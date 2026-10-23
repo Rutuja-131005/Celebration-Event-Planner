@@ -1,0 +1,6 @@
+{
+  "name": "Celebration & Event Planner",
+  "description": "Luxury celebration and event management atelier with budget forecasting, AI planning studio, and predictive risk telemetry.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
