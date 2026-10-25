@@ -9,6 +9,7 @@ interface HeaderProps {
   currentUser: User | null;
   onNavigate: (path: string) => void;
   onOpenAuth: () => void;
+  onCreateEventClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentUser,
   onNavigate,
   onOpenAuth,
+  onCreateEventClick,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -26,65 +28,62 @@ export const Header: React.FC<HeaderProps> = ({
   const formatPathName = (path: string) => {
     switch (path) {
       case 'overview':
-        return 'Overview';
-      case 'my-events':
-        return 'My Events';
+        return 'Celebration Overview';
       case 'ai-planning-studio':
-        return 'AI Planning Studio';
+        return 'AI Master Blueprint';
       case 'budget-and-forecast':
-        return 'Budget & Forecast';
+        return 'Budget & Forecasting';
       case 'timeline-and-tasks':
-        return 'Timeline & Tasks';
+        return 'Timeline & Milestones';
       case 'vendors-and-quotations':
         return 'Vendors & Quotations';
-      case 'ideas-and-inspiration':
-        return 'Ideas & Inspiration';
-      case 'reports-and-insights':
-        return 'Reports & Insights';
+      case 'my-events':
+        return 'My Celebrations';
       case 'settings':
-        return 'Settings';
+        return 'Atelier Settings';
       default:
-        return 'Atelier Studio';
+        return 'Celebration Planner';
     }
   };
 
   return (
-    <header className="fixed top-0 left-[260px] right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg border-b border-outline-variant/30">
-      {/* Left breadcrumb and event selector */}
+    <header className="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-space-lg border-b border-outline-variant/30">
+      {/* Left section: Clean Page Title & Active Event Switcher */}
       <div className="flex items-center gap-space-md min-w-0">
-        <div className="hidden sm:flex items-center gap-space-xs text-outline font-body-sm text-body-sm">
-          <span
-            onClick={() => onNavigate('overview')}
-            className="hover:text-on-surface transition-colors cursor-pointer"
-          >
-            {formatPathName(currentPath)}
-          </span>
-          <span>/</span>
-          <span className="text-on-surface font-title-md text-title-md truncate max-w-[200px]">
-            Spring & Autumn Celebrations
-          </span>
-        </div>
+        <h2 className="font-headline-sm text-headline-sm text-primary font-semibold tracking-tight truncate hidden md:block">
+          {formatPathName(currentPath)}
+        </h2>
+
+        <span className="hidden md:inline text-outline-variant">|</span>
 
         {/* Active Event Pill Dropdown */}
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded-xl cursor-pointer hover:bg-surface-container-high transition-colors text-left"
+            className="flex items-center gap-space-xs bg-surface-container px-space-md py-1.5 rounded-xl cursor-pointer hover:bg-surface-container-high transition-all text-left border border-outline-variant/30 shadow-xs"
             type="button"
           >
-            <span className="material-symbols-outlined text-[16px] text-secondary">celebration</span>
-            <span className="font-label-md text-label-md text-on-surface font-medium truncate max-w-[220px] md:max-w-xs">
-              {activeEvent ? `${activeEvent.name} · ₹${(activeEvent.budgetAmount / 100000).toFixed(1)}L Budget` : 'Select Celebration'}
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-outline">expand_more</span>
+            <span className="material-symbols-outlined text-[18px] text-secondary">celebration</span>
+            <div className="flex flex-col min-w-0">
+              <span className="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[200px] lg:max-w-xs leading-tight">
+                {activeEvent ? activeEvent.name : 'Select Celebration'}
+              </span>
+              {activeEvent && (
+                <span className="font-body-xs text-[11px] text-outline truncate leading-none">
+                  {activeEvent.location} · ₹{(activeEvent.budgetAmount / 100000).toFixed(1)}L
+                </span>
+              )}
+            </div>
+            <span className="material-symbols-outlined text-[16px] text-outline ml-1">expand_more</span>
           </button>
 
           {dropdownOpen && (
-            <div className="absolute left-0 mt-2 w-80 rounded-xl bg-surface-container-lowest shadow-lg border border-outline-variant/40 py-1.5 z-50">
-              <div className="px-3 py-1.5 text-xs font-semibold text-outline uppercase tracking-wider">
-                Switch Active Celebration
+            <div className="absolute left-0 mt-2 w-80 rounded-2xl bg-surface-container-lowest shadow-xl border border-outline-variant/40 py-2 z-50">
+              <div className="px-3 py-1.5 text-xs font-semibold text-outline uppercase tracking-wider flex items-center justify-between">
+                <span>Switch Active Celebration</span>
+                <span className="text-[11px] text-secondary font-normal">{allEvents.length} total</span>
               </div>
-              <div className="divide-y divide-outline-variant/20 max-h-60 overflow-y-auto">
+              <div className="divide-y divide-outline-variant/20 max-h-64 overflow-y-auto">
                 {allEvents.map((ev) => (
                   <button
                     key={ev.id}
@@ -93,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
                       setDropdownOpen(false);
                     }}
                     className={`w-full px-3 py-2 text-left flex items-start gap-2 hover:bg-surface-container-low transition-colors cursor-pointer ${
-                      activeEvent?.id === ev.id ? 'bg-primary-fixed/30 font-semibold' : ''
+                      activeEvent?.id === ev.id ? 'bg-primary-fixed/25 font-semibold' : ''
                     }`}
                   >
                     <span className="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">
@@ -104,55 +103,50 @@ export const Header: React.FC<HeaderProps> = ({
                         {ev.name}
                       </div>
                       <div className="font-body-sm text-body-sm text-outline flex items-center justify-between">
-                        <span>{ev.location}</span>
-                        <span>₹{(ev.budgetAmount / 100000).toFixed(1)}L</span>
+                        <span className="truncate">{ev.location}</span>
+                        <span className="font-semibold text-on-surface">₹{(ev.budgetAmount / 100000).toFixed(1)}L</span>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
+              {onCreateEventClick && (
+                <div className="p-2 border-t border-outline-variant/20 mt-1">
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      onCreateEventClick();
+                    }}
+                    className="w-full py-1.5 px-3 rounded-xl bg-primary-fixed text-on-primary-fixed text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-primary-fixed/80 transition-all cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                    <span>Create New Celebration Blueprint</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* Right dock controls */}
-      <div className="flex items-center gap-space-sm">
-        {/* Search Input */}
-        <div className="hidden md:flex items-center bg-surface-container-low px-space-sm py-1.5 rounded-xl text-outline gap-space-sm w-44 hover:bg-surface-container transition-colors cursor-text">
-          <span className="material-symbols-outlined text-[18px]">search</span>
-          <span className="font-body-sm text-body-sm flex-1">Search</span>
-          <kbd className="font-label-sm text-label-sm bg-surface px-1.5 py-0.5 rounded shadow-sm text-outline">
-            ⌘K
-          </kbd>
-        </div>
-
-        {/* Ask Studio AI action */}
-        <button
-          onClick={() => onNavigate('ai-planning-studio')}
-          className="flex items-center gap-1 bg-secondary text-on-secondary px-space-sm py-1.5 rounded-xl font-label-md text-label-md shadow-sm hover:bg-on-secondary-container transition-all cursor-pointer active:scale-95"
-          type="button"
-        >
-          <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-          <span className="hidden lg:inline">Ask Studio AI</span>
-        </button>
-
-        {/* Notifications */}
-        <button
-          onClick={() => onNavigate('overview')}
-          className="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-xl transition-all cursor-pointer"
-          title="Milestone Notifications"
-          type="button"
-        >
-          <span className="material-symbols-outlined text-[20px]">notifications</span>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span>
-        </button>
+      {/* Right controls: Quick Creation CTA & Profile */}
+      <div className="flex items-center gap-space-md">
+        {onCreateEventClick && (
+          <button
+            onClick={onCreateEventClick}
+            className="flex items-center gap-1.5 bg-primary text-on-primary px-3.5 py-1.5 rounded-xl font-label-md text-label-md shadow-xs hover:bg-primary/90 transition-all cursor-pointer active:scale-95"
+            type="button"
+          >
+            <span className="material-symbols-outlined text-[16px] text-secondary">auto_awesome</span>
+            <span className="font-semibold">+ New Celebration</span>
+          </button>
+        )}
 
         {/* User profile with dropdown */}
         <div className="relative">
           <button
             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-            className="flex items-center gap-space-sm pl-space-xs cursor-pointer group"
+            className="flex items-center gap-space-sm cursor-pointer group"
             type="button"
           >
             <img

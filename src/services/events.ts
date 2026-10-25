@@ -10,7 +10,7 @@ export const eventsService = {
     return api.get(`/events/${id}`);
   },
 
-  async createEvent(eventData: Partial<Event>): Promise<{ success: boolean; event: Event }> {
+  async createEvent(eventData: any): Promise<{ success: boolean; event: Event; plan?: any; planApplied?: boolean }> {
     return api.post('/events', eventData);
   },
 

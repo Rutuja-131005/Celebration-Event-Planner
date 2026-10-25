@@ -131,11 +131,16 @@ export default function App() {
     if (ev) setActiveEvent(ev);
   };
 
-  const handleEventCreated = (newEvent: Event) => {
+  const handleEventCreated = async (newEvent: Event, planGenerated?: boolean) => {
     setAllEvents((prev) => [newEvent, ...prev]);
     setActiveEvent(newEvent);
     setActiveEventId(newEvent.id);
-    setCurrentPath('overview');
+    await loadEventData(newEvent.id);
+    if (planGenerated) {
+      setCurrentPath('ai-planning-studio');
+    } else {
+      setCurrentPath('overview');
+    }
   };
 
   const handleExpenseAdded = (newExpense: Expense, updatedMetrics?: any) => {
@@ -210,6 +215,7 @@ export default function App() {
           currentUser={currentUser}
           onNavigate={setCurrentPath}
           onOpenAuth={() => setIsAuthOpen(true)}
+          onCreateEventClick={() => setIsCreateEventOpen(true)}
         />
 
         {/* Viewport Content Area */}

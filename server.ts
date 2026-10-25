@@ -1,3 +1,4 @@
+import http from 'http';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,6 +15,7 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 
 async function startServer() {
   const app = express();
+  const server = http.createServer(app);
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -31,10 +33,13 @@ async function startServer() {
   app.get('/health/ready', (req, res) => res.json({ status: 'ready', database: 'connected' }));
 
   if (!isProduction) {
-    // Development mode: Mount Vite dev server middleware
+    // Development mode: Mount Vite dev server middleware (HMR disabled in middleware mode to avoid reload loops)
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: false,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -59,9 +64,10 @@ async function startServer() {
     });
   });
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[Celebration Atelier Server] Running on http://0.0.0.0:${PORT}`);
-    console.log(`[Celebration Atelier Server] API endpoints available at http://0.0.0.0:${PORT}/api/v1`);
+  server.listen(PORT, () => {
+    console.log(`[Celebration Atelier Server] Running on http://localhost:${PORT}`);
+    console.log(`[Celebration Atelier Server] Direct IPv4 link: http://127.0.0.1:${PORT}`);
+    console.log(`[Celebration Atelier Server] API endpoints available at http://localhost:${PORT}/api/v1`);
   });
 }
 

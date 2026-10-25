@@ -170,6 +170,83 @@
       "code": "ATELIER-2025-BLR",
       "createdAt": "2025-08-15T00:00:00Z",
       "updatedAt": "2026-10-23T15:26:42.389Z"
+    },
+    {
+      "ownerUserId": "usr_priya_lead",
+      "name": "xyz & abc ",
+      "eventType": "Royal Wedding Celebration",
+      "eventDate": "2026-03-20",
+      "location": "Udaipur, Rajasthan",
+      "venueName": "Jagmandir Island Palace",
+      "guestCount": 300,
+      "confirmedGuestCount": 0,
+      "budgetAmount": 2500000,
+      "currencyCode": "INR",
+      "theme": "Royal Marwar & Rajputana Florals",
+      "eventPreferences": {},
+      "status": "planning",
+      "daysRemaining": 60,
+      "readinessScore": 35,
+      "code": "ATELIER-2026-U27",
+      "id": "evt_1792932372573_es46o",
+      "createdAt": "2026-10-25T12:46:12.573Z",
+      "updatedAt": "2026-10-25T12:46:12.573Z"
+    },
+    {
+      "ownerUserId": "usr_priya_lead",
+      "name": "Dev & Rhea's Sunset Sangeet Gala",
+      "eventType": "Royal Wedding Celebration",
+      "eventDate": "2026-04-12",
+      "location": "Jaipur, Rajasthan",
+      "venueName": "Rambagh Palace",
+      "guestCount": 250,
+      "confirmedGuestCount": 0,
+      "budgetAmount": 2000000,
+      "currencyCode": "INR",
+      "theme": "An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.",
+      "eventPreferences": {
+        "vibe": "Energetic, royal, and festive",
+        "ambiance": "Fairy lights, marigold garlands, acoustic Sufi stage",
+        "culinaryStyle": "Royal Rajasthani Thali & craft cocktail lounge",
+        "specialMoments": "Grand fireworks, choreo sangeet reveal, midnight dessert station",
+        "colorPalette": "Champagne Gold, Ivory & Velvet Plum",
+        "additionalNotes": ""
+      },
+      "status": "planning",
+      "daysRemaining": 1,
+      "readinessScore": 92,
+      "code": "ATELIER-2026-U47",
+      "id": "evt_1792933366671_259nk",
+      "createdAt": "2026-10-25T13:02:46.671Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "ownerUserId": "usr_priya_lead",
+      "name": "Aria's 30th Bohemian Sunset Gala",
+      "eventType": "Milestone Birthday Party",
+      "eventDate": "2026-04-18",
+      "location": "Bandra West, Mumbai",
+      "venueName": "The Glass Horizon Penthouse & Rooftop",
+      "guestCount": 100,
+      "confirmedGuestCount": 0,
+      "budgetAmount": 500000,
+      "currencyCode": "INR",
+      "theme": "An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.",
+      "eventPreferences": {
+        "vibe": "Chic, energetic, stylish and celebratory",
+        "ambiance": "Golden hour fairy lights, amber glass candles, velvet seating & vinyl listening lounge",
+        "culinaryStyle": "Tapas grazing table, woodfired gourmet pizzas, craft cocktail tasting bar",
+        "specialMoments": "Surprise aerial champagne pour, polaroid memory wall & midnight DJ set",
+        "colorPalette": "Royal Crimson & Antique Gold",
+        "additionalNotes": "Ensure boat shuttles operate seamlessly from jetty; VIP dietary preferences noted"
+      },
+      "status": "planning",
+      "daysRemaining": 1,
+      "readinessScore": 92,
+      "code": "ATELIER-2026-NC1",
+      "id": "evt_1792933902959_hff3m",
+      "createdAt": "2026-10-25T13:11:42.959Z",
+      "updatedAt": "2026-10-25T13:12:02.026Z"
     }
   ],
   "budgetCategories": [
@@ -341,6 +418,234 @@
       "notes": "Unforeseen guest extensions & late-night transport surge",
       "createdAt": "2026-10-23T15:27:16.129Z",
       "updatedAt": "2026-10-23T15:27:16.129Z"
+    },
+    {
+      "id": "cat_1792932372574_24jm",
+      "eventId": "evt_1792932372573_es46o",
+      "categoryName": "Venue & Lodging",
+      "plannedAmount": 700000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "createdAt": "2026-10-25T12:46:12.574Z",
+      "updatedAt": "2026-10-25T12:46:12.574Z"
+    },
+    {
+      "id": "cat_1792932372574_x3t5",
+      "eventId": "evt_1792932372573_es46o",
+      "categoryName": "Catering & Hospitality",
+      "plannedAmount": 800000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "createdAt": "2026-10-25T12:46:12.574Z",
+      "updatedAt": "2026-10-25T12:46:12.574Z"
+    },
+    {
+      "id": "cat_1792932372574_kcwn",
+      "eventId": "evt_1792932372573_es46o",
+      "categoryName": "Decor & Production",
+      "plannedAmount": 550000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "createdAt": "2026-10-25T12:46:12.574Z",
+      "updatedAt": "2026-10-25T12:46:12.574Z"
+    },
+    {
+      "id": "cat_1792932372574_3szs",
+      "eventId": "evt_1792932372573_es46o",
+      "categoryName": "Photography & Cinema",
+      "plannedAmount": 250000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "createdAt": "2026-10-25T12:46:12.574Z",
+      "updatedAt": "2026-10-25T12:46:12.574Z"
+    },
+    {
+      "id": "cat_1792932372574_6t58",
+      "eventId": "evt_1792932372573_es46o",
+      "categoryName": "Entertainment & Sound",
+      "plannedAmount": 125000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "createdAt": "2026-10-25T12:46:12.574Z",
+      "updatedAt": "2026-10-25T12:46:12.574Z"
+    },
+    {
+      "id": "cat_1792932372574_luun",
+      "eventId": "evt_1792932372573_es46o",
+      "categoryName": "Invitations & Gifting",
+      "plannedAmount": 75000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "createdAt": "2026-10-25T12:46:12.574Z",
+      "updatedAt": "2026-10-25T12:46:12.574Z"
+    },
+    {
+      "id": "cat_1792933367447_6591",
+      "eventId": "evt_1792933366671_259nk",
+      "categoryName": "Royal Catering & Crafted Banquet",
+      "plannedAmount": 680000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "notes": "Multi-course royal feast, live signature chaat stations, copperware service",
+      "createdAt": "2026-10-25T13:02:47.447Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "id": "cat_1792933367447_tbcm",
+      "eventId": "evt_1792933366671_259nk",
+      "categoryName": "Floral Scenography & Mandap Architecture",
+      "plannedAmount": 480000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "notes": "Hand-carved mandap dais, 400 brass urlis, marigold promenade canopies",
+      "createdAt": "2026-10-25T13:02:47.447Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "id": "cat_1792933367447_uq3m",
+      "eventId": "evt_1792933366671_259nk",
+      "categoryName": "Heritage Venue Rental & Island Shuttles",
+      "plannedAmount": 400000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "notes": "Jagmandir palace access, boat jetty logistics, security & power backups",
+      "createdAt": "2026-10-25T13:02:47.447Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "id": "cat_1792933367447_j2d4",
+      "eventId": "evt_1792933366671_259nk",
+      "categoryName": "Cinematography, Drone & Fine-Art Stills",
+      "plannedAmount": 200000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "medium",
+      "status": "pending",
+      "notes": "3 master cinematographers, 4K teaser film, leather-bound heirloom album",
+      "createdAt": "2026-10-25T13:02:47.447Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "id": "cat_1792933367447_tzwo",
+      "eventId": "evt_1792933366671_259nk",
+      "categoryName": "Live Folk-Sufi Artists & Choreography",
+      "plannedAmount": 120000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Nizami acoustic ensemble, Rajasthani welcome dholis, sangeet audio tech",
+      "createdAt": "2026-10-25T13:02:47.447Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "id": "cat_1792933367447_4mhv",
+      "eventId": "evt_1792933366671_259nk",
+      "categoryName": "Contingency Pool & Sound Licensing Reserve",
+      "plannedAmount": 120000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "low",
+      "status": "pending",
+      "notes": "Lakeside curfew extension bond, unexpected travel adjustments",
+      "createdAt": "2026-10-25T13:02:47.447Z",
+      "updatedAt": "2026-10-25T13:02:47.447Z"
+    },
+    {
+      "id": "cat_1792933922026_8dny",
+      "eventId": "evt_1792933902959_hff3m",
+      "categoryName": "Royal Catering & Crafted Banquet",
+      "plannedAmount": 170000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "notes": "Multi-course royal feast, live signature chaat stations, copperware service",
+      "createdAt": "2026-10-25T13:12:02.026Z",
+      "updatedAt": "2026-10-25T13:12:02.026Z"
+    },
+    {
+      "id": "cat_1792933922026_tkwj",
+      "eventId": "evt_1792933902959_hff3m",
+      "categoryName": "Floral Scenography & Mandap Architecture",
+      "plannedAmount": 120000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "notes": "Hand-carved mandap dais, 400 brass urlis, marigold promenade canopies",
+      "createdAt": "2026-10-25T13:12:02.026Z",
+      "updatedAt": "2026-10-25T13:12:02.026Z"
+    },
+    {
+      "id": "cat_1792933922026_5n98",
+      "eventId": "evt_1792933902959_hff3m",
+      "categoryName": "Heritage Venue Rental & Island Shuttles",
+      "plannedAmount": 100000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "high",
+      "status": "pending",
+      "notes": "Jagmandir palace access, boat jetty logistics, security & power backups",
+      "createdAt": "2026-10-25T13:12:02.026Z",
+      "updatedAt": "2026-10-25T13:12:02.026Z"
+    },
+    {
+      "id": "cat_1792933922026_3gr4",
+      "eventId": "evt_1792933902959_hff3m",
+      "categoryName": "Cinematography, Drone & Fine-Art Stills",
+      "plannedAmount": 50000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "medium",
+      "status": "pending",
+      "notes": "3 master cinematographers, 4K teaser film, leather-bound heirloom album",
+      "createdAt": "2026-10-25T13:12:02.026Z",
+      "updatedAt": "2026-10-25T13:12:02.026Z"
+    },
+    {
+      "id": "cat_1792933922026_ae79",
+      "eventId": "evt_1792933902959_hff3m",
+      "categoryName": "Live Folk-Sufi Artists & Choreography",
+      "plannedAmount": 30000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Nizami acoustic ensemble, Rajasthani welcome dholis, sangeet audio tech",
+      "createdAt": "2026-10-25T13:12:02.026Z",
+      "updatedAt": "2026-10-25T13:12:02.026Z"
+    },
+    {
+      "id": "cat_1792933922026_8du4",
+      "eventId": "evt_1792933902959_hff3m",
+      "categoryName": "Contingency Pool & Sound Licensing Reserve",
+      "plannedAmount": 30000,
+      "committedAmount": 0,
+      "actualAmount": 0,
+      "priority": "low",
+      "status": "pending",
+      "notes": "Lakeside curfew extension bond, unexpected travel adjustments",
+      "createdAt": "2026-10-25T13:12:02.026Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
     }
   ],
   "expenses": [
@@ -664,6 +969,398 @@
       "category": "Vendor Sourcing",
       "createdAt": "2026-10-23T15:27:16.130Z",
       "updatedAt": "2026-10-23T15:27:16.130Z"
+    },
+    {
+      "id": "tsk_1792933367447_mxw3",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Lock Heritage Palace & Guest Room Blocks",
+      "description": "Execute venue contracts, confirm jetty docking rights, and secure hotel rooms for out-of-town guests.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "12 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_jvbf",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Approve 3D Mandap Renders & Floral Sourcing",
+      "description": "Lock floral master order with wholesale Pushkar vendors to secure fixed-price arbitrage.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "8 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_vybn",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Catering Tasting & Returnable Bar Agreement",
+      "description": "Complete final menu tasting with royal chefs and execute 100% buyback clause on sealed liquor crates.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "4 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_8sq4",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Lake Shuttle Coordination & Sound Permits",
+      "description": "Review motor boat transfer schedules and file mandatory lakefront sound compliance notices.",
+      "dueDate": "2026-11-08",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "1 Week Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_i92u",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Master Production & Floral Rig Inspection (11 AM)",
+      "description": "Walk palace grounds with head decorator, check cold pyro safety radius, and soundcheck Sufi audio.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "Wedding Day Morning",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_z36w",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Procure Master Palace Decorator & Floral Architect (Decor & Scenography)",
+      "description": "Deliverables: Hand-carved 20ft Floral Mandap, 400 Brass Urlis & Diyas, Fairy light courtyard canopy, 2 Custom stages. Target allocation: ₹4,80,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 8-10 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_yvuf",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Procure Royal Heritage Caterer & Artisanal Bar (Catering & Banquets)",
+      "description": "Deliverables: Multi-course Mewari royal feast, Live signature chaat counters, Copperware silver banquet service, Licensed bar team. Target allocation: ₹6,80,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 8 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_t5l1",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Procure Fine-Art Wedding Cinematographer & Drone Pilot (Cinematography & Stills)",
+      "description": "Deliverables: 2 Full shooting days across palace grounds, Cinematic 4K teaser film, 80-Page hand-bound leather heirloom album. Target allocation: ₹2,00,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 8 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933367448_2rq3",
+      "eventId": "evt_1792933366671_259nk",
+      "title": "Procure Acoustic Folk-Sufi Ensemble & Welcome Dholis (Artists & Entertainment)",
+      "description": "Deliverables: Nizami acoustic sufi quartet (90 mins), 6 Traditional Rajasthani welcome dholis, Wireless monitors & audio setup. Target allocation: ₹1,20,000",
+      "dueDate": "2026-11-15",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 6 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:02:47.448Z",
+      "updatedAt": "2026-10-25T13:02:47.448Z"
+    },
+    {
+      "id": "tsk_1792933903867_5zyl",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Confirm Venue & Core Theme Palette",
+      "description": "Lock in rooftop or private dining space, sign deposit agreement, and finalize styling colors.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "6 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:11:43.867Z",
+      "updatedAt": "2026-10-25T13:11:43.867Z"
+    },
+    {
+      "id": "tsk_1792933903867_6jv0",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Design & Send Digital RSVP Invitations",
+      "description": "Send custom interactive invites with dietary preference polls and milestone photo prompts.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "4 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:11:43.867Z",
+      "updatedAt": "2026-10-25T13:11:43.867Z"
+    },
+    {
+      "id": "tsk_1792933903867_m061",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Contract DJ, Cake Artist & Mixology Scope",
+      "description": "Submit playlist must-haves, finalize custom cake flavors, and approve 3 signature cocktails.",
+      "dueDate": "2026-11-08",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "3 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:11:43.867Z",
+      "updatedAt": "2026-10-25T13:11:43.867Z"
+    },
+    {
+      "id": "tsk_1792933903867_snqc",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Final Headcount & Balloon/Floral Delivery Check",
+      "description": "Provide final headcount to caterer, verify delivery time windows for scenography and cake.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "1 Week Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:11:43.867Z",
+      "updatedAt": "2026-10-25T13:11:43.867Z"
+    },
+    {
+      "id": "tsk_1792933903868_yovl",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Setup Inspection & Host Soundcheck (3 PM)",
+      "description": "Test wireless microphones, inspect balloon/floral backdrops, and review timing cues with DJ.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "Day of Celebration",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:11:43.868Z",
+      "updatedAt": "2026-10-25T13:11:43.868Z"
+    },
+    {
+      "id": "tsk_1792933903868_w4in",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Artisanal Cocktail & Small Plates Caterer (Catering & Mixology)",
+      "description": "Deliverables: 3 Handcrafted signature cocktails, Interactive grazing table, Passed savory appetizers, Bartender team & glassware. Target allocation: ₹1,75,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 4 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:11:43.868Z",
+      "updatedAt": "2026-10-25T13:11:43.868Z"
+    },
+    {
+      "id": "tsk_1792933903868_g1zw",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Live Vinyl / Open-Format DJ & Sound Tech (Music & Audio)",
+      "description": "Deliverables: 4-hour live curated DJ set, PA speakers & wireless mics, Dancefloor ambient lighting. Target allocation: ₹60,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 3-4 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:11:43.868Z",
+      "updatedAt": "2026-10-25T13:11:43.868Z"
+    },
+    {
+      "id": "tsk_1792933903868_sbl2",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Bespoke Sculptural Cake Designer (Bakery & Confectionery)",
+      "description": "Deliverables: Custom 3-tier flavored cake, Matching mini tartlets & macarons, Delivery and on-site display styling. Target allocation: ₹40,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 3 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:11:43.868Z",
+      "updatedAt": "2026-10-25T13:11:43.868Z"
+    },
+    {
+      "id": "tsk_1792933903868_th3g",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Modern Floral & Balloon Installation Stylist (Scenography & Decor)",
+      "description": "Deliverables: Organic balloon arch or floral photo wall, Custom neon acrylic name sign, Lounge table centerpieces. Target allocation: ₹70,000",
+      "dueDate": "2026-11-15",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 2-3 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:11:43.868Z",
+      "updatedAt": "2026-10-25T13:11:43.868Z"
+    },
+    {
+      "id": "tsk_1792933903868_90o8",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Lifestyle Event Photographer & Audio Guestbook (Photography & Keepsakes)",
+      "description": "Deliverables: 4 hours candid photo coverage, Full digital gallery within 7 days, Vintage rotary audio guestbook telephone. Target allocation: ₹25,000",
+      "dueDate": "2026-11-15",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 3 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:11:43.868Z",
+      "updatedAt": "2026-10-25T13:11:43.868Z"
+    },
+    {
+      "id": "tsk_1792933922027_nk6c",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Lock Heritage Palace & Guest Room Blocks",
+      "description": "Execute venue contracts, confirm jetty docking rights, and secure hotel rooms for out-of-town guests.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "12 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_tp50",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Approve 3D Mandap Renders & Floral Sourcing",
+      "description": "Lock floral master order with wholesale Pushkar vendors to secure fixed-price arbitrage.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "8 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_8b1y",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Catering Tasting & Returnable Bar Agreement",
+      "description": "Complete final menu tasting with royal chefs and execute 100% buyback clause on sealed liquor crates.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "4 Weeks Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_utah",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Lake Shuttle Coordination & Sound Permits",
+      "description": "Review motor boat transfer schedules and file mandatory lakefront sound compliance notices.",
+      "dueDate": "2026-11-08",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "1 Week Before",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_wbql",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Master Production & Floral Rig Inspection (11 AM)",
+      "description": "Walk palace grounds with head decorator, check cold pyro safety radius, and soundcheck Sufi audio.",
+      "dueDate": "2026-11-08",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Lead Planner",
+      "dueLabel": "Wedding Day Morning",
+      "category": "AI Milestone",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_gx4w",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Master Palace Decorator & Floral Architect (Decor & Scenography)",
+      "description": "Deliverables: Hand-carved 20ft Floral Mandap, 400 Brass Urlis & Diyas, Fairy light courtyard canopy, 2 Custom stages. Target allocation: ₹1,20,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 8-10 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_eihn",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Royal Heritage Caterer & Artisanal Bar (Catering & Banquets)",
+      "description": "Deliverables: Multi-course Mewari royal feast, Live signature chaat counters, Copperware silver banquet service, Licensed bar team. Target allocation: ₹1,70,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 8 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_snsa",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Fine-Art Wedding Cinematographer & Drone Pilot (Cinematography & Stills)",
+      "description": "Deliverables: 2 Full shooting days across palace grounds, Cinematic 4K teaser film, 80-Page hand-bound leather heirloom album. Target allocation: ₹50,000",
+      "dueDate": "2026-11-15",
+      "priority": "high",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 8 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
+    },
+    {
+      "id": "tsk_1792933922027_a7lh",
+      "eventId": "evt_1792933902959_hff3m",
+      "title": "Procure Acoustic Folk-Sufi Ensemble & Welcome Dholis (Artists & Entertainment)",
+      "description": "Deliverables: Nizami acoustic sufi quartet (90 mins), 6 Traditional Rajasthani welcome dholis, Wireless monitors & audio setup. Target allocation: ₹30,000",
+      "dueDate": "2026-11-15",
+      "priority": "medium",
+      "status": "pending",
+      "assignedTo": "Procurement Lead",
+      "dueLabel": "Book 6 weeks prior",
+      "category": "Vendor Sourcing",
+      "createdAt": "2026-10-25T13:12:02.027Z",
+      "updatedAt": "2026-10-25T13:12:02.027Z"
     }
   ],
   "vendors": [
@@ -877,6 +1574,1404 @@
     }
   ],
   "aiPlans": [
+    {
+      "eventId": "evt_1792933902959_hff3m",
+      "versionNumber": "v1.4",
+      "versionTitle": "Aria's 30th Bohemian Sunset Gala (WEDDING)",
+      "curationConcept": "An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.",
+      "eventType": "wedding",
+      "inputPrompt": "Plan an unforgettable luxury celebration. Prioritize authentic culinary stations, harmonic 2700K ambient illumination, signature guest activities, and optimize floral and sound production below budget cap. | Event Title: Aria's 30th Bohemian Sunset Gala | Type: wedding | Location: Bandra West, Mumbai (The Glass Horizon Penthouse & Rooftop) | Guests: 100 | Target Budget: ₹5,00,000 | Special Parameters: Lakeside sunset acoustic set, artisanal royal thali, warm brass lantern glow, strict curfew compliance",
+      "planJson": {
+        "eventType": "wedding",
+        "aestheticFeasibilityScore": 97,
+        "colorPalette": [
+          {
+            "name": "Deep Royal Plum",
+            "hex": "#512C3D",
+            "usage": "Velvet Drapes & Stage Backdrop"
+          },
+          {
+            "name": "Mewari Terracotta",
+            "hex": "#FE9D7F",
+            "usage": "Marigold Carpets & Urli Pots"
+          },
+          {
+            "name": "Aged Champagne",
+            "hex": "#E8E1DC",
+            "usage": "Linen Tables & Chiffon Canopies"
+          },
+          {
+            "name": "Eucalyptus Sage",
+            "hex": "#BDCBAC",
+            "usage": "Foliage Runners & Courtyard Borders"
+          }
+        ],
+        "spatialBlueprint": {
+          "headline": "Lakeside Floating Stage & Tuberose Chandeliers",
+          "description": "A bespoke floating dais on water framed by cascading brass urlis, marigold garlands, and historic palace architecture.",
+          "lightingArchitecture": "Continuous 2700K amber canopy overhead with 140 clustered brass floor lamps along the promenade. Zero synthetic floodlights.",
+          "olfactoryTactileSignature": "Subtle vaporized rosewater misting along arrival stairs, handwoven raw tussar silk runners, and sweet fresh rajnigandha.",
+          "decibelRegulations": "Outdoor lakeside sound cutoff set for 22:00 IST with acoustic lounge indoor transition certified."
+        },
+        "personalizedIdeas": [
+          {
+            "title": "Illuminated Heritage Boat Procession",
+            "category": "signature_moment",
+            "description": "Couple and immediate family arrive across the lake on antique royal shikaras flanked by floating oil lamps and traditional shehnai players.",
+            "impact": "Breathtaking arrival that sets a regal, timeless tone for the celebration."
+          },
+          {
+            "title": "Royal Fragrance Bar & Floral Gifting Atelier",
+            "category": "activity",
+            "description": "Live master perfumer blending traditional Ittar (Kannauj rose, vetiver, and jasmine) in etched glass flacons customized with guest initials.",
+            "impact": "Ultra-luxurious tactile keepsake embodying Mewari hospitality."
+          },
+          {
+            "title": "Acoustic Sufi Sundowner Under Marigold Canopies",
+            "category": "entertainment",
+            "description": "Internationally acclaimed folk-Sufi ensemble performing seated on silk gaddas during twilight cocktail hour.",
+            "impact": "Elevates the emotional ambiance before the high-energy sangeet segment."
+          },
+          {
+            "title": "Brass Urli & Floating Lotus Scenography",
+            "category": "decor",
+            "description": "Heritage water bodies filled with 400 floating brass urlis, hand-picked mogra blooms, and slow-burning pure beeswax wicks.",
+            "impact": "Transforms historic palace courtyards into glowing fairytale landscapes."
+          }
+        ],
+        "budgetRebalance": {
+          "totalBudget": 500000,
+          "arbitrageInsight": "By substituting imported white orchids with indigenous Pushkar Rajnigandha and Marigold blooms, the atelier unlocked ₹1,40,000 in floral savings, rechanneled to the Sufi audio acoustic rig.",
+          "categories": [
+            {
+              "name": "Royal Catering & Crafted Banquet",
+              "amount": 170000,
+              "percentage": 34,
+              "priority": "high",
+              "note": "Multi-course royal feast, live signature chaat stations, copperware service"
+            },
+            {
+              "name": "Floral Scenography & Mandap Architecture",
+              "amount": 120000,
+              "percentage": 24,
+              "priority": "high",
+              "note": "Hand-carved mandap dais, 400 brass urlis, marigold promenade canopies"
+            },
+            {
+              "name": "Heritage Venue Rental & Island Shuttles",
+              "amount": 100000,
+              "percentage": 20,
+              "priority": "high",
+              "note": "Jagmandir palace access, boat jetty logistics, security & power backups"
+            },
+            {
+              "name": "Cinematography, Drone & Fine-Art Stills",
+              "amount": 50000,
+              "percentage": 10,
+              "priority": "medium",
+              "note": "3 master cinematographers, 4K teaser film, leather-bound heirloom album"
+            },
+            {
+              "name": "Live Folk-Sufi Artists & Choreography",
+              "amount": 30000,
+              "percentage": 6,
+              "priority": "medium",
+              "note": "Nizami acoustic ensemble, Rajasthani welcome dholis, sangeet audio tech"
+            },
+            {
+              "name": "Contingency Pool & Sound Licensing Reserve",
+              "amount": 30000,
+              "percentage": 6,
+              "priority": "low",
+              "note": "Lakeside curfew extension bond, unexpected travel adjustments"
+            }
+          ],
+          "catering": {
+            "amount": 170000,
+            "percentage": 34,
+            "note": "Royal banquet & chaat"
+          },
+          "decor": {
+            "amount": 120000,
+            "percentage": 24,
+            "note": "Mandap & floral scenography"
+          },
+          "venueSound": {
+            "amount": 100000,
+            "percentage": 20,
+            "note": "Palace venue & boats"
+          },
+          "artistsChoreography": {
+            "amount": 30000,
+            "percentage": 6,
+            "note": "Sufi ensemble & dhol"
+          },
+          "contingencyReserve": {
+            "amount": 30000,
+            "percentage": 6,
+            "note": "Contingency pool"
+          }
+        },
+        "itinerary": [
+          {
+            "time": "17:30",
+            "title": "Illuminated Boat Arrival & Shehnai Prelude",
+            "locationTag": "Entrance Jetty",
+            "description": "Guests arrive via illuminated wooden boats. Traditional Mewari shehnai and rosewater welcome at palace gates.",
+            "colorDot": "#381727"
+          },
+          {
+            "time": "18:45",
+            "title": "Twilight Sundowner & Acoustic Sufi Set",
+            "locationTag": "Lakeside Lawn",
+            "description": "Ambient brass lanterns ignite as sunset fades. Acoustic Sufi ensemble plays 45-minute semi-classical set.",
+            "colorDot": "#944831"
+          },
+          {
+            "time": "20:15",
+            "title": "Grand Couple Procession & Cold Pyro Cascade",
+            "locationTag": "Promenade Stage",
+            "description": "Live dhol procession escorting couple onto floating dais with synchronized low-smoke sparklers.",
+            "colorDot": "#512c3d"
+          },
+          {
+            "time": "21:00",
+            "title": "Royal Mewari Banquet & Family Performances",
+            "locationTag": "Grand Pavilion",
+            "description": "Full copper-service royal buffet opens. 8 scheduled family dance performances on stage with speech toasts.",
+            "colorDot": "#1a2510"
+          },
+          {
+            "time": "23:30",
+            "title": "Intimate Heritage After-Hours Lounge",
+            "locationTag": "Courtyard Bar",
+            "description": "Sound levels modulated to heritage municipal norms. Unplugged indie acoustic transition with hot sweet desserts.",
+            "colorDot": "#817478"
+          }
+        ],
+        "milestoneTimeline": [
+          {
+            "timeframe": "12 Weeks Before",
+            "milestone": "Lock Heritage Palace & Guest Room Blocks",
+            "description": "Execute venue contracts, confirm jetty docking rights, and secure hotel rooms for out-of-town guests.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "8 Weeks Before",
+            "milestone": "Approve 3D Mandap Renders & Floral Sourcing",
+            "description": "Lock floral master order with wholesale Pushkar vendors to secure fixed-price arbitrage.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "4 Weeks Before",
+            "milestone": "Catering Tasting & Returnable Bar Agreement",
+            "description": "Complete final menu tasting with royal chefs and execute 100% buyback clause on sealed liquor crates.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "1 Week Before",
+            "milestone": "Lake Shuttle Coordination & Sound Permits",
+            "description": "Review motor boat transfer schedules and file mandatory lakefront sound compliance notices.",
+            "priority": "medium"
+          },
+          {
+            "timeframe": "Wedding Day Morning",
+            "milestone": "Master Production & Floral Rig Inspection (11 AM)",
+            "description": "Walk palace grounds with head decorator, check cold pyro safety radius, and soundcheck Sufi audio.",
+            "priority": "high"
+          }
+        ],
+        "vendorChecklist": [
+          {
+            "category": "Decor & Scenography",
+            "roleTitle": "Master Palace Decorator & Floral Architect",
+            "keyDeliverables": [
+              "Hand-carved 20ft Floral Mandap",
+              "400 Brass Urlis & Diyas",
+              "Fairy light courtyard canopy",
+              "2 Custom stages"
+            ],
+            "estimatedAllocation": 120000,
+            "bookingWindow": "Book 8-10 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Catering & Banquets",
+            "roleTitle": "Royal Heritage Caterer & Artisanal Bar",
+            "keyDeliverables": [
+              "Multi-course Mewari royal feast",
+              "Live signature chaat counters",
+              "Copperware silver banquet service",
+              "Licensed bar team"
+            ],
+            "estimatedAllocation": 170000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Cinematography & Stills",
+            "roleTitle": "Fine-Art Wedding Cinematographer & Drone Pilot",
+            "keyDeliverables": [
+              "2 Full shooting days across palace grounds",
+              "Cinematic 4K teaser film",
+              "80-Page hand-bound leather heirloom album"
+            ],
+            "estimatedAllocation": 50000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Artists & Entertainment",
+            "roleTitle": "Acoustic Folk-Sufi Ensemble & Welcome Dholis",
+            "keyDeliverables": [
+              "Nizami acoustic sufi quartet (90 mins)",
+              "6 Traditional Rajasthani welcome dholis",
+              "Wireless monitors & audio setup"
+            ],
+            "estimatedAllocation": 30000,
+            "bookingWindow": "Book 6 weeks prior",
+            "status": "recommended"
+          }
+        ],
+        "culinaryAteliers": [
+          {
+            "title": "Royal Bajra & Dal Baati Churma Ateliers",
+            "categoryTag": "Live Artisanal Stations",
+            "description": "Live slow-cooked Daal Baati baked over coal embers in brass sigris with five distinct artisanal churned ghee churmas."
+          },
+          {
+            "title": "Botanical Saffron & Vetiver Infusions",
+            "categoryTag": "Artisanal Bar Chemistry",
+            "description": "Low-ABV and zero-proof handcrafted elixirs featuring smoked Udaipur royal rose essence and clarified citrus tonics."
+          }
+        ]
+      },
+      "isDevelopmentFallback": true,
+      "id": "plan_1792933952698_vyuq",
+      "createdAt": "2026-10-25T13:12:32.698Z"
+    },
+    {
+      "eventId": "evt_1792933902959_hff3m",
+      "versionNumber": "v1.3",
+      "versionTitle": "Aria's 30th Bohemian Sunset Gala (WEDDING)",
+      "curationConcept": "An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.",
+      "eventType": "wedding",
+      "inputPrompt": "Plan an unforgettable luxury celebration. Prioritize authentic culinary stations, harmonic 2700K ambient illumination, signature guest activities, and optimize floral and sound production below budget cap. | Event Title: Aria's 30th Bohemian Sunset Gala | Type: wedding | Location: Bandra West, Mumbai (The Glass Horizon Penthouse & Rooftop) | Guests: 100 | Target Budget: ₹5,00,000 | Special Parameters: Lakeside sunset acoustic set, artisanal royal thali, warm brass lantern glow, strict curfew compliance",
+      "planJson": {
+        "eventType": "wedding",
+        "aestheticFeasibilityScore": 97,
+        "colorPalette": [
+          {
+            "name": "Deep Royal Plum",
+            "hex": "#512C3D",
+            "usage": "Velvet Drapes & Stage Backdrop"
+          },
+          {
+            "name": "Mewari Terracotta",
+            "hex": "#FE9D7F",
+            "usage": "Marigold Carpets & Urli Pots"
+          },
+          {
+            "name": "Aged Champagne",
+            "hex": "#E8E1DC",
+            "usage": "Linen Tables & Chiffon Canopies"
+          },
+          {
+            "name": "Eucalyptus Sage",
+            "hex": "#BDCBAC",
+            "usage": "Foliage Runners & Courtyard Borders"
+          }
+        ],
+        "spatialBlueprint": {
+          "headline": "Lakeside Floating Stage & Tuberose Chandeliers",
+          "description": "A bespoke floating dais on water framed by cascading brass urlis, marigold garlands, and historic palace architecture.",
+          "lightingArchitecture": "Continuous 2700K amber canopy overhead with 140 clustered brass floor lamps along the promenade. Zero synthetic floodlights.",
+          "olfactoryTactileSignature": "Subtle vaporized rosewater misting along arrival stairs, handwoven raw tussar silk runners, and sweet fresh rajnigandha.",
+          "decibelRegulations": "Outdoor lakeside sound cutoff set for 22:00 IST with acoustic lounge indoor transition certified."
+        },
+        "personalizedIdeas": [
+          {
+            "title": "Illuminated Heritage Boat Procession",
+            "category": "signature_moment",
+            "description": "Couple and immediate family arrive across the lake on antique royal shikaras flanked by floating oil lamps and traditional shehnai players.",
+            "impact": "Breathtaking arrival that sets a regal, timeless tone for the celebration."
+          },
+          {
+            "title": "Royal Fragrance Bar & Floral Gifting Atelier",
+            "category": "activity",
+            "description": "Live master perfumer blending traditional Ittar (Kannauj rose, vetiver, and jasmine) in etched glass flacons customized with guest initials.",
+            "impact": "Ultra-luxurious tactile keepsake embodying Mewari hospitality."
+          },
+          {
+            "title": "Acoustic Sufi Sundowner Under Marigold Canopies",
+            "category": "entertainment",
+            "description": "Internationally acclaimed folk-Sufi ensemble performing seated on silk gaddas during twilight cocktail hour.",
+            "impact": "Elevates the emotional ambiance before the high-energy sangeet segment."
+          },
+          {
+            "title": "Brass Urli & Floating Lotus Scenography",
+            "category": "decor",
+            "description": "Heritage water bodies filled with 400 floating brass urlis, hand-picked mogra blooms, and slow-burning pure beeswax wicks.",
+            "impact": "Transforms historic palace courtyards into glowing fairytale landscapes."
+          }
+        ],
+        "budgetRebalance": {
+          "totalBudget": 500000,
+          "arbitrageInsight": "By substituting imported white orchids with indigenous Pushkar Rajnigandha and Marigold blooms, the atelier unlocked ₹1,40,000 in floral savings, rechanneled to the Sufi audio acoustic rig.",
+          "categories": [
+            {
+              "name": "Royal Catering & Crafted Banquet",
+              "amount": 170000,
+              "percentage": 34,
+              "priority": "high",
+              "note": "Multi-course royal feast, live signature chaat stations, copperware service"
+            },
+            {
+              "name": "Floral Scenography & Mandap Architecture",
+              "amount": 120000,
+              "percentage": 24,
+              "priority": "high",
+              "note": "Hand-carved mandap dais, 400 brass urlis, marigold promenade canopies"
+            },
+            {
+              "name": "Heritage Venue Rental & Island Shuttles",
+              "amount": 100000,
+              "percentage": 20,
+              "priority": "high",
+              "note": "Jagmandir palace access, boat jetty logistics, security & power backups"
+            },
+            {
+              "name": "Cinematography, Drone & Fine-Art Stills",
+              "amount": 50000,
+              "percentage": 10,
+              "priority": "medium",
+              "note": "3 master cinematographers, 4K teaser film, leather-bound heirloom album"
+            },
+            {
+              "name": "Live Folk-Sufi Artists & Choreography",
+              "amount": 30000,
+              "percentage": 6,
+              "priority": "medium",
+              "note": "Nizami acoustic ensemble, Rajasthani welcome dholis, sangeet audio tech"
+            },
+            {
+              "name": "Contingency Pool & Sound Licensing Reserve",
+              "amount": 30000,
+              "percentage": 6,
+              "priority": "low",
+              "note": "Lakeside curfew extension bond, unexpected travel adjustments"
+            }
+          ],
+          "catering": {
+            "amount": 170000,
+            "percentage": 34,
+            "note": "Royal banquet & chaat"
+          },
+          "decor": {
+            "amount": 120000,
+            "percentage": 24,
+            "note": "Mandap & floral scenography"
+          },
+          "venueSound": {
+            "amount": 100000,
+            "percentage": 20,
+            "note": "Palace venue & boats"
+          },
+          "artistsChoreography": {
+            "amount": 30000,
+            "percentage": 6,
+            "note": "Sufi ensemble & dhol"
+          },
+          "contingencyReserve": {
+            "amount": 30000,
+            "percentage": 6,
+            "note": "Contingency pool"
+          }
+        },
+        "itinerary": [
+          {
+            "time": "17:30",
+            "title": "Illuminated Boat Arrival & Shehnai Prelude",
+            "locationTag": "Entrance Jetty",
+            "description": "Guests arrive via illuminated wooden boats. Traditional Mewari shehnai and rosewater welcome at palace gates.",
+            "colorDot": "#381727"
+          },
+          {
+            "time": "18:45",
+            "title": "Twilight Sundowner & Acoustic Sufi Set",
+            "locationTag": "Lakeside Lawn",
+            "description": "Ambient brass lanterns ignite as sunset fades. Acoustic Sufi ensemble plays 45-minute semi-classical set.",
+            "colorDot": "#944831"
+          },
+          {
+            "time": "20:15",
+            "title": "Grand Couple Procession & Cold Pyro Cascade",
+            "locationTag": "Promenade Stage",
+            "description": "Live dhol procession escorting couple onto floating dais with synchronized low-smoke sparklers.",
+            "colorDot": "#512c3d"
+          },
+          {
+            "time": "21:00",
+            "title": "Royal Mewari Banquet & Family Performances",
+            "locationTag": "Grand Pavilion",
+            "description": "Full copper-service royal buffet opens. 8 scheduled family dance performances on stage with speech toasts.",
+            "colorDot": "#1a2510"
+          },
+          {
+            "time": "23:30",
+            "title": "Intimate Heritage After-Hours Lounge",
+            "locationTag": "Courtyard Bar",
+            "description": "Sound levels modulated to heritage municipal norms. Unplugged indie acoustic transition with hot sweet desserts.",
+            "colorDot": "#817478"
+          }
+        ],
+        "milestoneTimeline": [
+          {
+            "timeframe": "12 Weeks Before",
+            "milestone": "Lock Heritage Palace & Guest Room Blocks",
+            "description": "Execute venue contracts, confirm jetty docking rights, and secure hotel rooms for out-of-town guests.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "8 Weeks Before",
+            "milestone": "Approve 3D Mandap Renders & Floral Sourcing",
+            "description": "Lock floral master order with wholesale Pushkar vendors to secure fixed-price arbitrage.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "4 Weeks Before",
+            "milestone": "Catering Tasting & Returnable Bar Agreement",
+            "description": "Complete final menu tasting with royal chefs and execute 100% buyback clause on sealed liquor crates.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "1 Week Before",
+            "milestone": "Lake Shuttle Coordination & Sound Permits",
+            "description": "Review motor boat transfer schedules and file mandatory lakefront sound compliance notices.",
+            "priority": "medium"
+          },
+          {
+            "timeframe": "Wedding Day Morning",
+            "milestone": "Master Production & Floral Rig Inspection (11 AM)",
+            "description": "Walk palace grounds with head decorator, check cold pyro safety radius, and soundcheck Sufi audio.",
+            "priority": "high"
+          }
+        ],
+        "vendorChecklist": [
+          {
+            "category": "Decor & Scenography",
+            "roleTitle": "Master Palace Decorator & Floral Architect",
+            "keyDeliverables": [
+              "Hand-carved 20ft Floral Mandap",
+              "400 Brass Urlis & Diyas",
+              "Fairy light courtyard canopy",
+              "2 Custom stages"
+            ],
+            "estimatedAllocation": 120000,
+            "bookingWindow": "Book 8-10 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Catering & Banquets",
+            "roleTitle": "Royal Heritage Caterer & Artisanal Bar",
+            "keyDeliverables": [
+              "Multi-course Mewari royal feast",
+              "Live signature chaat counters",
+              "Copperware silver banquet service",
+              "Licensed bar team"
+            ],
+            "estimatedAllocation": 170000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Cinematography & Stills",
+            "roleTitle": "Fine-Art Wedding Cinematographer & Drone Pilot",
+            "keyDeliverables": [
+              "2 Full shooting days across palace grounds",
+              "Cinematic 4K teaser film",
+              "80-Page hand-bound leather heirloom album"
+            ],
+            "estimatedAllocation": 50000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Artists & Entertainment",
+            "roleTitle": "Acoustic Folk-Sufi Ensemble & Welcome Dholis",
+            "keyDeliverables": [
+              "Nizami acoustic sufi quartet (90 mins)",
+              "6 Traditional Rajasthani welcome dholis",
+              "Wireless monitors & audio setup"
+            ],
+            "estimatedAllocation": 30000,
+            "bookingWindow": "Book 6 weeks prior",
+            "status": "recommended"
+          }
+        ],
+        "culinaryAteliers": [
+          {
+            "title": "Royal Bajra & Dal Baati Churma Ateliers",
+            "categoryTag": "Live Artisanal Stations",
+            "description": "Live slow-cooked Daal Baati baked over coal embers in brass sigris with five distinct artisanal churned ghee churmas."
+          },
+          {
+            "title": "Botanical Saffron & Vetiver Infusions",
+            "categoryTag": "Artisanal Bar Chemistry",
+            "description": "Low-ABV and zero-proof handcrafted elixirs featuring smoked Udaipur royal rose essence and clarified citrus tonics."
+          }
+        ]
+      },
+      "isDevelopmentFallback": true,
+      "id": "plan_1792933918120_dkee",
+      "createdAt": "2026-10-25T13:11:58.120Z"
+    },
+    {
+      "eventId": "evt_1792933902959_hff3m",
+      "versionNumber": "v1.2",
+      "versionTitle": "Aria's 30th Bohemian Sunset Gala (WEDDING)",
+      "curationConcept": "An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.",
+      "eventType": "wedding",
+      "inputPrompt": "Plan an unforgettable luxury celebration. Prioritize authentic culinary stations, harmonic 2700K ambient illumination, signature guest activities, and optimize floral and sound production below budget cap. | Event Title: Aria's 30th Bohemian Sunset Gala | Type: wedding | Location: Bandra West, Mumbai (The Glass Horizon Penthouse & Rooftop) | Guests: 100 | Target Budget: ₹5,00,000 | Special Parameters: Lakeside sunset acoustic set, artisanal royal thali, warm brass lantern glow, strict curfew compliance",
+      "planJson": {
+        "eventType": "wedding",
+        "aestheticFeasibilityScore": 97,
+        "colorPalette": [
+          {
+            "name": "Deep Royal Plum",
+            "hex": "#512C3D",
+            "usage": "Velvet Drapes & Stage Backdrop"
+          },
+          {
+            "name": "Mewari Terracotta",
+            "hex": "#FE9D7F",
+            "usage": "Marigold Carpets & Urli Pots"
+          },
+          {
+            "name": "Aged Champagne",
+            "hex": "#E8E1DC",
+            "usage": "Linen Tables & Chiffon Canopies"
+          },
+          {
+            "name": "Eucalyptus Sage",
+            "hex": "#BDCBAC",
+            "usage": "Foliage Runners & Courtyard Borders"
+          }
+        ],
+        "spatialBlueprint": {
+          "headline": "Lakeside Floating Stage & Tuberose Chandeliers",
+          "description": "A bespoke floating dais on water framed by cascading brass urlis, marigold garlands, and historic palace architecture.",
+          "lightingArchitecture": "Continuous 2700K amber canopy overhead with 140 clustered brass floor lamps along the promenade. Zero synthetic floodlights.",
+          "olfactoryTactileSignature": "Subtle vaporized rosewater misting along arrival stairs, handwoven raw tussar silk runners, and sweet fresh rajnigandha.",
+          "decibelRegulations": "Outdoor lakeside sound cutoff set for 22:00 IST with acoustic lounge indoor transition certified."
+        },
+        "personalizedIdeas": [
+          {
+            "title": "Illuminated Heritage Boat Procession",
+            "category": "signature_moment",
+            "description": "Couple and immediate family arrive across the lake on antique royal shikaras flanked by floating oil lamps and traditional shehnai players.",
+            "impact": "Breathtaking arrival that sets a regal, timeless tone for the celebration."
+          },
+          {
+            "title": "Royal Fragrance Bar & Floral Gifting Atelier",
+            "category": "activity",
+            "description": "Live master perfumer blending traditional Ittar (Kannauj rose, vetiver, and jasmine) in etched glass flacons customized with guest initials.",
+            "impact": "Ultra-luxurious tactile keepsake embodying Mewari hospitality."
+          },
+          {
+            "title": "Acoustic Sufi Sundowner Under Marigold Canopies",
+            "category": "entertainment",
+            "description": "Internationally acclaimed folk-Sufi ensemble performing seated on silk gaddas during twilight cocktail hour.",
+            "impact": "Elevates the emotional ambiance before the high-energy sangeet segment."
+          },
+          {
+            "title": "Brass Urli & Floating Lotus Scenography",
+            "category": "decor",
+            "description": "Heritage water bodies filled with 400 floating brass urlis, hand-picked mogra blooms, and slow-burning pure beeswax wicks.",
+            "impact": "Transforms historic palace courtyards into glowing fairytale landscapes."
+          }
+        ],
+        "budgetRebalance": {
+          "totalBudget": 500000,
+          "arbitrageInsight": "By substituting imported white orchids with indigenous Pushkar Rajnigandha and Marigold blooms, the atelier unlocked ₹1,40,000 in floral savings, rechanneled to the Sufi audio acoustic rig.",
+          "categories": [
+            {
+              "name": "Royal Catering & Crafted Banquet",
+              "amount": 170000,
+              "percentage": 34,
+              "priority": "high",
+              "note": "Multi-course royal feast, live signature chaat stations, copperware service"
+            },
+            {
+              "name": "Floral Scenography & Mandap Architecture",
+              "amount": 120000,
+              "percentage": 24,
+              "priority": "high",
+              "note": "Hand-carved mandap dais, 400 brass urlis, marigold promenade canopies"
+            },
+            {
+              "name": "Heritage Venue Rental & Island Shuttles",
+              "amount": 100000,
+              "percentage": 20,
+              "priority": "high",
+              "note": "Jagmandir palace access, boat jetty logistics, security & power backups"
+            },
+            {
+              "name": "Cinematography, Drone & Fine-Art Stills",
+              "amount": 50000,
+              "percentage": 10,
+              "priority": "medium",
+              "note": "3 master cinematographers, 4K teaser film, leather-bound heirloom album"
+            },
+            {
+              "name": "Live Folk-Sufi Artists & Choreography",
+              "amount": 30000,
+              "percentage": 6,
+              "priority": "medium",
+              "note": "Nizami acoustic ensemble, Rajasthani welcome dholis, sangeet audio tech"
+            },
+            {
+              "name": "Contingency Pool & Sound Licensing Reserve",
+              "amount": 30000,
+              "percentage": 6,
+              "priority": "low",
+              "note": "Lakeside curfew extension bond, unexpected travel adjustments"
+            }
+          ],
+          "catering": {
+            "amount": 170000,
+            "percentage": 34,
+            "note": "Royal banquet & chaat"
+          },
+          "decor": {
+            "amount": 120000,
+            "percentage": 24,
+            "note": "Mandap & floral scenography"
+          },
+          "venueSound": {
+            "amount": 100000,
+            "percentage": 20,
+            "note": "Palace venue & boats"
+          },
+          "artistsChoreography": {
+            "amount": 30000,
+            "percentage": 6,
+            "note": "Sufi ensemble & dhol"
+          },
+          "contingencyReserve": {
+            "amount": 30000,
+            "percentage": 6,
+            "note": "Contingency pool"
+          }
+        },
+        "itinerary": [
+          {
+            "time": "17:30",
+            "title": "Illuminated Boat Arrival & Shehnai Prelude",
+            "locationTag": "Entrance Jetty",
+            "description": "Guests arrive via illuminated wooden boats. Traditional Mewari shehnai and rosewater welcome at palace gates.",
+            "colorDot": "#381727"
+          },
+          {
+            "time": "18:45",
+            "title": "Twilight Sundowner & Acoustic Sufi Set",
+            "locationTag": "Lakeside Lawn",
+            "description": "Ambient brass lanterns ignite as sunset fades. Acoustic Sufi ensemble plays 45-minute semi-classical set.",
+            "colorDot": "#944831"
+          },
+          {
+            "time": "20:15",
+            "title": "Grand Couple Procession & Cold Pyro Cascade",
+            "locationTag": "Promenade Stage",
+            "description": "Live dhol procession escorting couple onto floating dais with synchronized low-smoke sparklers.",
+            "colorDot": "#512c3d"
+          },
+          {
+            "time": "21:00",
+            "title": "Royal Mewari Banquet & Family Performances",
+            "locationTag": "Grand Pavilion",
+            "description": "Full copper-service royal buffet opens. 8 scheduled family dance performances on stage with speech toasts.",
+            "colorDot": "#1a2510"
+          },
+          {
+            "time": "23:30",
+            "title": "Intimate Heritage After-Hours Lounge",
+            "locationTag": "Courtyard Bar",
+            "description": "Sound levels modulated to heritage municipal norms. Unplugged indie acoustic transition with hot sweet desserts.",
+            "colorDot": "#817478"
+          }
+        ],
+        "milestoneTimeline": [
+          {
+            "timeframe": "12 Weeks Before",
+            "milestone": "Lock Heritage Palace & Guest Room Blocks",
+            "description": "Execute venue contracts, confirm jetty docking rights, and secure hotel rooms for out-of-town guests.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "8 Weeks Before",
+            "milestone": "Approve 3D Mandap Renders & Floral Sourcing",
+            "description": "Lock floral master order with wholesale Pushkar vendors to secure fixed-price arbitrage.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "4 Weeks Before",
+            "milestone": "Catering Tasting & Returnable Bar Agreement",
+            "description": "Complete final menu tasting with royal chefs and execute 100% buyback clause on sealed liquor crates.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "1 Week Before",
+            "milestone": "Lake Shuttle Coordination & Sound Permits",
+            "description": "Review motor boat transfer schedules and file mandatory lakefront sound compliance notices.",
+            "priority": "medium"
+          },
+          {
+            "timeframe": "Wedding Day Morning",
+            "milestone": "Master Production & Floral Rig Inspection (11 AM)",
+            "description": "Walk palace grounds with head decorator, check cold pyro safety radius, and soundcheck Sufi audio.",
+            "priority": "high"
+          }
+        ],
+        "vendorChecklist": [
+          {
+            "category": "Decor & Scenography",
+            "roleTitle": "Master Palace Decorator & Floral Architect",
+            "keyDeliverables": [
+              "Hand-carved 20ft Floral Mandap",
+              "400 Brass Urlis & Diyas",
+              "Fairy light courtyard canopy",
+              "2 Custom stages"
+            ],
+            "estimatedAllocation": 120000,
+            "bookingWindow": "Book 8-10 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Catering & Banquets",
+            "roleTitle": "Royal Heritage Caterer & Artisanal Bar",
+            "keyDeliverables": [
+              "Multi-course Mewari royal feast",
+              "Live signature chaat counters",
+              "Copperware silver banquet service",
+              "Licensed bar team"
+            ],
+            "estimatedAllocation": 170000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Cinematography & Stills",
+            "roleTitle": "Fine-Art Wedding Cinematographer & Drone Pilot",
+            "keyDeliverables": [
+              "2 Full shooting days across palace grounds",
+              "Cinematic 4K teaser film",
+              "80-Page hand-bound leather heirloom album"
+            ],
+            "estimatedAllocation": 50000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Artists & Entertainment",
+            "roleTitle": "Acoustic Folk-Sufi Ensemble & Welcome Dholis",
+            "keyDeliverables": [
+              "Nizami acoustic sufi quartet (90 mins)",
+              "6 Traditional Rajasthani welcome dholis",
+              "Wireless monitors & audio setup"
+            ],
+            "estimatedAllocation": 30000,
+            "bookingWindow": "Book 6 weeks prior",
+            "status": "recommended"
+          }
+        ],
+        "culinaryAteliers": [
+          {
+            "title": "Royal Bajra & Dal Baati Churma Ateliers",
+            "categoryTag": "Live Artisanal Stations",
+            "description": "Live slow-cooked Daal Baati baked over coal embers in brass sigris with five distinct artisanal churned ghee churmas."
+          },
+          {
+            "title": "Botanical Saffron & Vetiver Infusions",
+            "categoryTag": "Artisanal Bar Chemistry",
+            "description": "Low-ABV and zero-proof handcrafted elixirs featuring smoked Udaipur royal rose essence and clarified citrus tonics."
+          }
+        ]
+      },
+      "isDevelopmentFallback": true,
+      "id": "plan_1792933916106_g4sl",
+      "createdAt": "2026-10-25T13:11:56.106Z"
+    },
+    {
+      "eventId": "evt_1792933902959_hff3m",
+      "versionNumber": "v1.1",
+      "versionTitle": "Aria's 30th Bohemian Sunset Gala - Complete Master Blueprint",
+      "curationConcept": "A chic panoramic rooftop sunset soirée celebrating personal milestones with craft cocktails, immersive memories, and eclectic music.",
+      "eventType": "birthday",
+      "inputPrompt": "Celebration Name: Aria's 30th Bohemian Sunset Gala. Celebration Type: Milestone Birthday Party. Location & Venue: The Glass Horizon Penthouse & Rooftop, Bandra West, Mumbai. Guest Count: 100 guests. Target Total Budget: ₹5,00,000. Aesthetic Theme: Sunset Terracotta, Amber Glow & Velvet Vinyl. Vibe & Energy: Chic, energetic, stylish and celebratory. Sensory Atmosphere & Decor: Golden hour fairy lights, amber glass candles, velvet seating & vinyl listening lounge. Culinary & Beverage Direction: Tapas grazing table, woodfired gourmet pizzas, craft cocktail tasting bar. Signature Highlights & Special Requests: Surprise aerial champagne pour, polaroid memory wall & midnight DJ set. Color Palette Preference: Royal Crimson & Antique Gold. Client Notes: Ensure boat shuttles operate seamlessly from jetty; VIP dietary preferences noted",
+      "planJson": {
+        "eventType": "birthday",
+        "aestheticFeasibilityScore": 98,
+        "colorPalette": [
+          {
+            "name": "Sunset Terracotta",
+            "hex": "#FE9D7F",
+            "usage": "Velvet Pillows & Lighting Washes"
+          },
+          {
+            "name": "Warm Champagne",
+            "hex": "#E8E1DC",
+            "usage": "Linen Tables & Acrylic Signage"
+          },
+          {
+            "name": "Midnight Plum",
+            "hex": "#512C3D",
+            "usage": "Stage Backdrop & Bar Framing"
+          },
+          {
+            "name": "Golden Marigold",
+            "hex": "#F59E0B",
+            "usage": "Floral Accents & Cocktail Stirrers"
+          }
+        ],
+        "spatialBlueprint": {
+          "headline": "Rooftop Sundowner Lounge & Neon Memory Gallery",
+          "description": "An intimate panoramic terrace with plush lounge clusters, an artisanal cocktail lab, and an illuminated interactive memory installation celebrating life milestones.",
+          "lightingArchitecture": "Golden-hour ambient string festoon canopy, warm 2700K uplighting on botanical planters, and subtle retro neon custom monogram over the DJ booth.",
+          "olfactoryTactileSignature": "Infused bergamot citrus and sandalwood candle scent, textured velvet lounge cushions, brushed bronze bar accessories.",
+          "decibelRegulations": "Open-air acoustic sundowner until 21:30; transitions to indoor high-fidelity sound lounge after 22:00 in compliance with municipal norms."
+        },
+        "personalizedIdeas": [
+          {
+            "title": "Signature \"Year in Flavor\" Cocktail Flight",
+            "category": "signature_moment",
+            "description": "A curated 3-drink tasting flight where each artisanal cocktail represents a defining era or memorable trip in the honoree’s life.",
+            "impact": "Sparks conversation and deeply personal storytelling among guests."
+          },
+          {
+            "title": "Interactive Audio Guestbook & Polaroid Wall",
+            "category": "activity",
+            "description": "A vintage rotary phone where guests record voicemail toasts, coupled with an instant film booth with copper pegboards for spontaneous photo keepsakes.",
+            "impact": "Provides an irreplaceable audio-visual emotional keepsake for the host."
+          },
+          {
+            "title": "Midnight Flame & Artisanal Cake Reveal",
+            "category": "entertainment",
+            "description": "A tiered architectural confection unveiled with low-smoke sparklers and a synchronized brass-trio fanfare leading into live DJ sets.",
+            "impact": "Peak celebratory highlight of the evening."
+          },
+          {
+            "title": "Personalized Botanical Scent Souvenirs",
+            "category": "decor",
+            "description": "Pocket-sized custom room mists hand-blended with the evening’s signature amber-bergamot scent profile for each guest to take home.",
+            "impact": "Long-lasting emotional recall of the milestone celebration."
+          }
+        ],
+        "budgetRebalance": {
+          "totalBudget": 500000,
+          "arbitrageInsight": "Negotiating a combined venue & sound package with in-house mixology saved ₹65,000, allowing upgrade to a premium 3-tier artisanal cake and live vinyl DJ.",
+          "categories": [
+            {
+              "name": "Artisanal Catering & Crafted Bar",
+              "amount": 175000,
+              "percentage": 35,
+              "priority": "high",
+              "note": "Grazing tables, small bites, and signature cocktail chemistry"
+            },
+            {
+              "name": "Venue & Audio Rig Rental",
+              "amount": 110000,
+              "percentage": 22,
+              "priority": "high",
+              "note": "Panoramic rooftop hire, sound engineer, ambient festoon lighting"
+            },
+            {
+              "name": "Balloon, Floral & Spatial Scenography",
+              "amount": 70000,
+              "percentage": 14,
+              "priority": "medium",
+              "note": "Custom photo backdrop, lounge seating, botanical arrangements"
+            },
+            {
+              "name": "Live DJ & Entertainment",
+              "amount": 60000,
+              "percentage": 12,
+              "priority": "medium",
+              "note": "Curated vinyl DJ set, audio equipment, wireless mic setup"
+            },
+            {
+              "name": "Custom Milestone Cake & Dessert Atelier",
+              "amount": 40000,
+              "percentage": 8,
+              "priority": "medium",
+              "note": "Bespoke sculptural 3-tier cake and mini dessert shooters"
+            },
+            {
+              "name": "Photography & Audio Keepsakes",
+              "amount": 25000,
+              "percentage": 5,
+              "priority": "normal",
+              "note": "Event photographer (4 hrs) + retro audio phone guestbook"
+            },
+            {
+              "name": "Contingency & Host Buffer",
+              "amount": 20000,
+              "percentage": 4,
+              "priority": "low",
+              "note": "Unforeseen guest extensions & late-night transport surge"
+            }
+          ],
+          "catering": {
+            "amount": 175000,
+            "percentage": 35,
+            "note": "Craft bar & gourmet menu"
+          },
+          "decor": {
+            "amount": 70000,
+            "percentage": 14,
+            "note": "Scenography & backdrop"
+          },
+          "venueSound": {
+            "amount": 110000,
+            "percentage": 22,
+            "note": "Rooftop venue & sound"
+          },
+          "artistsChoreography": {
+            "amount": 60000,
+            "percentage": 12,
+            "note": "DJ & audio production"
+          },
+          "contingencyReserve": {
+            "amount": 20000,
+            "percentage": 4,
+            "note": "Contingency reserve"
+          }
+        },
+        "itinerary": [
+          {
+            "time": "18:30",
+            "title": "Guest Arrival & Golden Hour Welcome",
+            "locationTag": "Rooftop Terrace",
+            "description": "Acoustic background beats commence; signature champagne & mocktail flutes served upon arrival.",
+            "colorDot": "#FE9D7F"
+          },
+          {
+            "time": "19:15",
+            "title": "Grazing Tables & Interactive Audio Guestbook",
+            "locationTag": "Central Lounge",
+            "description": "Artisanal cheese, charcuterie, and tapas stations open. Guests leave audio voicemail memories at vintage booth.",
+            "colorDot": "#E8E1DC"
+          },
+          {
+            "time": "20:30",
+            "title": "Host Speech & Personalized Video Tribute",
+            "locationTag": "Main Stage",
+            "description": "Short 5-minute video compilation of milestones followed by lighthearted toasts from close friends.",
+            "colorDot": "#512C3D"
+          },
+          {
+            "time": "21:15",
+            "title": "Midnight Cake Cutting & Cold Sparklers",
+            "locationTag": "Stage Dais",
+            "description": "3-tier sculptural cake wheeled out with synchronised cold pyros and celebratory champagne pour.",
+            "colorDot": "#F59E0B"
+          },
+          {
+            "time": "21:45",
+            "title": "Live DJ Dance Set & Late-Night Bites",
+            "locationTag": "Dance Floor",
+            "description": "High-energy dance music begins. Sliders, truffle fries, and artisanal dessert shooters served continuously.",
+            "colorDot": "#1A2510"
+          }
+        ],
+        "milestoneTimeline": [
+          {
+            "timeframe": "6 Weeks Before",
+            "milestone": "Confirm Venue & Core Theme Palette",
+            "description": "Lock in rooftop or private dining space, sign deposit agreement, and finalize styling colors.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "4 Weeks Before",
+            "milestone": "Design & Send Digital RSVP Invitations",
+            "description": "Send custom interactive invites with dietary preference polls and milestone photo prompts.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "3 Weeks Before",
+            "milestone": "Contract DJ, Cake Artist & Mixology Scope",
+            "description": "Submit playlist must-haves, finalize custom cake flavors, and approve 3 signature cocktails.",
+            "priority": "medium"
+          },
+          {
+            "timeframe": "1 Week Before",
+            "milestone": "Final Headcount & Balloon/Floral Delivery Check",
+            "description": "Provide final headcount to caterer, verify delivery time windows for scenography and cake.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "Day of Celebration",
+            "milestone": "Setup Inspection & Host Soundcheck (3 PM)",
+            "description": "Test wireless microphones, inspect balloon/floral backdrops, and review timing cues with DJ.",
+            "priority": "high"
+          }
+        ],
+        "vendorChecklist": [
+          {
+            "category": "Catering & Mixology",
+            "roleTitle": "Artisanal Cocktail & Small Plates Caterer",
+            "keyDeliverables": [
+              "3 Handcrafted signature cocktails",
+              "Interactive grazing table",
+              "Passed savory appetizers",
+              "Bartender team & glassware"
+            ],
+            "estimatedAllocation": 175000,
+            "bookingWindow": "Book 4 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Music & Audio",
+            "roleTitle": "Live Vinyl / Open-Format DJ & Sound Tech",
+            "keyDeliverables": [
+              "4-hour live curated DJ set",
+              "PA speakers & wireless mics",
+              "Dancefloor ambient lighting"
+            ],
+            "estimatedAllocation": 60000,
+            "bookingWindow": "Book 3-4 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Bakery & Confectionery",
+            "roleTitle": "Bespoke Sculptural Cake Designer",
+            "keyDeliverables": [
+              "Custom 3-tier flavored cake",
+              "Matching mini tartlets & macarons",
+              "Delivery and on-site display styling"
+            ],
+            "estimatedAllocation": 40000,
+            "bookingWindow": "Book 3 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Scenography & Decor",
+            "roleTitle": "Modern Floral & Balloon Installation Stylist",
+            "keyDeliverables": [
+              "Organic balloon arch or floral photo wall",
+              "Custom neon acrylic name sign",
+              "Lounge table centerpieces"
+            ],
+            "estimatedAllocation": 70000,
+            "bookingWindow": "Book 2-3 weeks prior",
+            "status": "recommended"
+          },
+          {
+            "category": "Photography & Keepsakes",
+            "roleTitle": "Lifestyle Event Photographer & Audio Guestbook",
+            "keyDeliverables": [
+              "4 hours candid photo coverage",
+              "Full digital gallery within 7 days",
+              "Vintage rotary audio guestbook telephone"
+            ],
+            "estimatedAllocation": 25000,
+            "bookingWindow": "Book 3 weeks prior",
+            "status": "recommended"
+          }
+        ],
+        "culinaryAteliers": [
+          {
+            "title": "Artisanal Slider & Truffle Fry Atelier",
+            "categoryTag": "Interactive Food Station",
+            "description": "Gourmet brioche mini sliders (wagyu, smoked portobello, and pulled jackfruit) with house truffle parmesan fries and 4 house aiolis."
+          },
+          {
+            "title": "Molecular Mocktail & Smoked Cocktail Chemistry",
+            "categoryTag": "Craft Bar Lab",
+            "description": "Custom drinks smoked with applewood under glass cloches, edible botanical flower garnishes, and clarified citrus tonics."
+          }
+        ]
+      },
+      "isDevelopmentFallback": true,
+      "id": "plan_1792933903856_8z6e",
+      "createdAt": "2026-10-25T13:11:43.856Z"
+    },
+    {
+      "eventId": "evt_1792933366671_259nk",
+      "versionNumber": "v1.1",
+      "versionTitle": "Dev & Rhea's Sunset Sangeet Gala - Complete Master Blueprint",
+      "curationConcept": "An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.",
+      "eventType": "wedding",
+      "inputPrompt": "Celebration Name: Dev & Rhea's Sunset Sangeet Gala. Celebration Type: Royal Wedding Celebration. Location & Venue: Rambagh Palace, Jaipur, Rajasthan. Guest Count: 250 guests. Target Total Budget: ₹20,00,000. Aesthetic Theme: Emerald Twilight & Candlelight. Vibe & Energy: Energetic, royal, and festive. Sensory Atmosphere & Decor: Fairy lights, marigold garlands, acoustic Sufi stage. Culinary & Beverage Direction: Royal Rajasthani Thali & craft cocktail lounge. Signature Highlights & Special Requests: Grand fireworks, choreo sangeet reveal, midnight dessert station",
+      "planJson": {
+        "eventType": "wedding",
+        "aestheticFeasibilityScore": 97,
+        "colorPalette": [
+          {
+            "name": "Deep Royal Plum",
+            "hex": "#512C3D",
+            "usage": "Velvet Drapes & Stage Backdrop"
+          },
+          {
+            "name": "Mewari Terracotta",
+            "hex": "#FE9D7F",
+            "usage": "Marigold Carpets & Urli Pots"
+          },
+          {
+            "name": "Aged Champagne",
+            "hex": "#E8E1DC",
+            "usage": "Linen Tables & Chiffon Canopies"
+          },
+          {
+            "name": "Eucalyptus Sage",
+            "hex": "#BDCBAC",
+            "usage": "Foliage Runners & Courtyard Borders"
+          }
+        ],
+        "spatialBlueprint": {
+          "headline": "Lakeside Floating Stage & Tuberose Chandeliers",
+          "description": "A bespoke floating dais on water framed by cascading brass urlis, marigold garlands, and historic palace architecture.",
+          "lightingArchitecture": "Continuous 2700K amber canopy overhead with 140 clustered brass floor lamps along the promenade. Zero synthetic floodlights.",
+          "olfactoryTactileSignature": "Subtle vaporized rosewater misting along arrival stairs, handwoven raw tussar silk runners, and sweet fresh rajnigandha.",
+          "decibelRegulations": "Outdoor lakeside sound cutoff set for 22:00 IST with acoustic lounge indoor transition certified."
+        },
+        "personalizedIdeas": [
+          {
+            "title": "Illuminated Heritage Boat Procession",
+            "category": "signature_moment",
+            "description": "Couple and immediate family arrive across the lake on antique royal shikaras flanked by floating oil lamps and traditional shehnai players.",
+            "impact": "Breathtaking arrival that sets a regal, timeless tone for the celebration."
+          },
+          {
+            "title": "Royal Fragrance Bar & Floral Gifting Atelier",
+            "category": "activity",
+            "description": "Live master perfumer blending traditional Ittar (Kannauj rose, vetiver, and jasmine) in etched glass flacons customized with guest initials.",
+            "impact": "Ultra-luxurious tactile keepsake embodying Mewari hospitality."
+          },
+          {
+            "title": "Acoustic Sufi Sundowner Under Marigold Canopies",
+            "category": "entertainment",
+            "description": "Internationally acclaimed folk-Sufi ensemble performing seated on silk gaddas during twilight cocktail hour.",
+            "impact": "Elevates the emotional ambiance before the high-energy sangeet segment."
+          },
+          {
+            "title": "Brass Urli & Floating Lotus Scenography",
+            "category": "decor",
+            "description": "Heritage water bodies filled with 400 floating brass urlis, hand-picked mogra blooms, and slow-burning pure beeswax wicks.",
+            "impact": "Transforms historic palace courtyards into glowing fairytale landscapes."
+          }
+        ],
+        "budgetRebalance": {
+          "totalBudget": 2000000,
+          "arbitrageInsight": "By substituting imported white orchids with indigenous Pushkar Rajnigandha and Marigold blooms, the atelier unlocked ₹1,40,000 in floral savings, rechanneled to the Sufi audio acoustic rig.",
+          "categories": [
+            {
+              "name": "Royal Catering & Crafted Banquet",
+              "amount": 680000,
+              "percentage": 34,
+              "priority": "high",
+              "note": "Multi-course royal feast, live signature chaat stations, copperware service"
+            },
+            {
+              "name": "Floral Scenography & Mandap Architecture",
+              "amount": 480000,
+              "percentage": 24,
+              "priority": "high",
+              "note": "Hand-carved mandap dais, 400 brass urlis, marigold promenade canopies"
+            },
+            {
+              "name": "Heritage Venue Rental & Island Shuttles",
+              "amount": 400000,
+              "percentage": 20,
+              "priority": "high",
+              "note": "Jagmandir palace access, boat jetty logistics, security & power backups"
+            },
+            {
+              "name": "Cinematography, Drone & Fine-Art Stills",
+              "amount": 200000,
+              "percentage": 10,
+              "priority": "medium",
+              "note": "3 master cinematographers, 4K teaser film, leather-bound heirloom album"
+            },
+            {
+              "name": "Live Folk-Sufi Artists & Choreography",
+              "amount": 120000,
+              "percentage": 6,
+              "priority": "medium",
+              "note": "Nizami acoustic ensemble, Rajasthani welcome dholis, sangeet audio tech"
+            },
+            {
+              "name": "Contingency Pool & Sound Licensing Reserve",
+              "amount": 120000,
+              "percentage": 6,
+              "priority": "low",
+              "note": "Lakeside curfew extension bond, unexpected travel adjustments"
+            }
+          ],
+          "catering": {
+            "amount": 680000,
+            "percentage": 34,
+            "note": "Royal banquet & chaat"
+          },
+          "decor": {
+            "amount": 480000,
+            "percentage": 24,
+            "note": "Mandap & floral scenography"
+          },
+          "venueSound": {
+            "amount": 400000,
+            "percentage": 20,
+            "note": "Palace venue & boats"
+          },
+          "artistsChoreography": {
+            "amount": 120000,
+            "percentage": 6,
+            "note": "Sufi ensemble & dhol"
+          },
+          "contingencyReserve": {
+            "amount": 120000,
+            "percentage": 6,
+            "note": "Contingency pool"
+          }
+        },
+        "itinerary": [
+          {
+            "time": "17:30",
+            "title": "Illuminated Boat Arrival & Shehnai Prelude",
+            "locationTag": "Entrance Jetty",
+            "description": "Guests arrive via illuminated wooden boats. Traditional Mewari shehnai and rosewater welcome at palace gates.",
+            "colorDot": "#381727"
+          },
+          {
+            "time": "18:45",
+            "title": "Twilight Sundowner & Acoustic Sufi Set",
+            "locationTag": "Lakeside Lawn",
+            "description": "Ambient brass lanterns ignite as sunset fades. Acoustic Sufi ensemble plays 45-minute semi-classical set.",
+            "colorDot": "#944831"
+          },
+          {
+            "time": "20:15",
+            "title": "Grand Couple Procession & Cold Pyro Cascade",
+            "locationTag": "Promenade Stage",
+            "description": "Live dhol procession escorting couple onto floating dais with synchronized low-smoke sparklers.",
+            "colorDot": "#512c3d"
+          },
+          {
+            "time": "21:00",
+            "title": "Royal Mewari Banquet & Family Performances",
+            "locationTag": "Grand Pavilion",
+            "description": "Full copper-service royal buffet opens. 8 scheduled family dance performances on stage with speech toasts.",
+            "colorDot": "#1a2510"
+          },
+          {
+            "time": "23:30",
+            "title": "Intimate Heritage After-Hours Lounge",
+            "locationTag": "Courtyard Bar",
+            "description": "Sound levels modulated to heritage municipal norms. Unplugged indie acoustic transition with hot sweet desserts.",
+            "colorDot": "#817478"
+          }
+        ],
+        "milestoneTimeline": [
+          {
+            "timeframe": "12 Weeks Before",
+            "milestone": "Lock Heritage Palace & Guest Room Blocks",
+            "description": "Execute venue contracts, confirm jetty docking rights, and secure hotel rooms for out-of-town guests.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "8 Weeks Before",
+            "milestone": "Approve 3D Mandap Renders & Floral Sourcing",
+            "description": "Lock floral master order with wholesale Pushkar vendors to secure fixed-price arbitrage.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "4 Weeks Before",
+            "milestone": "Catering Tasting & Returnable Bar Agreement",
+            "description": "Complete final menu tasting with royal chefs and execute 100% buyback clause on sealed liquor crates.",
+            "priority": "high"
+          },
+          {
+            "timeframe": "1 Week Before",
+            "milestone": "Lake Shuttle Coordination & Sound Permits",
+            "description": "Review motor boat transfer schedules and file mandatory lakefront sound compliance notices.",
+            "priority": "medium"
+          },
+          {
+            "timeframe": "Wedding Day Morning",
+            "milestone": "Master Production & Floral Rig Inspection (11 AM)",
+            "description": "Walk palace grounds with head decorator, check cold pyro safety radius, and soundcheck Sufi audio.",
+            "priority": "high"
+          }
+        ],
+        "vendorChecklist": [
+          {
+            "category": "Decor & Scenography",
+            "roleTitle": "Master Palace Decorator & Floral Architect",
+            "keyDeliverables": [
+              "Hand-carved 20ft Floral Mandap",
+              "400 Brass Urlis & Diyas",
+              "Fairy light courtyard canopy",
+              "2 Custom stages"
+            ],
+            "estimatedAllocation": 480000,
+            "bookingWindow": "Book 8-10 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Catering & Banquets",
+            "roleTitle": "Royal Heritage Caterer & Artisanal Bar",
+            "keyDeliverables": [
+              "Multi-course Mewari royal feast",
+              "Live signature chaat counters",
+              "Copperware silver banquet service",
+              "Licensed bar team"
+            ],
+            "estimatedAllocation": 680000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Cinematography & Stills",
+            "roleTitle": "Fine-Art Wedding Cinematographer & Drone Pilot",
+            "keyDeliverables": [
+              "2 Full shooting days across palace grounds",
+              "Cinematic 4K teaser film",
+              "80-Page hand-bound leather heirloom album"
+            ],
+            "estimatedAllocation": 200000,
+            "bookingWindow": "Book 8 weeks prior",
+            "status": "must_hire"
+          },
+          {
+            "category": "Artists & Entertainment",
+            "roleTitle": "Acoustic Folk-Sufi Ensemble & Welcome Dholis",
+            "keyDeliverables": [
+              "Nizami acoustic sufi quartet (90 mins)",
+              "6 Traditional Rajasthani welcome dholis",
+              "Wireless monitors & audio setup"
+            ],
+            "estimatedAllocation": 120000,
+            "bookingWindow": "Book 6 weeks prior",
+            "status": "recommended"
+          }
+        ],
+        "culinaryAteliers": [
+          {
+            "title": "Royal Bajra & Dal Baati Churma Ateliers",
+            "categoryTag": "Live Artisanal Stations",
+            "description": "Live slow-cooked Daal Baati baked over coal embers in brass sigris with five distinct artisanal churned ghee churmas."
+          },
+          {
+            "title": "Botanical Saffron & Vetiver Infusions",
+            "categoryTag": "Artisanal Bar Chemistry",
+            "description": "Low-ABV and zero-proof handcrafted elixirs featuring smoked Udaipur royal rose essence and clarified citrus tonics."
+          }
+        ]
+      },
+      "isDevelopmentFallback": true,
+      "id": "plan_1792933367444_0y6c",
+      "createdAt": "2026-10-25T13:02:47.444Z"
+    },
     {
       "eventId": "evt_aria_birthday",
       "versionNumber": "v1.1",
@@ -1412,7 +3507,113 @@
   ],
   "predictions": [
     {
-      "id": "pred_1792768048042_o5d1",
+      "id": "pred_1792932372678_tg9s",
+      "eventId": "evt_1792932372573_es46o",
+      "predictionType": "cost_forecast",
+      "predictedValue": 2500000,
+      "lowerEstimate": 2462500,
+      "upperEstimate": 2562500,
+      "riskProbability": 0.06,
+      "modelVersion": "AI Predictive Model v2.4",
+      "confidenceScore": 0.94,
+      "featureSnapshot": {
+        "guestCount": 300,
+        "confirmedPax": 0,
+        "daysRemaining": 60,
+        "committedPct": 0,
+        "historicalBenchmarkWeddings": 120,
+        "region": "Udaipur, Rajasthan"
+      },
+      "explanation": "Automated analysis cross-referenced against 120+ atelier weddings in Udaipur, Rajasthan indicates low overall risk with high probability of ₹0 (0%) net surplus under approved baseline budget.",
+      "primaryVariable": {
+        "title": "Venue & Lodging Stability",
+        "clause": "Fixed Price Clause",
+        "status": "Locked",
+        "description": "Committed hotel master agreements carry zero peak-rate volatility. Catering guarantees locked at 320 plates."
+      },
+      "watchlistItems": [
+        {
+          "title": "Beverage & Spirits Consumption",
+          "badge": "Volatile",
+          "description": "Current forecast models 2.4 drinks/guest. A ±10% shift in attendance (±30 guests) introduces an unhedged +₹45,000 variance.",
+          "simulatedDeviation": "+1.8% of budget"
+        },
+        {
+          "title": "Guest Attendance Velocity",
+          "badge": "0% Turnout Projected",
+          "description": "High velocity of confirmations and regional flight records. Recommendation: Set catering buffer to +25 plates instead of +40 to save approx. ₹42,000.",
+          "simulatedDeviation": "-₹42,000 potential saving"
+        },
+        {
+          "title": "Logistics Surge Rate Alert",
+          "badge": "Caution",
+          "description": "Peak tourist season creates potential 15–20% surge rate on luxury passenger vans and lakeside motor boats. Action: Lock transport vendor before Nov 15.",
+          "simulatedDeviation": "+15-20% transport surge"
+        }
+      ],
+      "actionPlan": {
+        "title": "Execute Returnable Stock Deal",
+        "description": "Contract premium single-malts & champagne through verified distributor with a 100% buyback clause on unopened sealed crates.",
+        "potentialSavings": "Saves ~₹38,000 risk",
+        "actionLabel": "Apply Clause"
+      },
+      "createdAt": "2026-10-25T12:46:12.678Z"
+    },
+    {
+      "id": "pred_1792933745101_oasp",
+      "eventId": "evt_dev_samaira",
+      "predictionType": "cost_forecast",
+      "predictedValue": 1800000,
+      "lowerEstimate": 1773000,
+      "upperEstimate": 1845000,
+      "riskProbability": 0.06,
+      "modelVersion": "AI Predictive Model v2.4",
+      "confidenceScore": 0.94,
+      "featureSnapshot": {
+        "guestCount": 220,
+        "confirmedPax": 195,
+        "daysRemaining": 26,
+        "committedPct": 0,
+        "historicalBenchmarkWeddings": 120,
+        "region": "Jaipur, Rajasthan"
+      },
+      "explanation": "Automated analysis cross-referenced against 120+ atelier weddings in Jaipur, Rajasthan indicates low overall risk with high probability of ₹0 (0%) net surplus under approved baseline budget.",
+      "primaryVariable": {
+        "title": "Venue & Lodging Stability",
+        "clause": "Fixed Price Clause",
+        "status": "Locked",
+        "description": "Committed hotel master agreements carry zero peak-rate volatility. Catering guarantees locked at 320 plates."
+      },
+      "watchlistItems": [
+        {
+          "title": "Beverage & Spirits Consumption",
+          "badge": "Volatile",
+          "description": "Current forecast models 2.4 drinks/guest. A ±10% shift in attendance (±22 guests) introduces an unhedged +₹45,000 variance.",
+          "simulatedDeviation": "+1.8% of budget"
+        },
+        {
+          "title": "Guest Attendance Velocity",
+          "badge": "89% Turnout Projected",
+          "description": "High velocity of confirmations and regional flight records. Recommendation: Set catering buffer to +25 plates instead of +40 to save approx. ₹42,000.",
+          "simulatedDeviation": "-₹42,000 potential saving"
+        },
+        {
+          "title": "Logistics Surge Rate Alert",
+          "badge": "Caution",
+          "description": "Peak tourist season creates potential 15–20% surge rate on luxury passenger vans and lakeside motor boats. Action: Lock transport vendor before Nov 15.",
+          "simulatedDeviation": "+15-20% transport surge"
+        }
+      ],
+      "actionPlan": {
+        "title": "Execute Returnable Stock Deal",
+        "description": "Contract premium single-malts & champagne through verified distributor with a 100% buyback clause on unopened sealed crates.",
+        "potentialSavings": "Saves ~₹38,000 risk",
+        "actionLabel": "Apply Clause"
+      },
+      "createdAt": "2026-10-25T13:09:05.101Z"
+    },
+    {
+      "id": "pred_1792933858461_c8zw",
       "eventId": "evt_ananya_rohan",
       "predictionType": "cost_forecast",
       "predictedValue": 2415000,
@@ -1462,7 +3663,60 @@
         "potentialSavings": "Saves ~₹38,000 risk",
         "actionLabel": "Apply Clause"
       },
-      "createdAt": "2026-10-23T15:07:28.042Z"
+      "createdAt": "2026-10-25T13:10:58.461Z"
+    },
+    {
+      "id": "pred_1792933952722_zwnl",
+      "eventId": "evt_1792933902959_hff3m",
+      "predictionType": "cost_forecast",
+      "predictedValue": 500000,
+      "lowerEstimate": 492500,
+      "upperEstimate": 512500,
+      "riskProbability": 0.14,
+      "modelVersion": "AI Predictive Model v2.4",
+      "confidenceScore": 0.94,
+      "featureSnapshot": {
+        "guestCount": 100,
+        "confirmedPax": 0,
+        "daysRemaining": 1,
+        "committedPct": 0,
+        "historicalBenchmarkWeddings": 120,
+        "region": "Bandra West, Mumbai"
+      },
+      "explanation": "Automated analysis cross-referenced against 120+ atelier weddings in Bandra West, Mumbai indicates low overall risk with high probability of ₹0 (0%) net surplus under approved baseline budget.",
+      "primaryVariable": {
+        "title": "Venue & Lodging Stability",
+        "clause": "Fixed Price Clause",
+        "status": "Locked",
+        "description": "Committed hotel master agreements carry zero peak-rate volatility. Catering guarantees locked at 320 plates."
+      },
+      "watchlistItems": [
+        {
+          "title": "Beverage & Spirits Consumption",
+          "badge": "Volatile",
+          "description": "Current forecast models 2.4 drinks/guest. A ±10% shift in attendance (±10 guests) introduces an unhedged +₹45,000 variance.",
+          "simulatedDeviation": "+1.8% of budget"
+        },
+        {
+          "title": "Guest Attendance Velocity",
+          "badge": "0% Turnout Projected",
+          "description": "High velocity of confirmations and regional flight records. Recommendation: Set catering buffer to +25 plates instead of +40 to save approx. ₹42,000.",
+          "simulatedDeviation": "-₹42,000 potential saving"
+        },
+        {
+          "title": "Logistics Surge Rate Alert",
+          "badge": "Caution",
+          "description": "Peak tourist season creates potential 15–20% surge rate on luxury passenger vans and lakeside motor boats. Action: Lock transport vendor before Nov 15.",
+          "simulatedDeviation": "+15-20% transport surge"
+        }
+      ],
+      "actionPlan": {
+        "title": "Execute Returnable Stock Deal",
+        "description": "Contract premium single-malts & champagne through verified distributor with a 100% buyback clause on unopened sealed crates.",
+        "potentialSavings": "Saves ~₹38,000 risk",
+        "actionLabel": "Apply Clause"
+      },
+      "createdAt": "2026-10-25T13:12:32.722Z"
     }
   ],
   "scenarios": [

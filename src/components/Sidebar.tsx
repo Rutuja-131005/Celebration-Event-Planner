@@ -15,19 +15,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems = [
     { path: 'overview', label: 'Overview', icon: 'dashboard' },
-    { path: 'my-events', label: 'My Events', icon: 'calendar_today' },
     {
       path: 'ai-planning-studio',
-      label: 'AI Planning Studio',
+      label: 'AI Master Blueprint',
       icon: 'auto_awesome',
       iconClass: 'text-secondary',
     },
     { path: 'budget-and-forecast', label: 'Budget & Forecast', icon: 'payments' },
     { path: 'timeline-and-tasks', label: 'Timeline & Tasks', icon: 'checklist' },
-    { path: 'vendors-and-quotations', label: 'Vendors & Quotations', icon: 'storefront' },
-    { path: 'ideas-and-inspiration', label: 'Ideas & Inspiration', icon: 'palette' },
-    { path: 'reports-and-insights', label: 'Reports & Insights', icon: 'analytics' },
-    { path: 'settings', label: 'Settings', icon: 'settings' },
+    { path: 'vendors-and-quotations', label: 'Vendors & Quotes', icon: 'storefront' },
+    { path: 'my-events', label: 'My Celebrations', icon: 'celebration' },
   ];
 
   return (
@@ -59,11 +56,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="px-space-md mb-space-sm">
           <button
             onClick={onCreateEventClick}
-            className="w-full flex items-center justify-center gap-space-sm bg-primary-container hover:bg-primary text-on-primary font-title-md text-title-md py-space-sm px-space-md rounded-xl shadow-[0_4px_12px_-2px_rgba(81,44,61,0.15)] transition-all cursor-pointer active:scale-[0.99]"
+            className="w-full flex items-center justify-center gap-space-sm bg-gradient-to-r from-primary to-primary-container hover:from-primary-container hover:to-primary text-on-primary font-title-md text-title-md py-space-sm px-space-md rounded-xl shadow-[0_4px_14px_rgba(81,44,61,0.2)] transition-all cursor-pointer active:scale-[0.98]"
             type="button"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            <span>Create Event</span>
+            <span className="material-symbols-outlined text-[20px] text-secondary">auto_awesome</span>
+            <span>+ New Celebration</span>
           </button>
         </div>
 

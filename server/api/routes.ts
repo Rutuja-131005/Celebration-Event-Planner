@@ -206,11 +206,32 @@ apiRouter.get('/events', (_req: Request, res: Response) => {
   res.json({ success: true, events });
 });
 
-apiRouter.post('/events', (req: Request, res: Response) => {
-  const { name, eventType, eventDate, location, venueName, guestCount, budgetAmount, theme } = req.body;
+apiRouter.post('/events', async (req: Request, res: Response) => {
+  const {
+    name,
+    eventType,
+    eventDate,
+    location,
+    venueName,
+    guestCount,
+    budgetAmount,
+    theme,
+    autoGeneratePlan = true,
+    vibe,
+    ambiance,
+    culinaryStyle,
+    specialMoments,
+    colorPalette,
+    additionalNotes,
+  } = req.body;
+
   if (!name || !budgetAmount) {
     return handleError(res, 400, 'Name and budgetAmount are required', 'VALIDATION_ERROR');
   }
+
+  const calculatedDays = eventDate
+    ? Math.max(1, Math.round((new Date(eventDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 60;
 
   const newEvent = db.createEvent({
     ownerUserId: 'usr_priya_lead',
@@ -224,14 +245,64 @@ apiRouter.post('/events', (req: Request, res: Response) => {
     budgetAmount: Number(budgetAmount),
     currencyCode: 'INR',
     theme: theme || 'Classic Atelier Elegance',
-    eventPreferences: {},
+    eventPreferences: {
+      vibe: vibe || 'Sophisticated & Memorable',
+      ambiance: ambiance || 'Warm ambient glow with artisanal florals',
+      culinaryStyle: culinaryStyle || 'Curated gourmet feast with signature cocktails',
+      specialMoments: specialMoments || 'Champagne toast & live sensory reveals',
+      colorPalette: colorPalette || 'Champagne Gold, Ivory & Velvet Plum',
+      additionalNotes: additionalNotes || '',
+    },
     status: 'planning',
-    daysRemaining: 60,
-    readinessScore: 35,
+    daysRemaining: calculatedDays,
+    readinessScore: 40,
     code: `ATELIER-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`,
   });
 
-  res.status(201).json({ success: true, event: newEvent });
+  let generatedPlan = null;
+  let planApplied = false;
+
+  if (autoGeneratePlan) {
+    try {
+      const promptParts = [
+        `Celebration Name: ${name}`,
+        `Celebration Type: ${eventType || 'Bespoke Celebration'}`,
+        `Location & Venue: ${venueName || 'Heritage Estate'}, ${location || 'Rajasthan, India'}`,
+        `Guest Count: ${guestCount || 200} guests`,
+        `Target Total Budget: ₹${Number(budgetAmount).toLocaleString('en-IN')}`,
+        theme ? `Aesthetic Theme: ${theme}` : '',
+        vibe ? `Vibe & Energy: ${vibe}` : '',
+        ambiance ? `Sensory Atmosphere & Decor: ${ambiance}` : '',
+        culinaryStyle ? `Culinary & Beverage Direction: ${culinaryStyle}` : '',
+        specialMoments ? `Signature Highlights & Special Requests: ${specialMoments}` : '',
+        colorPalette ? `Color Palette Preference: ${colorPalette}` : '',
+        additionalNotes ? `Client Notes: ${additionalNotes}` : '',
+      ].filter(Boolean).join('. ');
+
+      const plan = await aiService.generatePlan(
+        newEvent.id,
+        promptParts,
+        `${newEvent.name} - Complete Master Blueprint`,
+        eventType
+      );
+
+      // Immediately apply the synthesized plan to populate budget categories & milestone tasks
+      db.applyAIPlanToEvent(newEvent.id, plan.id);
+      generatedPlan = plan;
+      planApplied = true;
+    } catch (planErr) {
+      console.error('Auto-generate plan error:', planErr);
+    }
+  }
+
+  const finalEvent = db.getEvent(newEvent.id) || newEvent;
+
+  res.status(201).json({
+    success: true,
+    event: finalEvent,
+    plan: generatedPlan,
+    planApplied,
+  });
 });
 
 apiRouter.get('/events/:id', (req: Request, res: Response) => {
