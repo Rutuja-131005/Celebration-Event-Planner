@@ -21,7 +21,7 @@ async function acquireDemoToken(): Promise<string | null> {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'priya@atelier.com', password: 'atelier2025' }),
+        body: JSON.stringify({ email: 'rutuja@atelier.com', password: 'atelier2025' }),
       });
       const data = await res.json().catch(() => ({}));
       if (data?.success && data?.token) {

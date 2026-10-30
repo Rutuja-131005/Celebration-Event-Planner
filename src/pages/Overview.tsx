@@ -7,6 +7,7 @@ interface OverviewProps {
   tasks: Task[];
   quotes: VendorQuote[];
   prediction: Prediction | null;
+  currentUser?: { name?: string } | null;
   onNavigate: (path: string) => void;
   onOpenAddTask: () => void;
   onRefreshData: () => void;
@@ -17,6 +18,7 @@ export const Overview: React.FC<OverviewProps> = ({
   tasks,
   quotes,
   prediction,
+  currentUser,
   onNavigate,
   onOpenAddTask,
   onRefreshData,
@@ -58,7 +60,7 @@ export const Overview: React.FC<OverviewProps> = ({
               <span>Atelier Daily Portfolio · Udaipur Heritage Season</span>
             </div>
             <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
-              Good morning, Priya.
+              Good morning, {currentUser?.name ? currentUser.name.split(' ')[0] : 'Rutuja'}.
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
               Here is the atelier overview for your flagship celebration. Milestones are trending smoothly with 4 critical approvals scheduled for this week.

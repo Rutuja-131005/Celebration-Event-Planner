@@ -41,8 +41,8 @@ const DB_FILE = path.resolve(process.cwd(), 'data', 'atelier_db.json');
 function getInitialSeedData(): DatabaseSchema {
   const defaultUser: User = {
     id: 'usr_priya_lead',
-    name: 'Priya Sharma',
-    email: 'priya@atelier.com',
+    name: 'Rutuja Jadhav',
+    email: 'rutuja@atelier.com',
     role: 'Lead Planner',
     avatarUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuD86wFMv7GznXchX3b4O0dO0Rfez-G3ls1BbhsDJ0csLCul8V7slfahg9diMslJ1IoVgS44Ez3ew_HFxaRBsRsXAra2Tfahx2dEi1psEBko4A9GOcglUSNHJkeWtIhe90bEwS4Pd0HEFlR_MQ6jWaLs6Tmg8gYFOpdYpoTVe6UTJ3SPEB_cF_LAzhIkZA1B4eeLHhgwBJ0G9JGPfwa3g7bfhVB94BhsEVkIMxGpgrMstBUC8ijg7jOxDw',
@@ -399,11 +399,11 @@ function getInitialSeedData(): DatabaseSchema {
       id: 'tsk_1',
       eventId: flagshipEvent.id,
       title: 'Finalize Sangeet Choreographer contract & advance deposit',
-      description: 'Assigned to: Priya Sharma · Sangeet Gala · Advance sum: ₹75,000',
+      description: 'Assigned to: Rutuja Jadhav · Sangeet Gala · Advance sum: ₹75,000',
       dueDate: '2025-11-04',
       priority: 'high',
       status: 'pending',
-      assignedTo: 'Priya Sharma',
+      assignedTo: 'Rutuja Jadhav',
       dueLabel: 'Due in 2 days',
       category: 'Entertainment',
       createdAt: '2025-10-20T00:00:00Z',
@@ -417,7 +417,7 @@ function getInitialSeedData(): DatabaseSchema {
       dueDate: '2025-11-06',
       priority: 'medium',
       status: 'pending',
-      assignedTo: 'Priya Sharma',
+      assignedTo: 'Rutuja Jadhav',
       dueLabel: 'Due in 4 days',
       category: 'Catering',
       createdAt: '2025-10-20T00:00:00Z',
@@ -445,7 +445,7 @@ function getInitialSeedData(): DatabaseSchema {
       dueDate: '2025-11-10',
       priority: 'routine',
       status: 'pending',
-      assignedTo: 'Priya Sharma',
+      assignedTo: 'Rutuja Jadhav',
       dueLabel: 'In 1 week',
       category: 'Guest Relations',
       createdAt: '2025-10-22T00:00:00Z',
@@ -459,7 +459,7 @@ function getInitialSeedData(): DatabaseSchema {
       dueDate: '2025-10-15',
       priority: 'high',
       status: 'completed',
-      assignedTo: 'Priya Sharma',
+      assignedTo: 'Rutuja Jadhav',
       dueLabel: 'Completed Oct 15',
       category: 'Decor',
       createdAt: '2025-10-01T00:00:00Z',
@@ -1031,9 +1031,9 @@ class Database {
             }
           }
           // Ensure default seed user has passwordHash if loaded from older JSON
-          const priya = this.data.users.find((u) => u.id === 'usr_priya_lead' || u.email === 'priya@atelier.com');
-          if (priya && !priya.passwordHash) {
-            priya.passwordHash = hashPassword('atelier2025');
+          const userLead = this.data.users.find((u) => u.id === 'usr_priya_lead' || u.email === 'rutuja@atelier.com' || u.email === 'priya@atelier.com');
+          if (userLead && !userLead.passwordHash) {
+            userLead.passwordHash = hashPassword('atelier2025');
           }
           this.persist();
           this.initialized = true;

@@ -20,7 +20,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 }) => {
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('priya@atelier.com');
+  const [email, setEmail] = useState('rutuja@atelier.com');
   const [password, setPassword] = useState('atelier2025');
   const [role, setRole] = useState('Lead Planner');
   const [loading, setLoading] = useState(false);
@@ -156,7 +156,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 id="auth-name"
                 type="text"
                 required
-                placeholder="e.g. Priya Sharma"
+                placeholder="e.g. Rutuja Jadhav"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary text-sm"
@@ -174,7 +174,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               required
               aria-invalid={!!error}
               aria-describedby={error ? 'auth-error-msg' : undefined}
-              placeholder="e.g. priya@atelier.com"
+              placeholder="e.g. rutuja@atelier.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary text-sm"

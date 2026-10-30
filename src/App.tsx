@@ -111,7 +111,9 @@ export default function App() {
       let userRes = await authService.getMe().catch(() => null);
       if (!userRes?.user) {
         try {
-          const loginRes = await authService.login('priya@atelier.com', 'atelier2025');
+          const loginRes = await authService.login('rutuja@atelier.com', 'atelier2025').catch(() =>
+            authService.login('priya@atelier.com', 'atelier2025')
+          );
           if (loginRes?.user) {
             userRes = { success: true, user: loginRes.user };
           }
@@ -282,6 +284,7 @@ export default function App() {
                   tasks={tasks}
                   quotes={quotes}
                   prediction={prediction}
+                  currentUser={currentUser}
                   onNavigate={setCurrentPath}
                   onOpenAddTask={() => setIsAddTaskOpen(true)}
                   onRefreshData={() => loadEventData(activeEventId)}

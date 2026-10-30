@@ -159,7 +159,7 @@ export const Header: React.FC<HeaderProps> = ({
             />
             <div className="hidden xl:flex flex-col min-w-0 text-left">
               <span className="font-label-md text-label-md font-semibold text-on-surface truncate leading-tight">
-                {currentUser?.name || 'Priya Sharma'}
+                {currentUser?.name || 'Rutuja Jadhav'}
               </span>
               <span className="font-label-sm text-label-sm text-outline truncate leading-tight">
                 {currentUser?.role || 'Lead Planner'}
@@ -171,9 +171,9 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="absolute right-0 mt-2 w-56 rounded-xl bg-surface-container-lowest shadow-lg border border-outline-variant/40 py-2 z-50">
               <div className="px-3 py-1.5 border-b border-outline-variant/20 mb-1">
                 <p className="font-title-md text-title-md text-primary leading-tight">
-                  {currentUser?.name || 'Priya Sharma'}
+                  {currentUser?.name || 'Rutuja Jadhav'}
                 </p>
-                <p className="font-body-sm text-body-sm text-outline">{currentUser?.email || 'priya@atelier.com'}</p>
+                <p className="font-body-sm text-body-sm text-outline">{currentUser?.email || 'rutuja@atelier.com'}</p>
               </div>
               <button
                 onClick={() => {

@@ -144,7 +144,7 @@ apiRouter.post('/auth/login', authRateLimiter, validateBody(authLoginSchema), (r
 
   let user = db.getUserByEmail(cleanEmail);
 
-  if (!user && cleanEmail === 'priya@atelier.com') {
+  if (!user && (cleanEmail === 'rutuja@atelier.com' || cleanEmail === 'priya@atelier.com')) {
     user = db.getUser('usr_priya_lead');
   }
 
@@ -617,7 +617,7 @@ apiRouter.post('/events/:id/tasks', requireAuth, validateBody(createTaskSchema),
     dueDate: sanitizeText(dueDate, 30) || new Date().toISOString().split('T')[0],
     priority: ['high', 'medium', 'normal', 'routine'].includes(priority) ? priority : 'normal',
     status: 'pending',
-    assignedTo: sanitizeText(assignedTo, 80) || 'Priya Sharma',
+    assignedTo: sanitizeText(assignedTo, 80) || 'Rutuja Jadhav',
     dueLabel: 'Upcoming',
     category: sanitizeText(category, 60) || 'General',
   });

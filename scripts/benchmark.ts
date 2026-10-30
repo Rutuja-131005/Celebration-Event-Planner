@@ -62,7 +62,7 @@ async function main() {
   );
 
   // Suite 3: Cryptographic Token Sign & Verify
-  const sampleUser = { id: 'usr_priya_lead', email: 'priya@atelier.com', role: 'Lead Planner' };
+  const sampleUser = { id: 'usr_priya_lead', email: 'rutuja@atelier.com', role: 'Lead Planner' };
   const sampleToken = createToken(sampleUser);
   results.push(
     runBenchmark('Cryptographic HMAC-SHA256 Token Verification', 10000, () => {

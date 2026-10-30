@@ -50,12 +50,12 @@ export const Settings: React.FC<SettingsProps> = ({ currentUser, onOpenAuth }) =
                   currentUser?.avatarUrl ||
                   'https://lh3.googleusercontent.com/aida-public/AB6AXuD86wFMv7GznXchX3b4O0dO0Rfez-G3ls1BbhsDJ0csLCul8V7slfahg9diMslJ1IoVgS44Ez3ew_HFxaRBsRsXAra2Tfahx2dEi1psEBko4A9GOcglUSNHJkeWtIhe90bEwS4Pd0HEFlR_MQ6jWaLs6Tmg8gYFOpdYpoTVe6UTJ3SPEB_cF_LAzhIkZA1B4eeLHhgwBJ0G9JGPfwa3g7bfhVB94BhsEVkIMxGpgrMstBUC8ijg7jOxDw'
                 }
-                alt={currentUser?.name || 'Priya Sharma'}
+                alt={currentUser?.name || 'Rutuja Jadhav'}
                 className="w-16 h-16 rounded-full object-cover ring-2 ring-primary/20"
               />
               <div>
-                <h3 className="font-headline-sm text-primary font-bold">{currentUser?.name || 'Priya Sharma'}</h3>
-                <p className="text-sm text-outline">{currentUser?.email || 'priya@atelier.com'}</p>
+                <h3 className="font-headline-sm text-primary font-bold">{currentUser?.name || 'Rutuja Jadhav'}</h3>
+                <p className="text-sm text-outline">{currentUser?.email || 'rutuja@atelier.com'}</p>
                 <span className="inline-block mt-1 px-2.5 py-0.5 rounded text-xs font-semibold bg-primary-fixed text-on-primary-fixed">
                   {currentUser?.role || 'Lead Planner'}
                 </span>
