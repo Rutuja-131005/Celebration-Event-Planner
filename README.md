@@ -1,244 +1,379 @@
-# 🏛️ Celebration Atelier — Luxury Event Planning & Predictive Fiscal Intelligence
+# 🏛️ Celebration Atelier
+### Luxury Event Planning & Predictive Fiscal Intelligence Platform
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Node.js](https://img.shields.io/badge/Node.js-v22-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![WCAG](https://img.shields.io/badge/WCAG-2.2_AA_Compliant-008080)](docs/ACCESSIBILITY.md)
-[![Audit Score](https://img.shields.io/badge/Audit_Score-99%2F100_A%2B-brightgreen)](SCORECARD.md)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+**Celebration Atelier** is an AI-powered event planning and financial intelligence platform designed to simplify the planning, budgeting, and operational management of luxury destination weddings, milestone celebrations, and large-scale cultural festivals.
 
-> An enterprise-grade celebration atelier and fiscal intelligence platform engineered for luxury destination weddings, milestone birthdays, and large-scale community cultural festivals. Built with **React 19**, **Node.js v22**, **Google Gemini**, and a defense-in-depth security architecture.
+Combining generative AI, predictive financial modeling, and a security-focused application architecture, the platform transforms event planning into a structured, data-driven experience.
+
+Built using **React 19, TypeScript, Node.js, Express, Google Gemini, and Vite**, Celebration Atelier brings creative event design and financial decision-making together in one unified workspace.
 
 ---
 
-## 📸 Platform Interface Showcase
+## ✨ Key Features
 
-### 01. Minimalist Overview & Financial Telemetry
-![Celebration Atelier Overview Dashboard](screenshots/01_overview_dashboard.png)
-*Real-time baseline budget tracking, committed disbursements, milestone timeline, and interactive operational readiness radar.*
+### 🤖 1. AI-Powered Master Blueprint Studio
+
+Generate comprehensive event planning blueprints using Google Gemini.
+
+- AI-generated multi-day event itineraries.
+- Context-aware recommendations based on celebration types.
+- Customizable event themes and creative direction.
+- Curated color palettes with hexadecimal color codes.
+- Venue layout and spatial planning recommendations.
+- Culinary concepts and VIP experience suggestions.
+- Automated milestone checklists.
+- Deterministic fallback engine for operation without an AI API key.
+
+**Supported Celebration Archetypes:**
+- Royal Weddings
+- Milestone Birthdays
+- Community Galas
+- Cultural Festivals
+
+### 📊 2. Predictive Financial Intelligence
+
+A financial planning engine designed to help event organizers make informed budgeting decisions.
+
+- Real-time budget tracking.
+- Committed expenditure monitoring.
+- Guest-count sensitivity analysis.
+- Decoration tier comparison (Classic, Couture, Regal).
+- Beverage package scenario modeling.
+- Marginal cost-per-guest calculations.
+- Contingency budget monitoring.
+- Financial variance calculations.
+- Indian currency formatting using ₹ and Lakhs/Crores notation.
+
+### 🎨 3. Premium Event Management Experience
+
+A minimalist editorial interface focused on clarity, usability, and professional presentation.
+
+- Clean and responsive dashboard.
+- Architectural sidebar navigation.
+- Financial telemetry and operational readiness indicators.
+- Celebration configuration workflows.
+- Interactive budget and planning interfaces.
+- Consistent design system with reusable components.
+- Smooth animations and reduced-motion support.
+
+### 🔐 4. Security & Authentication
+
+Security is integrated throughout the application using a defense-in-depth approach.
+
+- Password hashing using Node.js `scrypt`.
+- Random cryptographic salts.
+- HMAC-SHA256 signed session tokens.
+- Unique JWT-style token identifiers (`jti`).
+- Token revocation through a centralized denylist.
+- Automatic account lockout after five consecutive failed login attempts.
+- Fifteen-minute lockout duration.
+- Strict Zod request validation.
+- Mass-assignment protection using strict schemas.
+- HTTP security headers and Content Security Policy.
+- HSTS and clickjacking protection.
+- Anti-prototype-pollution middleware.
+- Sensitive information redaction in audit logs.
+- Automatic client-side token refresh and authentication recovery.
+
+### ♿ 5. Accessibility & Inclusive Design
+
+Designed with accessibility considerations aligned with **WCAG 2.2 AA**.
+
+- Keyboard-accessible navigation.
+- Circular modal focus trapping.
+- Escape-key modal dismissal.
+- Automatic focus restoration.
+- Screen-reader-friendly data tables.
+- Semantic form labels and controls.
+- Accessible live announcements.
+- Reduced-motion preferences.
+- Accessible representations of complex visualizations.
 
 ---
 
-### 02. Autonomous GenAI Master Blueprint Studio
-![AI Master Blueprint Studio](screenshots/02_ai_master_blueprint_studio.png)
-*Context-aware celebratory synthesis generating multi-day itineraries, spatial blueprints, culinary ateliers, sensory palettes, and computational budget rebalancing.*
+## 🏗️ System Architecture
 
----
-
-### 03. Bespoke Celebration Configurator
-![Bespoke Celebration Configurator Modal](screenshots/03_new_celebration_modal.png)
-*Multi-step celebratory intake with one-click archetype presets (Royal Wedding, Bohemian Gala, Community Harvest Festival) and instant blueprint generation.*
-
----
-
-## 🌟 Key Capabilities
-
-### 1. 🤖 Autonomous AI Master Blueprint Studio
-- **Generative Blueprint Synthesis**: Powered by Google Gemini 3.8 Flash with a deterministic fallback engine for 100% offline uptime.
-- **Deep Celebration Archetypes**: Tailored prompts for Royal Weddings, Milestone Birthdays, and Community Galas.
-- **Complete Sensory Specs**: Produces hex palettes, spatial layout directions, VIP culinary recommendations, and milestone checklists.
-- **Prompt Injection Defense**: Multi-tier regex sanitization and strict token caps preventing prompt jailbreaks.
-
-### 2. 📊 Predictive Financial Intelligence & Sensitivity Engine
-- **Monte Carlo Sensitivity Modeling**: Real-time simulation of guest count shifts (-50 to +50 pax), decor tiers (Classic, Couture, Regal), and beverage tiers.
-- **Variance & Contingency Calculations**: Instant calculation of marginal costs per guest and automatic contingency pool drawdown alerts.
-- **Indian Locale Formatting**: Native support for Indian Lakhs/Crores notation (`₹` / `en-IN`).
-
-### 3. 🎨 High-End Minimalist Editorial Design
-- **Curated Alabaster Palette**: Calming gallery alabaster canvas (`#FAF9F6`), pure white cards (`#FFFFFF`), onyx slate typography (`#18181B`), and warm champagne bronze accents (`#9C733E`).
-- **Architectural Navigation**: Slim minimalist sidebar with monogram branding, frosted glass top navigation bar, and distraction-free typography.
-- **Generous Whitespace**: Uncluttered layouts designed for clarity, scannability, and executive presentations.
-
-### 4. 🔒 Enterprise Security & Defense-in-Depth
-- **Cryptographic Authentication**: Password hashing with `scrypt` (16-byte random salt); cryptographically signed HMAC-SHA256 session tokens with unique `jti` identifiers.
-- **Self-Healing Token Management**: Client-side API layer proactively refreshes tokens and transparently recovers from 401s without disrupting user workflows.
-- **Centralized Revocation Denylist**: In-memory token denylist that revokes tokens upon logout.
-- **Brute-Force & Lockout Defenses**: Automatic 15-minute account lockout after 5 consecutive failed login attempts.
-- **Strict Parameter Validation**: Strict Zod schemas (`.strict()`) rejecting unexpected properties (mass-assignment protection).
-- **OWASP ASVS Hardening**: Content Security Policy (CSP), HSTS, `X-Frame-Options: DENY`, anti-prototype-pollution middleware, and recursive PII credential redaction in audit logs.
-
-### 5. ♿ Universal Accessibility (WCAG 2.2 AA)
-- **Cycle-Safe Modal Focus Traps**: Circular `Tab` / `Shift+Tab` navigation containment, `Escape` key dismissal, and automatic focus restoration to trigger elements.
-- **Screen Reader Accessible Data Tables**: All complex visualizations (Readiness Radar, Scenario Simulator) include accessible `sr-only` and toggleable HTML data tables.
-- **Assistive Technology Support**: Explicit `<label htmlFor="...">` and `id` bindings on all form controls, live announcements via `aria-live="polite"`, and OS-level `prefers-reduced-motion` compliance.
-
----
-
-## 🏛️ System Architecture
+Celebration Atelier follows a modular client-server architecture.
 
 ```mermaid
 graph TD
-    Client["Client Browser (React 19, Motion, Lucide)"]
-    Vite["Vite 8 SPA Bundler / Route Code Splitting"]
-    Express["Express Server (Node.js v22)"]
-    Security["OWASP ASVS Layer (CSP, HSTS, RateLimitStore, Lockout)"]
-    Router["API Router (/api/v1) + Strict Zod Validation"]
-    AI["AI Service (Google Gemini + Synthesis Fallback)"]
-    Predictive["Predictive Financial & Scenario Engine"]
-    DB["Atomic JSON DB Engine (Write Queue + Atomic Rename)"]
+    A["Client Browser"] --> B["React 19 + Vite"]
+    B --> C["Express REST API"]
+    C --> D["Security Middleware"]
+    D --> E["API Router + Zod Validation"]
 
-    Client -->|HTTPS + ETag| Express
-    Express --> Security
-    Security --> Router
-    Router --> AI
-    Router --> Predictive
-    Router --> DB
+    E --> F["AI Blueprint Service"]
+    E --> G["Financial Intelligence Engine"]
+    E --> H["JSON Database Engine"]
+
+    F --> I["Google Gemini API"]
+    F --> J["Deterministic Fallback Engine"]
+
+    G --> K["Scenario Simulation"]
+    G --> L["Budget Calculations"]
+
+    H --> M["Atomic JSON Persistence"]
 ```
+
+### Architecture Components
+
+| Component | Responsibility |
+|---|---|
+| React Frontend | User interface and event planning workflows |
+| Vite | Development server and production bundling |
+| Express Backend | REST API and application logic |
+| Security Middleware | Authentication, rate limiting, and HTTP protection |
+| Zod Validation | Strict request validation |
+| AI Service | Blueprint generation and AI integration |
+| Financial Engine | Budget calculations and scenario simulations |
+| JSON Database | Persistent data storage with atomic writes |
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technology | Key Details |
-|---|---|---|
-| **Frontend Framework** | React 19.0 + TypeScript 5.8 | Functional components, hooks, strict type safety |
-| **Styling & Design System** | Vanilla CSS + TailwindCSS v4 | Custom minimalist luxury theme, CSS variables |
-| **Icons & Motion** | Material Symbols + Motion | Micro-animations, reduced-motion compliance |
-| **Bundler & Build Tool** | Vite 8.3 | Route-level code splitting (`React.lazy` + `Suspense`) |
-| **Backend Runtime** | Node.js v22 + Express 4.x | RESTful API, unified error contracts, HTTP caching |
-| **AI / LLM Engine** | Google Gemini 3.8 Flash | Structured JSON schema output, offline fallback |
-| **Validation** | Zod 4.x | Strict schema validation (`.strict()`) on all endpoints |
-| **Testing** | Vitest 5.x + JSDOM + Axe-Core | 20 backend test suites + 30 frontend Vitest suites |
-| **CI / CD** | GitHub Actions | Automated linting, test execution, and production build |
+| Category | Technologies |
+|---|---|
+| Frontend | React 19, TypeScript 5.8 |
+| Styling | Vanilla CSS, Tailwind CSS v4 |
+| Icons | Material Symbols, Lucide |
+| Animations | Motion |
+| Build Tool | Vite |
+| Backend | Node.js v22, Express 4.x |
+| AI Integration | Google Gemini |
+| Validation | Zod 4.x |
+| Database | Atomic JSON Persistence |
+| Authentication | Scrypt, HMAC-SHA256 |
+| Testing | Vitest, JSDOM, Axe-Core |
+| CI/CD | GitHub Actions |
+| Version Control | Git, GitHub |
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Getting Started
+
+Follow these instructions to run Celebration Atelier locally.
 
 ### Prerequisites
-- **Node.js** >= `20.x` (Recommended: v22 LTS)
-- **npm** >= `10.x`
 
-### 1. Clone & Install
+Make sure the following tools are installed:
+
+- Node.js >= 20.x (Node.js v22 recommended)
+- npm >= 10.x
+- Git
+
+### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/Rutuja-131005/Celebration-Event-Planner.git
+
 cd Celebration-Event-Planner
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
 ```
 
-### 2. Environment Setup (Optional)
-Copy the example environment configuration:
+### 3. Configure Environment Variables
+
+Create a `.env` file using the example configuration:
+
 ```bash
 cp .env.example .env
 ```
-*(If no `GEMINI_API_KEY` is provided, the platform automatically utilizes its high-fidelity offline deterministic synthesis engine).*
 
-### 3. Run Locally in Development Mode
+Add your Google Gemini API key if you want to enable AI-powered blueprint generation:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+**Note:** The platform includes a deterministic fallback synthesis engine, allowing blueprint generation without a configured Gemini API key.
+
+Never commit your actual API keys or secrets to GitHub.
+
+### 4. Start the Development Server
+
 ```bash
 npm run dev
 ```
-Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
-> **Default Lead Planner Credentials:**
-> - **Email:** `priya@atelier.com`
-> - **Password:** `atelier2025`
-> - **Role:** Lead Planner
+Open your browser and navigate to:
 
-### 4. Production Build & Execution
+```text
+http://localhost:3000
+```
+
+### 5. Build for Production
+
 ```bash
-# Build optimized client bundles with route-level code splitting
 npm run build
+```
 
-# Start production server
+### 6. Start the Production Server
+
+```bash
 npm start
 ```
 
 ---
 
-## 🧪 Quality & Verification Commands
+## 🧪 Testing & Quality Assurance
 
-All quality gates pass with zero errors:
+The project includes automated testing, security checks, accessibility validation, and performance benchmarking.
 
-| Command | Purpose | Verification Standard |
-|---|---|---|
-| `npm run lint` | Static TypeScript compiler analysis | `tsc --noEmit` in strict mode (**0 errors, 0 warnings**) |
-| `npm test` | Automated testing suite | **20 backend suites (67 assertions)** + **30 Vitest suites** |
-| `npm run test:coverage` | Code coverage analysis | Generates line, function, and branch coverage reports |
-| `npm run bench` | Performance & throughput benchmark | **112,000+ ops/sec** throughput verified |
-| `npm run build` | Production Vite build | Code-split bundle with **24.4% main chunk reduction** |
-| `npm audit` | Security dependency check | **0 vulnerabilities found** |
+| Command | Description |
+|---|---|
+| `npm run lint` | TypeScript static analysis |
+| `npm test` | Execute automated test suites |
+| `npm run test:coverage` | Generate test coverage reports |
+| `npm run bench` | Run performance benchmarks |
+| `npm run build` | Generate production bundles |
+| `npm audit` | Check dependencies for known vulnerabilities |
+
+### Verification Results
+
+According to the project's documented verification results:
+
+- 20 backend test suites.
+- 67 backend assertions.
+- 30 frontend Vitest suites.
+- Zero TypeScript compilation errors.
+- Zero reported dependency vulnerabilities at the time of the documented audit.
+- Production bundle optimization with a reported 24.4% main-chunk reduction.
+
+Performance benchmarks were conducted using Node.js v22.
+
+| Benchmark | Reported Throughput |
+|---|---:|
+| Budget Metrics Calculation | 112,730 ops/sec |
+| Scenario Sensitivity Simulation | 109,718 ops/sec |
+| Zod Payload Validation | 119,074 ops/sec |
+| HMAC-SHA256 Token Verification | 26,301 ops/sec |
+| Input Sanitization | 833,076 ops/sec |
+
+*Benchmark figures are environment-dependent and should be interpreted according to the documented benchmark methodology.*
 
 ---
 
-## ⚡ Performance Benchmarks
-
-Verified via `npm run bench` (`scripts/benchmark.ts`) on Node.js v22:
-
-```text
-┌────────────────────────────────────────────────┬────────────┬────────────┬──────────────────┐
-│ Benchmark Suite                                │ Iterations │ Ops / Sec  │ Avg Latency (ms) │
-├────────────────────────────────────────────────┼────────────┼────────────┼──────────────────┤
-│ Budget Metrics Engine Calculation              │ 10,000     │ 112,730    │ 0.0089 ms        │
-│ Scenario Sensitivity Simulation Engine         │ 10,000     │ 109,718    │ 0.0091 ms        │
-│ Strict Zod Payload Validation (.strict())      │ 10,000     │ 119,074    │ 0.0084 ms        │
-│ Cryptographic HMAC-SHA256 Token Verification   │ 10,000     │ 26,301     │ 0.0380 ms        │
-│ Control Character Input Sanitization           │ 10,000     │ 833,076    │ 0.0012 ms        │
-└────────────────────────────────────────────────┴────────────┴────────────┴──────────────────┘
-```
-
----
-
-## 📁 Repository Directory Structure
+## 📁 Project Structure
 
 ```text
 Celebration-Event-Planner/
-├── .github/workflows/          # GitHub Actions CI automated pipeline
-├── data/                       # Atomic JSON database persistence (atelier_db.json)
-├── docs/                       # Detailed audit documentation
-│   ├── ACCESSIBILITY.md        # WCAG 2.2 AA audit matrix & remediation notes
-│   └── PERFORMANCE.md          # Benchmark methodology & latency analysis
-├── screenshots/                # High-resolution screenshots for showcase & LinkedIn
-│   ├── 01_overview_dashboard.png
-│   ├── 02_ai_master_blueprint_studio.png
-│   └── 03_new_celebration_modal.png
-├── scripts/                    # Performance benchmark scripts (benchmark.ts)
-├── server/                     # Backend API & service architecture
-│   ├── api/routes.ts           # RESTful route handlers (/api/v1)
-│   ├── config/constants.ts     # Centralized system constants & limits
-│   ├── db/database.ts          # Atomic serialized JSON storage engine
-│   ├── models/types.ts         # Central TypeScript interfaces & domain types
-│   ├── services/               # AI & predictive analytics calculation services
-│   ├── tests/api.test.ts       # 20 standalone backend security & API test suites
-│   ├── utils/security.ts       # Cryptographic hashing, tokens, rate limiter, lockout
-│   └── validation/schemas.ts   # Strict Zod validation schemas
-├── src/                        # Frontend application (React 19 + TypeScript)
-│   ├── components/             # Reusable UI components, Modals, Focus Traps
-│   ├── pages/                  # Route views (Overview, AIPlanningStudio, Budget, etc.)
-│   ├── services/               # Client-side API layer with self-healing auth retry
-│   ├── tests/                  # Vitest component, RTL, accessibility & E2E tests
-│   ├── App.tsx                 # Root component with code-split Suspense routing
-│   ├── index.css               # Minimalist luxury design system tokens
-│   └── main.tsx                # Client application bootstrap
-├── ARCHITECTURE.md             # In-depth architectural blueprint & technical design
-├── SCORECARD.md                # 6-dimension enterprise audit scorecard (99/100 A+)
-├── SECURITY.md                 # Security architecture & disclosure policy
-├── package.json                # Project dependencies & scripts
-├── tsconfig.json               # TypeScript strict configuration
-└── vite.config.ts              # Vite 8 configuration
+│
+├── .github/
+│   └── workflows/              # GitHub Actions CI/CD
+│
+├── data/
+│   └── atelier_db.json         # JSON database persistence
+│
+├── docs/
+│   ├── ACCESSIBILITY.md        # Accessibility documentation
+│   └── PERFORMANCE.md          # Performance benchmarks
+│
+├── scripts/
+│   └── benchmark.ts            # Benchmark scripts
+│
+├── server/
+│   ├── api/
+│   │   └── routes.ts           # REST API routes
+│   │
+│   ├── config/
+│   │   └── constants.ts        # Application constants
+│   │
+│   ├── db/
+│   │   └── database.ts         # Atomic JSON database engine
+│   │
+│   ├── models/
+│   │   └── types.ts            # Backend type definitions
+│   │
+│   ├── services/               # AI and financial services
+│   ├── tests/                  # Backend test suites
+│   │
+│   ├── utils/
+│   │   └── security.ts         # Authentication utilities
+│   │
+│   └── validation/
+│       └── schemas.ts          # Zod validation schemas
+│
+├── src/
+│   ├── components/             # Reusable UI components
+│   ├── pages/                  # Application pages
+│   ├── services/               # Frontend API services
+│   ├── tests/                  # Frontend tests
+│   ├── App.tsx                 # Root application
+│   ├── index.css               # Design system
+│   └── main.tsx                # Application entry point
+│
+├── ARCHITECTURE.md             # System architecture
+├── SECURITY.md                 # Security documentation
+├── SCORECARD.md                # Project audit scorecard
+├── LICENSE                     # MIT License
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
 ---
 
-## 📚 Deep-Dive Technical Documentation
+## 🔒 Security Considerations
 
-- 📘 [System Architecture & Stack Design](ARCHITECTURE.md)
-- 🔐 [Enterprise Security Architecture & Disclosure Policy](SECURITY.md)
-- ♿ [WCAG 2.2 AA Accessibility Compliance Audit](docs/ACCESSIBILITY.md)
-- ⚡ [Performance & Efficiency Benchmarks](docs/PERFORMANCE.md)
-- 🏆 [Enterprise Audit Scorecard (Verified 99/100)](SCORECARD.md)
+Security is a core design consideration of Celebration Atelier.
+
+The project incorporates authentication controls, strict input validation, token management, secure HTTP headers, and audit logging.
+
+For security-related information, vulnerability reporting, and responsible disclosure guidelines, refer to:
+
+- [Security Policy](SECURITY.md)
+- [Accessibility Documentation](docs/ACCESSIBILITY.md)
+- [Performance Documentation](docs/PERFORMANCE.md)
+
+**Important:** The current application uses JSON-based persistence and an in-memory token revocation mechanism. These are suitable architectural choices for a prototype or controlled deployment, but production deployment with multiple server instances requires durable shared storage, persistent revocation, and additional operational security controls.
+
+---
+
+## 🗺️ Future Enhancements
+
+Potential directions for further development include:
+
+- Integration with venue and vendor management systems.
+- Real-time collaborative event planning.
+- Advanced financial forecasting and optimization.
+- Historical event expenditure analytics.
+- Exportable event budgets and planning reports.
+- Cloud-based persistent database integration.
+- Multi-user role-based access control.
+- Enhanced AI-driven recommendations.
+- Integration with payment and booking platforms.
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+1. Fork this repository.
+2. Create a feature branch.
+3. Implement your changes.
+4. Run the available tests.
+5. Submit a pull request with a clear description.
+
+Please ensure that contributions follow the existing coding standards and security practices.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is distributed under the **MIT License**.
+
+See the [LICENSE](LICENSE) file for more information.
 
 ---
 
-## 👤 Author
+### 🏛️ Celebration Atelier
 
-**Rutuja Jadhav**  
-GitHub: [@Rutuja-131005](https://github.com/Rutuja-131005)  
-Email: [rutujajadhav475@gmail.com](mailto:rutujajadhav475@gmail.com)
+**Where Creative Celebrations Meet Intelligent Financial Planning.**
+
+*Designed with creativity. Engineered with intelligence.*
