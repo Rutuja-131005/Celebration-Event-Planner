@@ -28,58 +28,54 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.03)] border-r border-outline-variant/30">
+    <aside className="fixed left-0 top-0 h-full w-[260px] bg-white z-50 flex flex-col justify-between border-r border-stone-200/70">
       <div className="flex flex-col">
-        {/* Brand header */}
-        <div className="px-space-lg pt-space-lg pb-space-md">
-          <div className="flex items-center gap-space-sm cursor-pointer" onClick={() => onNavigate('overview')}>
-            <img
-              alt="Celebration & Event Planner Emblem"
-              className="h-8 w-auto object-contain"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRp4BItET0O8rwqrjgZug3vYLlId1PDSKc16HbLiwkz93dJnGWEvcrL7Ow1BkVDIE191MIesFBJqarjbsMVjoZQHt6fq099eO0z-XTo6ysahmstaHa4XH3xvG29P1enGj8dGOy0s_zmXlN7TfNAlM1z5pOA7U2mwXwVEBLPPlowhrbjcCkuhOfSz7Jo80X24uKF6-4YyTRY3Xjg6s3eyyjdHpW1UOndWufOI8rwZNocA_A-7KYEqiJ2Q"
-            />
+        {/* Minimal Brand header */}
+        <div className="px-5 pt-6 pb-4">
+          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => onNavigate('overview')}>
+            <div className="w-8 h-8 rounded-lg bg-stone-900 text-white flex items-center justify-center text-xs font-serif font-bold tracking-wider shadow-xs">
+              CA
+            </div>
             <div className="flex flex-col min-w-0">
-              <span className="font-headline-sm text-headline-sm text-primary tracking-tight truncate leading-tight">
-                Celebration
+              <span className="font-serif text-base text-stone-900 tracking-tight font-semibold truncate leading-tight">
+                Celebration Atelier
               </span>
-              <span className="font-label-sm text-label-sm text-outline tracking-wider uppercase truncate">
-                & Event Planner
+              <span className="text-[10px] text-stone-400 font-medium tracking-wider uppercase truncate">
+                Event Intelligence
               </span>
             </div>
           </div>
-          <p className="mt-space-xs font-body-sm text-body-sm text-on-surface-variant italic truncate">
-            Every detail, thoughtfully planned
-          </p>
         </div>
 
         {/* Action Button */}
-        <div className="px-space-md mb-space-sm">
+        <div className="px-4 mb-3">
           <button
             onClick={onCreateEventClick}
-            className="w-full flex items-center justify-center gap-space-sm bg-gradient-to-r from-primary to-primary-container hover:from-primary-container hover:to-primary text-on-primary font-title-md text-title-md py-space-sm px-space-md rounded-xl shadow-[0_4px_14px_rgba(81,44,61,0.2)] transition-all cursor-pointer active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold py-2.5 px-3.5 rounded-xl shadow-xs transition-all cursor-pointer active:scale-[0.99] border border-stone-800"
             type="button"
           >
-            <span className="material-symbols-outlined text-[20px] text-secondary">auto_awesome</span>
-            <span>+ New Celebration</span>
+            <span className="material-symbols-outlined text-[17px] text-amber-300">auto_awesome</span>
+            <span>New Celebration</span>
           </button>
         </div>
 
         {/* Navigation list */}
-        <nav className="px-space-sm space-y-0.5 overflow-y-auto max-h-[calc(100vh-270px)]">
+        <nav aria-label="Main Navigation" className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-250px)]">
           {navItems.map((item) => {
             const isActive = currentPath === item.path;
             return (
               <button
                 key={item.path}
                 onClick={() => onNavigate(item.path)}
-                className={`w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-left transition-all cursor-pointer ${
+                aria-current={isActive ? 'page' : undefined}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 ${
                   isActive
-                    ? 'bg-primary-fixed text-on-primary-fixed font-title-md shadow-[0_2px_8px_rgba(81,44,61,0.06)]'
-                    : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+                    ? 'bg-stone-100 text-stone-950 font-semibold'
+                    : 'text-stone-500 hover:bg-stone-50 hover:text-stone-900'
                 }`}
                 type="button"
               >
-                <span className={`material-symbols-outlined text-[20px] ${item.iconClass || ''}`}>
+                <span className={`material-symbols-outlined text-[19px] ${isActive ? 'text-stone-900' : 'text-stone-400'}`} aria-hidden="true">
                   {item.icon}
                 </span>
                 <span className="truncate">{item.label}</span>
@@ -90,23 +86,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom plan status card */}
-      <div className="p-space-md m-space-sm rounded-xl bg-surface-container flex items-center justify-between shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
-        <div className="flex items-center gap-space-sm">
-          <span className="w-2 h-2 rounded-full bg-tertiary-container"></span>
+      <div className="p-3 mx-3 mb-4 rounded-xl bg-stone-50 border border-stone-200/60 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
           <div className="flex flex-col">
-            <span className="font-label-sm text-label-sm font-semibold text-on-surface">
+            <span className="text-xs font-medium text-stone-800">
               {activeEventsCount} Active Celebrations
             </span>
-            <span className="font-body-sm text-body-sm text-outline">Atelier Plan</span>
+            <span className="text-[11px] text-stone-400">Atelier Suite</span>
           </div>
         </div>
         <button
           onClick={() => onNavigate('settings')}
-          className="text-outline hover:text-primary transition-colors cursor-pointer"
-          title="Atelier Help & Status"
+          className="text-stone-400 hover:text-stone-800 transition-colors cursor-pointer p-1"
+          title="Atelier Settings"
           type="button"
         >
-          <span className="material-symbols-outlined text-[18px]">help_outline</span>
+          <span className="material-symbols-outlined text-[16px]">settings</span>
         </button>
       </div>
     </aside>

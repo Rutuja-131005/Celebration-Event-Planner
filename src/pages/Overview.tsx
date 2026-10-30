@@ -23,6 +23,7 @@ export const Overview: React.FC<OverviewProps> = ({
 }) => {
   const [taskFilter, setTaskFilter] = useState<'all' | 'high'>('all');
   const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
+  const [showRadarTable, setShowRadarTable] = useState(false);
 
   const handleToggleTask = async (task: Task) => {
     try {
@@ -275,93 +276,181 @@ export const Overview: React.FC<OverviewProps> = ({
                   <h3 className="font-title-lg text-title-lg text-primary">Readiness Radar</h3>
                   <p className="font-body-sm text-body-sm text-outline">Functional pillars for wedding weekend</p>
                 </div>
-                <span className="bg-surface-container px-space-sm py-1 rounded-lg font-label-sm text-label-sm text-on-surface-variant font-semibold">
-                  All Venues Locked
-                </span>
-              </div>
-
-              {/* Pillar items with SVG Progress Rings */}
-              <div className="space-y-space-md">
-                {/* Item 1: Venue */}
-                <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
-                  <div className="flex items-center gap-space-sm">
-                    <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm">
-                      <span className="material-symbols-outlined text-[20px]">villa</span>
-                    </div>
-                    <div>
-                      <h4 className="font-title-md text-title-md text-on-surface leading-snug">Palace &amp; Courtyard Venues</h4>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant">Jagmandir, Zenana Mahal, Poolside Lawns</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-space-xs">
-                    <span className="font-label-sm text-label-sm font-semibold text-tertiary">100%</span>
-                    <svg className="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
-                      <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
-                      <path className="text-tertiary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="100, 100" strokeLinecap="round" strokeWidth="3.5"></path>
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Item 2: Catering & Banquets */}
-                <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
-                  <div className="flex items-center gap-space-sm">
-                    <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm">
-                      <span className="material-symbols-outlined text-[20px]">restaurant</span>
-                    </div>
-                    <div>
-                      <h4 className="font-title-md text-title-md text-on-surface leading-snug">Catering &amp; Beverage Menus</h4>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant">Rajputana feasts · Final tasting passed</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-space-xs">
-                    <span className="font-label-sm text-label-sm font-semibold text-primary">90%</span>
-                    <svg className="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
-                      <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
-                      <path className="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="90, 100" strokeLinecap="round" strokeWidth="3.5"></path>
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Item 3: Decor & Visual Scenography */}
-                <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
-                  <div className="flex items-center gap-space-sm">
-                    <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm">
-                      <span className="material-symbols-outlined text-[20px]">palette</span>
-                    </div>
-                    <div>
-                      <h4 className="font-title-md text-title-md text-on-surface leading-snug">Decor &amp; 3D Scenography</h4>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant">Mandap renders approved; Florals in check</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-space-xs">
-                    <span className="font-label-sm text-label-sm font-semibold text-secondary">85%</span>
-                    <svg className="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
-                      <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
-                      <path className="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="85, 100" strokeLinecap="round" strokeWidth="3.5"></path>
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Item 4: Guest Logistics & Transfers */}
-                <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
-                  <div className="flex items-center gap-space-sm">
-                    <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-outline shadow-sm">
-                      <span className="material-symbols-outlined text-[20px]">directions_boat</span>
-                    </div>
-                    <div>
-                      <h4 className="font-title-md text-title-md text-on-surface leading-snug">Boats, Shuttles &amp; Concierge</h4>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant">Jetty slips contracted; Airport shuttles open</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-space-xs">
-                    <span className="font-label-sm text-label-sm font-semibold text-on-surface-variant">60%</span>
-                    <svg className="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
-                      <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
-                      <path className="text-outline" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="60, 100" strokeLinecap="round" strokeWidth="3.5"></path>
-                    </svg>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowRadarTable(!showRadarTable)}
+                    aria-expanded={showRadarTable}
+                    aria-controls="readiness-radar-table"
+                    className="text-xs text-primary font-semibold hover:underline flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-2 py-1 bg-surface-container"
+                  >
+                    <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+                      {showRadarTable ? 'donut_large' : 'table_chart'}
+                    </span>
+                    <span>{showRadarTable ? 'View Rings' : 'View Table'}</span>
+                  </button>
+                  <span className="bg-surface-container px-space-sm py-1 rounded-lg font-label-sm text-label-sm text-on-surface-variant font-semibold">
+                    All Venues Locked
+                  </span>
                 </div>
               </div>
+
+              {/* Accessible Sr-Only / Visible Data Table */}
+              {showRadarTable ? (
+                <div id="readiness-radar-table" className="overflow-x-auto">
+                  <table className="w-full text-left text-sm divide-y divide-outline-variant/30">
+                    <caption className="sr-only">Readiness Radar Functional Pillar Scores</caption>
+                    <thead>
+                      <tr className="text-xs uppercase tracking-wider text-outline font-semibold">
+                        <th scope="col" className="py-2">Pillar</th>
+                        <th scope="col" className="py-2">Operational Details</th>
+                        <th scope="col" className="py-2 text-right">Completion</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-outline-variant/20">
+                      <tr>
+                        <td className="py-2.5 font-medium text-on-surface">Palace &amp; Courtyard Venues</td>
+                        <td className="py-2.5 text-on-surface-variant text-xs">Jagmandir, Zenana Mahal, Poolside Lawns</td>
+                        <td className="py-2.5 text-right font-bold text-tertiary">100%</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2.5 font-medium text-on-surface">Catering &amp; Beverage Menus</td>
+                        <td className="py-2.5 text-on-surface-variant text-xs">Rajputana feasts · Final tasting passed</td>
+                        <td className="py-2.5 text-right font-bold text-primary">90%</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2.5 font-medium text-on-surface">Decor &amp; 3D Scenography</td>
+                        <td className="py-2.5 text-on-surface-variant text-xs">Mandap renders approved; Florals in check</td>
+                        <td className="py-2.5 text-right font-bold text-secondary">85%</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2.5 font-medium text-on-surface">Boats, Shuttles &amp; Concierge</td>
+                        <td className="py-2.5 text-on-surface-variant text-xs">Jetty slips contracted; Airport shuttles open</td>
+                        <td className="py-2.5 text-right font-bold text-on-surface-variant">60%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                /* Pillar items with SVG Progress Rings */
+                <div className="space-y-space-md" role="region" aria-label="Readiness radar progress rings">
+                  {/* Screen reader summary table */}
+                  <div className="sr-only">
+                    <table>
+                      <caption>Operational Readiness Progress Summary</caption>
+                      <thead>
+                        <tr><th scope="col">Functional Pillar</th><th scope="col">Status</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Palace &amp; Courtyard Venues</td><td>100% Locked</td></tr>
+                        <tr><td>Catering &amp; Beverage Menus</td><td>90% Final Tasting Passed</td></tr>
+                        <tr><td>Decor &amp; 3D Scenography</td><td>85% Mandap Renders Approved</td></tr>
+                        <tr><td>Boats, Shuttles &amp; Concierge</td><td>60% Jetty Slips Contracted</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Item 1: Venue */}
+                  <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+                    <div className="flex items-center gap-space-sm">
+                      <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm" aria-hidden="true">
+                        <span className="material-symbols-outlined text-[20px]">villa</span>
+                      </div>
+                      <div>
+                        <h4 className="font-title-md text-title-md text-on-surface leading-snug">Palace &amp; Courtyard Venues</h4>
+                        <p className="font-body-sm text-body-sm text-on-surface-variant">Jagmandir, Zenana Mahal, Poolside Lawns</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-space-xs">
+                      <span className="font-label-sm text-label-sm font-semibold text-tertiary">100%</span>
+                      <svg
+                        role="img"
+                        aria-label="Venue readiness: 100% complete"
+                        className="w-8 h-8 -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
+                        <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
+                        <path className="text-tertiary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="100, 100" strokeLinecap="round" strokeWidth="3.5"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Item 2: Catering & Banquets */}
+                  <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+                    <div className="flex items-center gap-space-sm">
+                      <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm" aria-hidden="true">
+                        <span className="material-symbols-outlined text-[20px]">restaurant</span>
+                      </div>
+                      <div>
+                        <h4 className="font-title-md text-title-md text-on-surface leading-snug">Catering &amp; Beverage Menus</h4>
+                        <p className="font-body-sm text-body-sm text-on-surface-variant">Rajputana feasts · Final tasting passed</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-space-xs">
+                      <span className="font-label-sm text-label-sm font-semibold text-primary">90%</span>
+                      <svg
+                        role="img"
+                        aria-label="Catering readiness: 90% complete"
+                        className="w-8 h-8 -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
+                        <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
+                        <path className="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="90, 100" strokeLinecap="round" strokeWidth="3.5"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Item 3: Decor & Visual Scenography */}
+                  <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+                    <div className="flex items-center gap-space-sm">
+                      <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm" aria-hidden="true">
+                        <span className="material-symbols-outlined text-[20px]">palette</span>
+                      </div>
+                      <div>
+                        <h4 className="font-title-md text-title-md text-on-surface leading-snug">Decor &amp; 3D Scenography</h4>
+                        <p className="font-body-sm text-body-sm text-on-surface-variant">Mandap renders approved; Florals in check</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-space-xs">
+                      <span className="font-label-sm text-label-sm font-semibold text-secondary">85%</span>
+                      <svg
+                        role="img"
+                        aria-label="Decor readiness: 85% complete"
+                        className="w-8 h-8 -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
+                        <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
+                        <path className="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="85, 100" strokeLinecap="round" strokeWidth="3.5"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Item 4: Guest Logistics & Transfers */}
+                  <div className="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+                    <div className="flex items-center gap-space-sm">
+                      <div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-outline shadow-sm" aria-hidden="true">
+                        <span className="material-symbols-outlined text-[20px]">directions_boat</span>
+                      </div>
+                      <div>
+                        <h4 className="font-title-md text-title-md text-on-surface leading-snug">Boats, Shuttles &amp; Concierge</h4>
+                        <p className="font-body-sm text-body-sm text-on-surface-variant">Jetty slips contracted; Airport shuttles open</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-space-xs">
+                      <span className="font-label-sm text-label-sm font-semibold text-on-surface-variant">60%</span>
+                      <svg
+                        role="img"
+                        aria-label="Logistics readiness: 60% complete"
+                        className="w-8 h-8 -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
+                        <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
+                        <path className="text-outline" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="60, 100" strokeLinecap="round" strokeWidth="3.5"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="pt-space-md flex items-center justify-between">

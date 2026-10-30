@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Event, Vendor, VendorQuote } from '../../server/models/types.ts';
+import { Modal } from '../components/Modal.tsx';
 
 interface VendorsQuotationsProps {
   event: Event;
@@ -860,59 +861,65 @@ export const VendorsQuotations: React.FC<VendorsQuotationsProps> = ({
         </section>
 
         {/* Modal for side-by-side comparison modal if triggered */}
-        {showCompareModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary/40 backdrop-blur-sm p-4">
-            <div className="bg-surface-container-lowest rounded-2xl max-w-2xl w-full p-space-lg shadow-2xl border border-outline-variant/40 space-y-4">
-              <div className="flex items-center justify-between border-b border-outline-variant/30 pb-2">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-secondary text-[24px]">balance</span>
-                  <h3 className="font-headline-sm text-headline-sm text-primary">Head-to-Head Comparison Matrix</h3>
-                </div>
-                <button
-                  onClick={() => setShowCompareModal(false)}
-                  className="text-outline hover:text-primary transition-colors cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[20px]">close</span>
-                </button>
+        <Modal
+          isOpen={showCompareModal}
+          onClose={() => setShowCompareModal(false)}
+          titleId="compare-matrix-title"
+          maxWidthClass="max-w-2xl"
+        >
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-outline-variant/30 pb-2">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-secondary text-[24px]">balance</span>
+                <h3 id="compare-matrix-title" className="font-headline-sm text-headline-sm text-primary">
+                  Head-to-Head Comparison Matrix
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowCompareModal(false)}
+                className="text-outline hover:text-primary transition-colors cursor-pointer"
+                aria-label="Close Comparison Matrix"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="p-3 rounded-xl bg-surface-container-low border border-tertiary-fixed">
+                <h4 className="font-bold text-primary mb-1">Royal Rajputana Events</h4>
+                <p className="text-secondary font-bold text-lg">₹5,30,000</p>
+                <p className="text-xs text-outline mb-2">Taxes Included</p>
+                <ul className="space-y-1 text-xs text-on-surface">
+                  <li>✓ 20ft Floral Mandap</li>
+                  <li>✓ 400 Brass Diyas & Urlis</li>
+                  <li>✓ 2 Stage Setups included</li>
+                  <li>✓ 98% On-time track record</li>
+                </ul>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="p-3 rounded-xl bg-surface-container-low border border-tertiary-fixed">
-                  <h4 className="font-bold text-primary mb-1">Royal Rajputana Events</h4>
-                  <p className="text-secondary font-bold text-lg">₹5,30,000</p>
-                  <p className="text-xs text-outline mb-2">Taxes Included</p>
-                  <ul className="space-y-1 text-xs text-on-surface">
-                    <li>✓ 20ft Floral Mandap</li>
-                    <li>✓ 400 Brass Diyas & Urlis</li>
-                    <li>✓ 2 Stage Setups included</li>
-                    <li>✓ 98% On-time track record</li>
-                  </ul>
-                </div>
-
-                <div className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
-                  <h4 className="font-bold text-primary mb-1">Virasat Floral & Decor</h4>
-                  <p className="text-primary font-bold text-lg">₹6,10,000</p>
-                  <p className="text-xs text-error mb-2">+18% GST Applicable</p>
-                  <ul className="space-y-1 text-xs text-on-surface">
-                    <li>✓ 25ft Imported Flower Mandap</li>
-                    <li>✓ Laser light kinetic truss</li>
-                    <li>✓ 3 stage setups</li>
-                    <li>✗ Brassware self-sourced</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-2">
-                <button
-                  onClick={() => setShowCompareModal(false)}
-                  className="px-4 py-2 rounded-xl bg-primary text-on-primary font-semibold text-sm cursor-pointer"
-                >
-                  Close Matrix
-                </button>
+              <div className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
+                <h4 className="font-bold text-primary mb-1">Virasat Floral & Decor</h4>
+                <p className="text-primary font-bold text-lg">₹6,10,000</p>
+                <p className="text-xs text-error mb-2">+18% GST Applicable</p>
+                <ul className="space-y-1 text-xs text-on-surface">
+                  <li>✓ 25ft Imported Flower Mandap</li>
+                  <li>✓ Laser light kinetic truss</li>
+                  <li>✓ 3 stage setups</li>
+                  <li>✗ Brassware self-sourced</li>
+                </ul>
               </div>
             </div>
+
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setShowCompareModal(false)}
+                className="px-4 py-2 rounded-xl bg-primary text-on-primary font-semibold text-sm cursor-pointer"
+              >
+                Close Matrix
+              </button>
+            </div>
           </div>
-        )}
+        </Modal>
       </div>
     </div>
   );

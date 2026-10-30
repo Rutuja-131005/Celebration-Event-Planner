@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { eventsService } from '../services/events.ts';
 import { Event } from '../../server/models/types.ts';
 
@@ -56,6 +56,31 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [progressStep, setProgressStep] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
+
+  // Focus restoration & Escape dismissal
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevActive = document.activeElement as HTMLElement | null;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !submitting) {
+        e.preventDefault();
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+      if (prevActive && typeof prevActive.focus === 'function') {
+        prevActive.focus();
+      }
+    };
+  }, [isOpen, onClose, submitting]);
 
   if (!isOpen) return null;
 
@@ -180,18 +205,28 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-4 overflow-y-auto">
-      <div className="bg-surface-container-lowest rounded-3xl max-w-3xl w-full max-h-[92vh] shadow-2xl border border-outline-variant/40 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-4 overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !submitting) onClose();
+      }}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-event-modal-title"
+        className="bg-surface-container-lowest rounded-3xl max-w-3xl w-full max-h-[92vh] shadow-2xl border border-outline-variant/40 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      >
         
         {/* Modal Header */}
         <div className="p-6 pb-4 bg-gradient-to-r from-primary/10 via-surface-container-lowest to-secondary/10 border-b border-outline-variant/30 flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-md">
-              <span className="material-symbols-outlined text-secondary text-[26px]">auto_awesome</span>
+              <span className="material-symbols-outlined text-secondary text-[26px]" aria-hidden="true">auto_awesome</span>
             </div>
             <div>
-              <h2 className="font-headline-sm text-headline-sm text-primary font-bold">
-                Design New Celebration & Master Blueprint
+              <h2 id="create-event-modal-title" className="font-headline-sm text-headline-sm text-primary font-bold">
+                Design New Celebration &amp; Master Blueprint
               </h2>
               <p className="font-body-sm text-body-sm text-on-surface-variant">
                 Enter your celebration parameters once — our AI Atelier synthesizes budgets, timelines, vendor checklists and creative concepts all together.
@@ -201,10 +236,11 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           <button
             onClick={onClose}
             disabled={submitting}
-            className="text-outline hover:text-primary transition-colors cursor-pointer p-1 rounded-lg hover:bg-surface-container"
+            className="text-outline hover:text-primary transition-colors cursor-pointer p-1 rounded-lg hover:bg-surface-container focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             type="button"
+            aria-label="Close celebration designer dialog"
           >
-            <span className="material-symbols-outlined text-[22px]">close</span>
+            <span className="material-symbols-outlined text-[22px]" aria-hidden="true">close</span>
           </button>
         </div>
 

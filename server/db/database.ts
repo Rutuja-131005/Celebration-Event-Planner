@@ -11,6 +11,7 @@ import {
   AIPlanVersion,
   Prediction,
 } from '../models/types.ts';
+import { hashPassword } from '../utils/security.ts';
 
 export interface DatabaseSchema {
   users: User[];
@@ -45,6 +46,7 @@ function getInitialSeedData(): DatabaseSchema {
     role: 'Lead Planner',
     avatarUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuD86wFMv7GznXchX3b4O0dO0Rfez-G3ls1BbhsDJ0csLCul8V7slfahg9diMslJ1IoVgS44Ez3ew_HFxaRBsRsXAra2Tfahx2dEi1psEBko4A9GOcglUSNHJkeWtIhe90bEwS4Pd0HEFlR_MQ6jWaLs6Tmg8gYFOpdYpoTVe6UTJ3SPEB_cF_LAzhIkZA1B4eeLHhgwBJ0G9JGPfwa3g7bfhVB94BhsEVkIMxGpgrMstBUC8ijg7jOxDw',
+    passwordHash: hashPassword('atelier2025'),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -1028,6 +1030,11 @@ class Database {
               this.data.events.push(ev);
             }
           }
+          // Ensure default seed user has passwordHash if loaded from older JSON
+          const priya = this.data.users.find((u) => u.id === 'usr_priya_lead' || u.email === 'priya@atelier.com');
+          if (priya && !priya.passwordHash) {
+            priya.passwordHash = hashPassword('atelier2025');
+          }
           this.persist();
           this.initialized = true;
           return;
@@ -1043,15 +1050,61 @@ class Database {
     }
   }
 
+  private writeQueue: Promise<void> = Promise.resolve();
+
+  /**
+   * Persists database state atomically using temporary file + atomic rename
+   * and serialized write queue to prevent race conditions during concurrent requests.
+   */
+  public async persistAtomic(): Promise<void> {
+    const dataDir = path.dirname(DB_FILE);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    const tempFile = `${DB_FILE}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
+    const payload = JSON.stringify(this.data, null, 2);
+
+    this.writeQueue = this.writeQueue.then(async () => {
+      try {
+        await fs.promises.writeFile(tempFile, payload, 'utf-8');
+        try {
+          await fs.promises.rename(tempFile, DB_FILE);
+        } catch {
+          await fs.promises.copyFile(tempFile, DB_FILE);
+          await fs.promises.unlink(tempFile);
+        }
+      } catch (err) {
+        try {
+          if (fs.existsSync(tempFile)) await fs.promises.unlink(tempFile);
+        } catch {}
+      }
+    });
+
+    return this.writeQueue;
+  }
+
   private persist() {
     try {
       const dataDir = path.dirname(DB_FILE);
       if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
       }
-      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
-    } catch (err) {
-      console.warn('Failed to persist database to file:', err);
+      const tempFile = `${DB_FILE}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
+      fs.writeFileSync(tempFile, JSON.stringify(this.data, null, 2), 'utf-8');
+      try {
+        fs.renameSync(tempFile, DB_FILE);
+      } catch {
+        fs.copyFileSync(tempFile, DB_FILE);
+        try {
+          fs.unlinkSync(tempFile);
+        } catch {}
+      }
+    } catch {
+      try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+      } catch (innerErr) {
+        console.error('Fatal persistence write error:', innerErr);
+      }
     }
   }
 
@@ -1135,9 +1188,11 @@ class Database {
   public updateEvent(id: string, updates: Partial<Event>): Event | undefined {
     const idx = this.data.events.findIndex((e) => e.id === id);
     if (idx === -1) return undefined;
+    // Strip immutable identity and ownership fields to prevent mass assignment
+    const { id: _ignoredId, ownerUserId: _ignoredOwner, createdAt: _ignoredCreated, ...safeUpdates } = updates;
     this.data.events[idx] = {
       ...this.data.events[idx],
-      ...updates,
+      ...safeUpdates,
       updatedAt: new Date().toISOString(),
     };
     this.persist();
@@ -1212,9 +1267,10 @@ class Database {
   public updateExpense(id: string, updates: Partial<Expense>): Expense | undefined {
     const idx = this.data.expenses.findIndex((e) => e.id === id);
     if (idx === -1) return undefined;
+    const { id: _ignoredId, eventId: _ignoredEvent, createdAt: _ignoredCreated, ...safeUpdates } = updates;
     this.data.expenses[idx] = {
       ...this.data.expenses[idx],
-      ...updates,
+      ...safeUpdates,
       updatedAt: new Date().toISOString(),
     };
     this.persist();
@@ -1249,9 +1305,10 @@ class Database {
   public updateTask(id: string, updates: Partial<Task>): Task | undefined {
     const idx = this.data.tasks.findIndex((t) => t.id === id);
     if (idx === -1) return undefined;
+    const { id: _ignoredId, eventId: _ignoredEvent, createdAt: _ignoredCreated, ...safeUpdates } = updates;
     this.data.tasks[idx] = {
       ...this.data.tasks[idx],
-      ...updates,
+      ...safeUpdates,
       updatedAt: new Date().toISOString(),
     };
     this.persist();

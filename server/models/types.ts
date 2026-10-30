@@ -141,7 +141,7 @@ export interface AIPlanVersion {
       olfactoryTactileSignature: string;
       decibelRegulations: string;
     };
-    personalizedIdeas: Array<{
+    personalizedIdeas?: Array<{
       title: string;
       category: 'theme' | 'activity' | 'decor' | 'signature_moment' | 'entertainment';
       description: string;
@@ -149,7 +149,7 @@ export interface AIPlanVersion {
     }>;
     budgetRebalance: {
       totalBudget: number;
-      categories: Array<{
+      categories?: Array<{
         name: string;
         amount: number;
         percentage: number;

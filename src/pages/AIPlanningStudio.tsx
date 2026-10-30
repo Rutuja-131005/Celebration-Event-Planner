@@ -218,46 +218,57 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
         <section className="relative rounded-2xl bg-surface-container-lowest p-space-lg shadow-[0_10px_30px_-4px_rgba(81,44,61,0.05)] border border-outline-variant/40 space-y-space-md overflow-hidden">
           <div className="absolute -right-12 -top-12 w-64 h-64 rounded-full bg-secondary-fixed/30 blur-3xl pointer-events-none"></div>
 
+          {/* Accessible live region for AI generation and operations */}
+          <div className="sr-only" aria-live="polite" aria-atomic="true">
+            {synthesizing ? 'Synthesizing full AI celebration plan, please wait...' : ''}
+            {applyingPlan ? 'Applying AI plan to live event...' : ''}
+            {applySuccessMessage ? applySuccessMessage : ''}
+            {error ? `Error: ${error}` : ''}
+          </div>
+
           {/* Step 1: Select Event Type Domain */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/30 pb-3">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-secondary text-[22px]">tune</span>
-              <h3 className="font-title-lg text-title-lg text-primary">1. Select Event Type &amp; One-Click Presets</h3>
+              <span className="material-symbols-outlined text-secondary text-[22px]" aria-hidden="true">tune</span>
+              <h2 className="font-title-lg text-title-lg text-primary">1. Select Event Type &amp; One-Click Presets</h2>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs uppercase tracking-wider text-outline font-semibold mr-1">One-Click Starter:</span>
               <button
                 type="button"
                 onClick={() => handleLoadPreset('wedding')}
+                aria-pressed={eventTypeCategory === 'wedding'}
                 className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                   eventTypeCategory === 'wedding'
                     ? 'bg-primary text-on-primary shadow-sm'
                     : 'bg-surface-container hover:bg-surface-container-high text-on-surface'
                 }`}
               >
-                <span>💍</span> Wedding
+                <span aria-hidden="true">💍</span> Wedding
               </button>
               <button
                 type="button"
                 onClick={() => handleLoadPreset('birthday')}
+                aria-pressed={eventTypeCategory === 'birthday'}
                 className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                   eventTypeCategory === 'birthday'
                     ? 'bg-primary text-on-primary shadow-sm'
                     : 'bg-surface-container hover:bg-surface-container-high text-on-surface'
                 }`}
               >
-                <span>🎂</span> Birthday
+                <span aria-hidden="true">🎂</span> Birthday
               </button>
               <button
                 type="button"
                 onClick={() => handleLoadPreset('community')}
+                aria-pressed={eventTypeCategory === 'community'}
                 className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                   eventTypeCategory === 'community'
                     ? 'bg-primary text-on-primary shadow-sm'
                     : 'bg-surface-container hover:bg-surface-container-high text-on-surface'
                 }`}
               >
-                <span>🎪</span> Community
+                <span aria-hidden="true">🎪</span> Community
               </button>
             </div>
           </div>
@@ -265,10 +276,11 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
           {/* Step 2: Structured Parameter Grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-space-md">
             <div className="md:col-span-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+              <label htmlFor="ai-event-title-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
                 Event Title / Occasion
               </label>
               <input
+                id="ai-event-title-input"
                 type="text"
                 value={eventTitle}
                 onChange={(e) => setEventTitle(e.target.value)}
@@ -277,10 +289,11 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+              <label htmlFor="ai-guest-count-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
                 Guest Count (Pax)
               </label>
               <input
+                id="ai-guest-count-input"
                 type="number"
                 min="10"
                 max="5000"
@@ -290,10 +303,11 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+              <label htmlFor="ai-budget-amount-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
                 Target Budget (₹ INR)
               </label>
               <input
+                id="ai-budget-amount-input"
                 type="number"
                 step="25000"
                 value={budgetAmount}
@@ -305,10 +319,11 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+              <label htmlFor="ai-destination-venue-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
                 Destination &amp; Venue
               </label>
               <input
+                id="ai-destination-venue-input"
                 type="text"
                 value={`${locationName} · ${venueName}`}
                 onChange={(e) => {
@@ -321,10 +336,11 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+              <label htmlFor="ai-special-wishes-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
                 Atmosphere &amp; Special Wishes
               </label>
               <input
+                id="ai-special-wishes-input"
                 type="text"
                 value={specialWishes}
                 onChange={(e) => setSpecialWishes(e.target.value)}
@@ -336,10 +352,11 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
 
           {/* Step 3: Curatorial Brief Textarea */}
           <div className="relative rounded-xl bg-surface-container-low/70 p-space-md focus-within:bg-surface-container-lowest focus-within:shadow-[0_4px_16px_rgba(81,44,61,0.08)] transition-all border border-outline-variant/30">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+            <label htmlFor="ai-curatorial-brief" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
               Curatorial Brief &amp; Detailed Prompt
             </label>
             <textarea
+              id="ai-curatorial-brief"
               value={promptText}
               onChange={(e) => setPromptText(e.target.value)}
               rows={2}
@@ -454,9 +471,17 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
             </div>
 
             {/* Studio Tabs Navigation: 4 Core Pillars */}
-            <div className="flex items-center justify-between pb-space-xs border-b border-outline-variant/40 overflow-x-auto">
+            <div
+              role="tablist"
+              aria-label="Planning Studio Dimensions"
+              className="flex items-center justify-between pb-space-xs border-b border-outline-variant/40 overflow-x-auto"
+            >
               <div className="flex items-center gap-space-xs">
                 <button
+                  id="tab-ideas"
+                  role="tab"
+                  aria-selected={activeTab === 'ideas'}
+                  aria-controls="panel-ideas"
                   onClick={() => setActiveTab('ideas')}
                   className={`px-space-md py-space-sm rounded-t-xl font-title-md text-sm md:text-base flex items-center gap-2 transition-all cursor-pointer ${
                     activeTab === 'ideas'
@@ -465,11 +490,15 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
                   }`}
                   type="button"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-secondary">lightbulb</span>
+                  <span className="material-symbols-outlined text-[18px] text-secondary" aria-hidden="true">lightbulb</span>
                   <span>Personalized Ideas</span>
                 </button>
 
                 <button
+                  id="tab-budget"
+                  role="tab"
+                  aria-selected={activeTab === 'budget'}
+                  aria-controls="panel-budget"
                   onClick={() => setActiveTab('budget')}
                   className={`px-space-md py-space-sm rounded-t-xl font-title-md text-sm md:text-base flex items-center gap-2 transition-all cursor-pointer ${
                     activeTab === 'budget'
@@ -478,11 +507,15 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
                   }`}
                   type="button"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-secondary">payments</span>
+                  <span className="material-symbols-outlined text-[18px] text-secondary" aria-hidden="true">payments</span>
                   <span>Budget Allocation</span>
                 </button>
 
                 <button
+                  id="tab-timeline"
+                  role="tab"
+                  aria-selected={activeTab === 'timeline'}
+                  aria-controls="panel-timeline"
                   onClick={() => setActiveTab('timeline')}
                   className={`px-space-md py-space-sm rounded-t-xl font-title-md text-sm md:text-base flex items-center gap-2 transition-all cursor-pointer ${
                     activeTab === 'timeline'
@@ -491,11 +524,15 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
                   }`}
                   type="button"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-secondary">schedule</span>
+                  <span className="material-symbols-outlined text-[18px] text-secondary" aria-hidden="true">schedule</span>
                   <span>Timelines &amp; Run-of-Show</span>
                 </button>
 
                 <button
+                  id="tab-vendors"
+                  role="tab"
+                  aria-selected={activeTab === 'vendors'}
+                  aria-controls="panel-vendors"
                   onClick={() => setActiveTab('vendors')}
                   className={`px-space-md py-space-sm rounded-t-xl font-title-md text-sm md:text-base flex items-center gap-2 transition-all cursor-pointer ${
                     activeTab === 'vendors'
@@ -504,7 +541,7 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
                   }`}
                   type="button"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-secondary">checklist</span>
+                  <span className="material-symbols-outlined text-[18px] text-secondary" aria-hidden="true">checklist</span>
                   <span>Vendor Checklist</span>
                 </button>
               </div>
@@ -512,7 +549,7 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
 
             {/* TAB 1: PERSONALIZED IDEAS & CREATIVE DIRECTION */}
             {activeTab === 'ideas' && (
-              <div className="space-y-space-lg">
+              <div id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" className="space-y-space-lg">
                 {/* Concept Narrative */}
                 <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-md">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
@@ -612,7 +649,7 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
 
             {/* TAB 2: SMART BUDGET ALLOCATION */}
             {activeTab === 'budget' && (
-              <div className="space-y-space-lg">
+              <div id="panel-budget" role="tabpanel" aria-labelledby="tab-budget" className="space-y-space-lg">
                 <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-lg">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
                     <div>
@@ -705,7 +742,7 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
 
             {/* TAB 3: TIMELINES & RUN-OF-SHOW ITINERARY */}
             {activeTab === 'timeline' && (
-              <div className="space-y-space-lg">
+              <div id="panel-timeline" role="tabpanel" aria-labelledby="tab-timeline" className="space-y-space-lg">
                 <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-lg">
                   {/* Pre-Event Milestone Timeline */}
                   <div>
@@ -782,7 +819,7 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
 
             {/* TAB 4: VENDOR CHECKLIST & SOURCING */}
             {activeTab === 'vendors' && (
-              <div className="space-y-space-lg">
+              <div id="panel-vendors" role="tabpanel" aria-labelledby="tab-vendors" className="space-y-space-lg">
                 <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-lg">
                   <div>
                     <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">

@@ -12,8 +12,42 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = localStorage.getItem('atelier_token');
+let refreshPromise: Promise<string | null> | null = null;
+
+async function acquireDemoToken(): Promise<string | null> {
+  if (refreshPromise) return refreshPromise;
+  refreshPromise = (async () => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'priya@atelier.com', password: 'atelier2025' }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (data?.success && data?.token) {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.setItem('atelier_token', data.token);
+        }
+        return data.token as string;
+      }
+      return null;
+    } catch {
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+  return refreshPromise;
+}
+
+async function request<T>(endpoint: string, options: RequestInit = {}, isRetry = false): Promise<T> {
+  let token = typeof window !== 'undefined' && window.localStorage ? localStorage.getItem('atelier_token') : null;
+
+  // Proactively acquire a session token if none exists and not calling auth routes
+  if (!token && !endpoint.startsWith('/auth/')) {
+    token = await acquireDemoToken();
+  }
+
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -24,6 +58,14 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   try {
     const res = await fetch(url, { ...options, headers });
     const data = await res.json().catch(() => ({}));
+
+    // If 401 occurs and not already retrying, refresh token and retry once
+    if (res.status === 401 && !isRetry && !endpoint.startsWith('/auth/')) {
+      const freshToken = await acquireDemoToken();
+      if (freshToken) {
+        return request<T>(endpoint, options, true);
+      }
+    }
 
     if (!res.ok) {
       const errorMsg = data?.error?.message || `Request failed with status ${res.status}`;

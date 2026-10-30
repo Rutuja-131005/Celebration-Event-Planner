@@ -3,8 +3,48 @@ import { db } from '../db/database.ts';
 import { predictionService } from '../services/predictionService.ts';
 import { aiService } from '../services/aiService.ts';
 import { runTestSuite } from '../tests/api.test.ts';
+import {
+  hashPassword,
+  verifyPassword,
+  createToken,
+  requireAuth,
+  optionalAuth,
+  sanitizeText,
+  validateNumber,
+  createRateLimiter,
+  AuthenticatedRequest,
+  checkAccountLockout,
+  recordFailedLogin,
+  resetFailedLogins,
+  revokeToken,
+  DUMMY_PASSWORD_HASH,
+} from '../utils/security.ts';
+import { auditLogger } from '../utils/auditLogger.ts';
+import {
+  validateBody,
+  authRegisterSchema,
+  authLoginSchema,
+  createEventSchema,
+  createExpenseSchema,
+  createQuoteSchema,
+  createTaskSchema,
+  simulateScenarioSchema,
+} from '../validation/schemas.ts';
 
 export const apiRouter = Router();
+
+// Rate limiters for sensitive operations
+const authRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  maxRequests: 30,
+  message: 'Too many authentication attempts. Please try again after a few minutes.',
+});
+
+const aiRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000,
+  maxRequests: 15,
+  message: 'AI plan generation rate limit exceeded. Please wait a minute before requesting another synthesis.',
+});
 
 // Helper for consistent error responses
 function handleError(res: Response, status: number, message: string, code = 'ERROR') {
@@ -18,7 +58,7 @@ function handleError(res: Response, status: number, message: string, code = 'ERR
 }
 
 // ==========================================
-// 1. HEALTH CHECKS
+// 1. HEALTH CHECKS & DIAGNOSTICS
 // ==========================================
 apiRouter.get('/health/live', (_req: Request, res: Response) => {
   res.json({ status: 'ok', uptime: process.uptime() });
@@ -39,28 +79,40 @@ apiRouter.get('/tests/run', (_req: Request, res: Response) => {
 });
 
 // ==========================================
-// 2. AUTHENTICATION
+// 2. AUTHENTICATION & ACCESS SESSIONS
 // ==========================================
-apiRouter.post('/auth/register', (req: Request, res: Response) => {
+apiRouter.post('/auth/register', authRateLimiter, validateBody(authRegisterSchema), (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
-  if (!name || !email || !password) {
-    return handleError(res, 400, 'Name, email and password are required', 'VALIDATION_ERROR');
-  }
 
-  const existing = db.getUserByEmail(email);
+  const cleanName = sanitizeText(name, 100);
+  const cleanEmail = sanitizeText(email, 150).toLowerCase();
+
+  const existing = db.getUserByEmail(cleanEmail);
   if (existing) {
     return handleError(res, 409, 'User with this email already exists', 'CONFLICT');
   }
 
+  // Restrict self-assigned role to prevent unauthorized privilege escalation
+  const allowedRoles = ['Event Planner', 'Client'];
+  const assignedRole = allowedRoles.includes(role) ? role : 'Event Planner';
+
   const user = db.createUser({
-    name,
-    email,
-    role: role || 'Event Planner',
-    avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`,
+    name: cleanName,
+    email: cleanEmail,
+    role: assignedRole,
+    passwordHash: hashPassword(password),
+    avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}`,
   });
 
-  // Return user info and simulated auth token
-  const token = `atelier_token_${user.id}_${Date.now()}`;
+  auditLogger.log({
+    eventType: 'AUTH_REGISTER',
+    userId: user.id,
+    ip: req.socket.remoteAddress,
+    status: 'SUCCESS',
+    details: { email: cleanEmail, role: assignedRole },
+  });
+
+  const token = createToken(user);
   res.status(201).json({
     success: true,
     user: {
@@ -74,25 +126,66 @@ apiRouter.post('/auth/register', (req: Request, res: Response) => {
   });
 });
 
-apiRouter.post('/auth/login', (req: Request, res: Response) => {
+apiRouter.post('/auth/login', authRateLimiter, validateBody(authLoginSchema), (req: Request, res: Response) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return handleError(res, 400, 'Email and password are required', 'VALIDATION_ERROR');
+  const cleanEmail = email.trim().toLowerCase();
+
+  // Check account lockout status
+  const lockout = checkAccountLockout(cleanEmail);
+  if (lockout.isLocked) {
+    return res.status(429).json({
+      success: false,
+      error: {
+        code: 'ACCOUNT_LOCKED',
+        message: `Account is temporarily locked due to repeated failed login attempts. Please retry in ${lockout.remainingSeconds}s.`,
+      },
+    });
   }
 
-  let user = db.getUserByEmail(email);
-  if (!user) {
-    // If logging in as Priya or demo user, resolve or create
-    if (email === 'priya@atelier.com') {
-      user = db.getUser('usr_priya_lead');
+  let user = db.getUserByEmail(cleanEmail);
+
+  if (!user && cleanEmail === 'priya@atelier.com') {
+    user = db.getUser('usr_priya_lead');
+  }
+
+  // Generic message and constant-time password check prevents username/account enumeration attacks
+  const hashToVerify = user ? user.passwordHash : DUMMY_PASSWORD_HASH;
+  const isPasswordValid = verifyPassword(password, hashToVerify);
+
+  if (!user || !isPasswordValid) {
+    const failed = recordFailedLogin(cleanEmail);
+    auditLogger.log({
+      eventType: 'AUTH_LOGIN_FAILURE',
+      ip: req.socket.remoteAddress,
+      status: failed.isLocked ? 'ALERT' : 'WARNING',
+      details: { email: cleanEmail, attemptsLeft: failed.remainingAttempts },
+    });
+
+    if (failed.isLocked) {
+      return res.status(429).json({
+        success: false,
+        error: {
+          code: 'ACCOUNT_LOCKED',
+          message: 'Too many failed login attempts. Account temporarily locked for 15 minutes.',
+        },
+      });
     }
+
+    return handleError(res, 401, 'Invalid email or password', 'UNAUTHORIZED');
   }
 
-  if (!user) {
-    return handleError(res, 401, 'Invalid credentials', 'UNAUTHORIZED');
-  }
+  // Successful login resets failed attempts
+  resetFailedLogins(cleanEmail);
 
-  const token = `atelier_token_${user.id}_${Date.now()}`;
+  auditLogger.log({
+    eventType: 'AUTH_LOGIN_SUCCESS',
+    userId: user.id,
+    ip: req.socket.remoteAddress,
+    status: 'SUCCESS',
+    details: { email: cleanEmail, role: user.role },
+  });
+
+  const token = createToken(user);
   res.json({
     success: true,
     user: {
@@ -106,25 +199,28 @@ apiRouter.post('/auth/login', (req: Request, res: Response) => {
   });
 });
 
-apiRouter.post('/auth/logout', (_req: Request, res: Response) => {
+apiRouter.post('/auth/logout', optionalAuth, (req: AuthenticatedRequest, res: Response) => {
+  if (req.tokenJti) {
+    revokeToken(req.tokenJti, req.tokenExp);
+  }
+  auditLogger.log({
+    eventType: 'AUTH_LOGOUT',
+    userId: req.user?.id,
+    ip: req.socket.remoteAddress,
+    status: 'SUCCESS',
+  });
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
-apiRouter.get('/auth/me', (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-  let user = db.getUser('usr_priya_lead'); // default to Priya
-
-  if (authHeader && authHeader.startsWith('Bearer atelier_token_')) {
-    const parts = authHeader.replace('Bearer atelier_token_', '').split('_');
-    const userId = `usr_${parts[0]}`;
-    const found = db.getUser(userId);
-    if (found) user = found;
+apiRouter.get('/auth/audit-logs', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  if (req.user?.role !== 'Lead Planner' && req.user?.role !== 'Event Planner') {
+    return handleError(res, 403, 'Permission denied', 'FORBIDDEN');
   }
+  res.json({ success: true, logs: auditLogger.getRecentLogs() });
+});
 
-  if (!user) {
-    return handleError(res, 401, 'Session invalid or expired', 'UNAUTHORIZED');
-  }
-
+apiRouter.get('/auth/me', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
   res.json({
     success: true,
     user: {
@@ -140,8 +236,8 @@ apiRouter.get('/auth/me', (req: Request, res: Response) => {
 // ==========================================
 // 3. DASHBOARD SUMMARY
 // ==========================================
-apiRouter.get('/dashboard/summary', (req: Request, res: Response) => {
-  const eventId = (req.query.eventId as string) || 'evt_ananya_rohan';
+apiRouter.get('/dashboard/summary', optionalAuth, (req: Request, res: Response) => {
+  const eventId = sanitizeText(req.query.eventId, 50) || 'evt_ananya_rohan';
   const event = db.getEvent(eventId);
   if (!event) return handleError(res, 404, 'Event not found');
 
@@ -151,7 +247,7 @@ apiRouter.get('/dashboard/summary', (req: Request, res: Response) => {
   const quotes = db.getVendorQuotes(eventId);
 
   const completedTasks = tasks.filter((t) => t.status === 'completed').length;
-  const totalTasks = 62; // Total milestone checklist
+  const totalTasks = 62;
   const taskCompletionPct = Math.round((completedTasks / totalTasks) * 100);
 
   res.json({
@@ -184,13 +280,13 @@ apiRouter.get('/dashboard/summary', (req: Request, res: Response) => {
   });
 });
 
-apiRouter.get('/dashboard/upcoming-events', (_req: Request, res: Response) => {
+apiRouter.get('/dashboard/upcoming-events', optionalAuth, (_req: Request, res: Response) => {
   const events = db.getEvents();
   res.json({ success: true, events });
 });
 
-apiRouter.get('/dashboard/next-actions', (req: Request, res: Response) => {
-  const eventId = (req.query.eventId as string) || 'evt_ananya_rohan';
+apiRouter.get('/dashboard/next-actions', optionalAuth, (req: Request, res: Response) => {
+  const eventId = sanitizeText(req.query.eventId, 50) || 'evt_ananya_rohan';
   const tasks = db.getTasks(eventId);
   res.json({
     success: true,
@@ -201,12 +297,12 @@ apiRouter.get('/dashboard/next-actions', (req: Request, res: Response) => {
 // ==========================================
 // 4. EVENTS CRUD
 // ==========================================
-apiRouter.get('/events', (_req: Request, res: Response) => {
+apiRouter.get('/events', optionalAuth, (req: AuthenticatedRequest, res: Response) => {
   const events = db.getEvents();
   res.json({ success: true, events });
 });
 
-apiRouter.post('/events', async (req: Request, res: Response) => {
+apiRouter.post('/events', requireAuth, validateBody(createEventSchema), async (req: AuthenticatedRequest, res: Response) => {
   const {
     name,
     eventType,
@@ -225,33 +321,40 @@ apiRouter.post('/events', async (req: Request, res: Response) => {
     additionalNotes,
   } = req.body;
 
-  if (!name || !budgetAmount) {
-    return handleError(res, 400, 'Name and budgetAmount are required', 'VALIDATION_ERROR');
+  const cleanName = sanitizeText(name, 120);
+  const validBudget = validateNumber(budgetAmount, 1000, 1000000000, 0);
+
+  if (!cleanName || validBudget <= 0) {
+    return handleError(res, 400, 'A valid event name and positive budgetAmount are required', 'VALIDATION_ERROR');
   }
+
+  const validGuestCount = Math.round(validateNumber(guestCount, 1, 100000, 200));
 
   const calculatedDays = eventDate
     ? Math.max(1, Math.round((new Date(eventDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
     : 60;
 
+  const currentUserId = req.user?.id || 'usr_priya_lead';
+
   const newEvent = db.createEvent({
-    ownerUserId: 'usr_priya_lead',
-    name,
-    eventType: eventType || 'Bespoke Celebration',
-    eventDate: eventDate || '2026-03-20',
-    location: location || 'Rajasthan, India',
-    venueName: venueName || 'Heritage Estate',
-    guestCount: Number(guestCount) || 200,
+    ownerUserId: currentUserId,
+    name: cleanName,
+    eventType: sanitizeText(eventType, 80) || 'Bespoke Celebration',
+    eventDate: sanitizeText(eventDate, 30) || '2026-03-20',
+    location: sanitizeText(location, 100) || 'Rajasthan, India',
+    venueName: sanitizeText(venueName, 120) || 'Heritage Estate',
+    guestCount: validGuestCount,
     confirmedGuestCount: 0,
-    budgetAmount: Number(budgetAmount),
+    budgetAmount: validBudget,
     currencyCode: 'INR',
-    theme: theme || 'Classic Atelier Elegance',
+    theme: sanitizeText(theme, 100) || 'Classic Atelier Elegance',
     eventPreferences: {
-      vibe: vibe || 'Sophisticated & Memorable',
-      ambiance: ambiance || 'Warm ambient glow with artisanal florals',
-      culinaryStyle: culinaryStyle || 'Curated gourmet feast with signature cocktails',
-      specialMoments: specialMoments || 'Champagne toast & live sensory reveals',
-      colorPalette: colorPalette || 'Champagne Gold, Ivory & Velvet Plum',
-      additionalNotes: additionalNotes || '',
+      vibe: sanitizeText(vibe, 150) || 'Sophisticated & Memorable',
+      ambiance: sanitizeText(ambiance, 200) || 'Warm ambient glow with artisanal florals',
+      culinaryStyle: sanitizeText(culinaryStyle, 200) || 'Curated gourmet feast with signature cocktails',
+      specialMoments: sanitizeText(specialMoments, 200) || 'Champagne toast & live sensory reveals',
+      colorPalette: sanitizeText(colorPalette, 150) || 'Champagne Gold, Ivory & Velvet Plum',
+      additionalNotes: sanitizeText(additionalNotes, 500) || '',
     },
     status: 'planning',
     daysRemaining: calculatedDays,
@@ -265,28 +368,27 @@ apiRouter.post('/events', async (req: Request, res: Response) => {
   if (autoGeneratePlan) {
     try {
       const promptParts = [
-        `Celebration Name: ${name}`,
-        `Celebration Type: ${eventType || 'Bespoke Celebration'}`,
-        `Location & Venue: ${venueName || 'Heritage Estate'}, ${location || 'Rajasthan, India'}`,
-        `Guest Count: ${guestCount || 200} guests`,
-        `Target Total Budget: ₹${Number(budgetAmount).toLocaleString('en-IN')}`,
-        theme ? `Aesthetic Theme: ${theme}` : '',
-        vibe ? `Vibe & Energy: ${vibe}` : '',
-        ambiance ? `Sensory Atmosphere & Decor: ${ambiance}` : '',
-        culinaryStyle ? `Culinary & Beverage Direction: ${culinaryStyle}` : '',
-        specialMoments ? `Signature Highlights & Special Requests: ${specialMoments}` : '',
-        colorPalette ? `Color Palette Preference: ${colorPalette}` : '',
-        additionalNotes ? `Client Notes: ${additionalNotes}` : '',
+        `Celebration Name: ${newEvent.name}`,
+        `Celebration Type: ${newEvent.eventType}`,
+        `Location & Venue: ${newEvent.venueName}, ${newEvent.location}`,
+        `Guest Count: ${newEvent.guestCount} guests`,
+        `Target Total Budget: ₹${newEvent.budgetAmount.toLocaleString('en-IN')}`,
+        newEvent.theme ? `Aesthetic Theme: ${newEvent.theme}` : '',
+        newEvent.eventPreferences?.vibe ? `Vibe & Energy: ${newEvent.eventPreferences.vibe}` : '',
+        newEvent.eventPreferences?.ambiance ? `Sensory Atmosphere & Decor: ${newEvent.eventPreferences.ambiance}` : '',
+        newEvent.eventPreferences?.culinaryStyle ? `Culinary & Beverage Direction: ${newEvent.eventPreferences.culinaryStyle}` : '',
+        newEvent.eventPreferences?.specialMoments ? `Signature Highlights & Special Requests: ${newEvent.eventPreferences.specialMoments}` : '',
+        newEvent.eventPreferences?.colorPalette ? `Color Palette Preference: ${newEvent.eventPreferences.colorPalette}` : '',
+        newEvent.eventPreferences?.additionalNotes ? `Client Notes: ${newEvent.eventPreferences.additionalNotes}` : '',
       ].filter(Boolean).join('. ');
 
       const plan = await aiService.generatePlan(
         newEvent.id,
         promptParts,
         `${newEvent.name} - Complete Master Blueprint`,
-        eventType
+        newEvent.eventType
       );
 
-      // Immediately apply the synthesized plan to populate budget categories & milestone tasks
       db.applyAIPlanToEvent(newEvent.id, plan.id);
       generatedPlan = plan;
       planApplied = true;
@@ -305,19 +407,67 @@ apiRouter.post('/events', async (req: Request, res: Response) => {
   });
 });
 
-apiRouter.get('/events/:id', (req: Request, res: Response) => {
+apiRouter.get('/events/:id', optionalAuth, (req: Request, res: Response) => {
   const event = db.getEvent(req.params.id);
   if (!event) return handleError(res, 404, 'Event not found');
   res.json({ success: true, event });
 });
 
-apiRouter.patch('/events/:id', (req: Request, res: Response) => {
-  const updated = db.updateEvent(req.params.id, req.body);
-  if (!updated) return handleError(res, 404, 'Event not found');
+apiRouter.patch('/events/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  const existing = db.getEvent(req.params.id);
+  if (!existing) return handleError(res, 404, 'Event not found');
+
+  // Verify ownership or Lead Planner role
+  const isLead = req.user?.role === 'Lead Planner';
+  const isOwner = existing.ownerUserId === req.user?.id;
+  if (!isLead && !isOwner) {
+    return handleError(res, 403, 'Permission denied. Only event owners or Lead Planners can update event settings.', 'FORBIDDEN');
+  }
+
+  // Whitelist safe updatable fields to prevent mass assignment
+  const allowedFields = [
+    'name',
+    'eventType',
+    'eventDate',
+    'location',
+    'venueName',
+    'guestCount',
+    'confirmedGuestCount',
+    'budgetAmount',
+    'theme',
+    'eventPreferences',
+    'status',
+    'daysRemaining',
+    'readinessScore',
+  ];
+
+  const safeUpdates: Record<string, any> = {};
+  for (const field of allowedFields) {
+    if (field in req.body) {
+      if (typeof req.body[field] === 'string') {
+        safeUpdates[field] = sanitizeText(req.body[field], 500);
+      } else if (typeof req.body[field] === 'number') {
+        safeUpdates[field] = validateNumber(req.body[field], 0, 1000000000, existing[field as keyof typeof existing] as number);
+      } else {
+        safeUpdates[field] = req.body[field];
+      }
+    }
+  }
+
+  const updated = db.updateEvent(req.params.id, safeUpdates);
   res.json({ success: true, event: updated });
 });
 
-apiRouter.delete('/events/:id', (req: Request, res: Response) => {
+apiRouter.delete('/events/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  const existing = db.getEvent(req.params.id);
+  if (!existing) return handleError(res, 404, 'Event not found');
+
+  const isLead = req.user?.role === 'Lead Planner';
+  const isOwner = existing.ownerUserId === req.user?.id;
+  if (!isLead && !isOwner) {
+    return handleError(res, 403, 'Permission denied. Only event owners or Lead Planners can delete an event.', 'FORBIDDEN');
+  }
+
   const ok = db.deleteEvent(req.params.id);
   if (!ok) return handleError(res, 404, 'Event not found');
   res.json({ success: true, message: 'Event deleted safely' });
@@ -326,7 +476,7 @@ apiRouter.delete('/events/:id', (req: Request, res: Response) => {
 // ==========================================
 // 5. BUDGET AND EXPENSES
 // ==========================================
-apiRouter.get('/events/:id/budget', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/budget', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const event = db.getEvent(eventId);
   if (!event) return handleError(res, 404, 'Event not found');
@@ -341,28 +491,40 @@ apiRouter.get('/events/:id/budget', (req: Request, res: Response) => {
   });
 });
 
-apiRouter.put('/events/:id/budget', (req: Request, res: Response) => {
+apiRouter.put('/events/:id/budget', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const event = db.getEvent(eventId);
   if (!event) return handleError(res, 404, 'Event not found');
 
   const { categories } = req.body;
   if (!Array.isArray(categories)) {
-    return handleError(res, 400, 'Categories must be an array');
+    return handleError(res, 400, 'Categories must be an array', 'VALIDATION_ERROR');
   }
 
-  const updated = db.setBudgetCategories(eventId, categories);
+  const sanitizedCategories = categories.map((cat: any) => ({
+    categoryName: sanitizeText(cat.categoryName, 80) || 'General Category',
+    plannedAmount: validateNumber(cat.plannedAmount, 0, 1000000000, 0),
+    committedAmount: validateNumber(cat.committedAmount, 0, 1000000000, 0),
+    actualAmount: validateNumber(cat.actualAmount, 0, 1000000000, 0),
+    priority: ['high', 'medium', 'normal', 'low'].includes(cat.priority) ? cat.priority : 'normal',
+    status: ['paid_100', 'advance_50', 'quoted', 'booked', 'in_progress', 'pending'].includes(cat.status)
+      ? cat.status
+      : 'pending',
+    notes: sanitizeText(cat.notes, 200),
+  }));
+
+  const updated = db.setBudgetCategories(eventId, sanitizedCategories);
   const metrics = predictionService.calculateBudgetMetrics(eventId);
   res.json({ success: true, categories: updated, metrics });
 });
 
-apiRouter.get('/events/:id/expenses', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/expenses', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const expenses = db.getExpenses(eventId);
   res.json({ success: true, expenses, total: expenses.length });
 });
 
-apiRouter.post('/events/:id/expenses', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/expenses', requireAuth, validateBody(createExpenseSchema), (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const event = db.getEvent(eventId);
   if (!event) return handleError(res, 404, 'Event not found');
@@ -379,23 +541,28 @@ apiRouter.post('/events/:id/expenses', (req: Request, res: Response) => {
     receiptRef,
   } = req.body;
 
-  if (!description || !actualAmount) {
-    return handleError(res, 400, 'Description and actualAmount are required', 'VALIDATION_ERROR');
+  const validAmount = validateNumber(actualAmount, 0.01, 1000000000, 0);
+  const cleanDescription = sanitizeText(description, 200);
+
+  if (!cleanDescription || validAmount <= 0) {
+    return handleError(res, 400, 'Description and a positive actualAmount are required', 'VALIDATION_ERROR');
   }
 
   const newExpense = db.createExpense({
     eventId,
-    budgetCategoryId: budgetCategoryId || 'cat_decor',
-    categoryName: categoryName || 'Decor',
+    budgetCategoryId: sanitizeText(budgetCategoryId, 50) || 'cat_decor',
+    categoryName: sanitizeText(categoryName, 80) || 'Decor',
     voucherCode: `TRX-${Math.floor(1000 + Math.random() * 9000)}`,
-    description,
-    vendorName: vendorName || 'Atelier Partner',
-    estimatedAmount: Number(actualAmount),
-    actualAmount: Number(actualAmount),
-    expenseDate: expenseDate || new Date().toISOString().split('T')[0],
-    paymentMethod: paymentMethod || 'Bank NEFT',
-    paymentStatus: paymentStatus || 'settled',
-    receiptRef: receiptRef || `REC-${Math.floor(100 + Math.random() * 900)}`,
+    description: cleanDescription,
+    vendorName: sanitizeText(vendorName, 100) || 'Atelier Partner',
+    estimatedAmount: validAmount,
+    actualAmount: validAmount,
+    expenseDate: sanitizeText(expenseDate, 30) || new Date().toISOString().split('T')[0],
+    paymentMethod: sanitizeText(paymentMethod, 50) || 'Bank NEFT',
+    paymentStatus: ['settled', 'drawdown_partial', 'pending_invoice', 'overdue'].includes(paymentStatus)
+      ? paymentStatus
+      : 'settled',
+    receiptRef: sanitizeText(receiptRef, 50) || `REC-${Math.floor(100 + Math.random() * 900)}`,
     isReconciled: true,
   });
 
@@ -403,13 +570,25 @@ apiRouter.post('/events/:id/expenses', (req: Request, res: Response) => {
   res.status(201).json({ success: true, expense: newExpense, metrics });
 });
 
-apiRouter.patch('/expenses/:id', (req: Request, res: Response) => {
-  const updated = db.updateExpense(req.params.id, req.body);
+apiRouter.patch('/expenses/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  const allowed = ['description', 'actualAmount', 'estimatedAmount', 'paymentStatus', 'paymentMethod', 'notes'];
+  const safeUpdates: Record<string, any> = {};
+  for (const field of allowed) {
+    if (field in req.body) {
+      if (typeof req.body[field] === 'string') {
+        safeUpdates[field] = sanitizeText(req.body[field], 200);
+      } else if (typeof req.body[field] === 'number') {
+        safeUpdates[field] = validateNumber(req.body[field], 0, 1000000000, 0);
+      }
+    }
+  }
+
+  const updated = db.updateExpense(req.params.id, safeUpdates);
   if (!updated) return handleError(res, 404, 'Expense not found');
   res.json({ success: true, expense: updated });
 });
 
-apiRouter.delete('/expenses/:id', (req: Request, res: Response) => {
+apiRouter.delete('/expenses/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const ok = db.deleteExpense(req.params.id);
   if (!ok) return handleError(res, 404, 'Expense not found');
   res.json({ success: true, message: 'Expense deleted' });
@@ -418,40 +597,49 @@ apiRouter.delete('/expenses/:id', (req: Request, res: Response) => {
 // ==========================================
 // 6. TASKS
 // ==========================================
-apiRouter.get('/events/:id/tasks', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/tasks', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const tasks = db.getTasks(eventId);
   res.json({ success: true, tasks });
 });
 
-apiRouter.post('/events/:id/tasks', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/tasks', requireAuth, validateBody(createTaskSchema), (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { title, description, dueDate, priority, assignedTo, category } = req.body;
 
-  if (!title) return handleError(res, 400, 'Title is required', 'VALIDATION_ERROR');
+  const cleanTitle = sanitizeText(title, 150);
+  if (!cleanTitle) return handleError(res, 400, 'Title is required', 'VALIDATION_ERROR');
 
   const newTask = db.createTask({
     eventId,
-    title,
-    description: description || '',
-    dueDate: dueDate || new Date().toISOString().split('T')[0],
-    priority: priority || 'normal',
+    title: cleanTitle,
+    description: sanitizeText(description, 500) || '',
+    dueDate: sanitizeText(dueDate, 30) || new Date().toISOString().split('T')[0],
+    priority: ['high', 'medium', 'normal', 'routine'].includes(priority) ? priority : 'normal',
     status: 'pending',
-    assignedTo: assignedTo || 'Priya Sharma',
+    assignedTo: sanitizeText(assignedTo, 80) || 'Priya Sharma',
     dueLabel: 'Upcoming',
-    category: category || 'General',
+    category: sanitizeText(category, 60) || 'General',
   });
 
   res.status(201).json({ success: true, task: newTask });
 });
 
-apiRouter.patch('/tasks/:id', (req: Request, res: Response) => {
-  const updated = db.updateTask(req.params.id, req.body);
+apiRouter.patch('/tasks/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  const allowed = ['title', 'description', 'dueDate', 'priority', 'status', 'assignedTo', 'category'];
+  const safeUpdates: Record<string, any> = {};
+  for (const field of allowed) {
+    if (field in req.body) {
+      safeUpdates[field] = sanitizeText(req.body[field], 300);
+    }
+  }
+
+  const updated = db.updateTask(req.params.id, safeUpdates);
   if (!updated) return handleError(res, 404, 'Task not found');
   res.json({ success: true, task: updated });
 });
 
-apiRouter.delete('/tasks/:id', (req: Request, res: Response) => {
+apiRouter.delete('/tasks/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const ok = db.deleteTask(req.params.id);
   if (!ok) return handleError(res, 404, 'Task not found');
   res.json({ success: true, message: 'Task deleted' });
@@ -460,18 +648,21 @@ apiRouter.delete('/tasks/:id', (req: Request, res: Response) => {
 // ==========================================
 // 7. VENDORS & QUOTATIONS
 // ==========================================
-apiRouter.get('/events/:id/vendors', (_req: Request, res: Response) => {
+apiRouter.get('/events/:id/vendors', optionalAuth, (_req: Request, res: Response) => {
   const vendors = db.getVendors();
   res.json({ success: true, vendors });
 });
 
-apiRouter.post('/events/:id/vendors', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/vendors', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const { name, serviceCategory, location, contactPerson, phone } = req.body;
-  if (!name || !serviceCategory) {
+  const cleanName = sanitizeText(name, 100);
+  const cleanCategory = sanitizeText(serviceCategory, 80);
+
+  if (!cleanName || !cleanCategory) {
     return handleError(res, 400, 'Name and serviceCategory are required', 'VALIDATION_ERROR');
   }
 
-  const initials = name
+  const initials = cleanName
     .split(' ')
     .map((w: string) => w[0])
     .slice(0, 2)
@@ -479,11 +670,11 @@ apiRouter.post('/events/:id/vendors', (req: Request, res: Response) => {
     .toUpperCase();
 
   const newVendor = db.createVendor({
-    name,
-    serviceCategory,
-    location: location || 'Udaipur, Rajasthan',
-    contactPerson: contactPerson || 'Lead Representative',
-    phone: phone || '+91 98000 00000',
+    name: cleanName,
+    serviceCategory: cleanCategory,
+    location: sanitizeText(location, 100) || 'Udaipur, Rajasthan',
+    contactPerson: sanitizeText(contactPerson, 80) || 'Lead Representative',
+    phone: sanitizeText(phone, 30) || '+91 98000 00000',
     verificationStatus: 'verified',
     rating: 4.8,
     reviewCount: 12,
@@ -493,67 +684,80 @@ apiRouter.post('/events/:id/vendors', (req: Request, res: Response) => {
   res.status(201).json({ success: true, vendor: newVendor });
 });
 
-apiRouter.get('/events/:id/vendor-quotes', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/vendor-quotes', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const quotes = db.getVendorQuotes(eventId);
   res.json({ success: true, quotes });
 });
 
-apiRouter.post('/events/:id/vendor-quotes', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/vendor-quotes', requireAuth, validateBody(createQuoteSchema), (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { vendorId, vendorName, category, quotedAmount, validUntil, inclusions, paymentTerms } = req.body;
 
-  if (!vendorName || !quotedAmount) {
-    return handleError(res, 400, 'VendorName and quotedAmount are required', 'VALIDATION_ERROR');
+  const cleanVendorName = sanitizeText(vendorName, 100);
+  const validAmount = validateNumber(quotedAmount, 0.01, 1000000000, 0);
+
+  if (!cleanVendorName || validAmount <= 0) {
+    return handleError(res, 400, 'VendorName and a positive quotedAmount are required', 'VALIDATION_ERROR');
   }
 
   const quote = db.createVendorQuote({
     eventId,
-    vendorId: vendorId || 'vnd_custom',
-    vendorName,
-    category: category || 'Decor & Production',
-    quotedAmount: Number(quotedAmount),
+    vendorId: sanitizeText(vendorId, 50) || 'vnd_custom',
+    vendorName: cleanVendorName,
+    category: sanitizeText(category, 80) || 'Decor & Production',
+    quotedAmount: validAmount,
     quoteDate: new Date().toISOString().split('T')[0],
-    validUntil: validUntil || '2025-12-31',
+    validUntil: sanitizeText(validUntil, 30) || '2025-12-31',
     bookingStatus: 'under_review',
     contractScope: [descriptionOrScope(req.body)],
-    inclusions: Array.isArray(inclusions) ? inclusions : ['Standard atelier inclusions'],
-    paymentTerms: paymentTerms || '25% Advance / 50% Mid / 25% Wrap',
+    inclusions: Array.isArray(inclusions)
+      ? inclusions.map((i: any) => sanitizeText(i, 200))
+      : ['Standard atelier inclusions'],
+    paymentTerms: sanitizeText(paymentTerms, 100) || '25% Advance / 50% Mid / 25% Wrap',
   });
 
   res.status(201).json({ success: true, quote });
 });
 
 function descriptionOrScope(body: any): string {
-  return body.notes || body.scope || 'Custom scope agreed between client and partner';
+  const raw = body.notes || body.scope || 'Custom scope agreed between client and partner';
+  return sanitizeText(raw, 300);
 }
 
 // ==========================================
-// 8. AI PLANNING
+// 8. AI PLANNING & PROMPT-SAFE SYNTHESIS
 // ==========================================
-apiRouter.get('/events/:id/plans', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/plans', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const plans = db.getAIPlans(eventId);
   res.json({ success: true, plans });
 });
 
-apiRouter.post('/events/:id/generate-plan', async (req: Request, res: Response) => {
+apiRouter.post('/events/:id/generate-plan', aiRateLimiter, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { prompt, customTitle, eventType } = req.body;
 
-  if (!prompt) {
+  const cleanPrompt = sanitizeText(prompt, 1000);
+  if (!cleanPrompt) {
     return handleError(res, 400, 'Prompt description is required', 'VALIDATION_ERROR');
   }
 
   try {
-    const plan = await aiService.generatePlan(eventId, prompt, customTitle, eventType);
+    const plan = await aiService.generatePlan(
+      eventId,
+      cleanPrompt,
+      sanitizeText(customTitle, 100),
+      sanitizeText(eventType, 50)
+    );
     res.json({ success: true, plan });
   } catch (err: any) {
-    handleError(res, 500, err.message || 'AI Plan synthesis failed');
+    console.error('Plan generation failed:', err);
+    handleError(res, 500, 'AI Plan synthesis failed. Please try again.');
   }
 });
 
-apiRouter.post('/events/:id/apply-ai-plan', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/apply-ai-plan', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { planId } = req.body;
 
@@ -562,63 +766,79 @@ apiRouter.post('/events/:id/apply-ai-plan', (req: Request, res: Response) => {
   }
 
   try {
-    const result = db.applyAIPlanToEvent(eventId, planId);
+    const result = db.applyAIPlanToEvent(eventId, sanitizeText(planId, 60));
     res.json(result);
   } catch (err: any) {
-    handleError(res, 500, err.message || 'Failed to apply AI plan to event');
+    console.error('Apply AI plan error:', err);
+    handleError(res, 500, 'Failed to apply AI plan to event');
   }
 });
 
-apiRouter.post('/events/:id/replan', async (req: Request, res: Response) => {
+apiRouter.post('/events/:id/replan', aiRateLimiter, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { adjustmentInstruction, eventType } = req.body;
+
+  const cleanInstruction = sanitizeText(adjustmentInstruction, 500);
 
   try {
     const existing = db.getAIPlans(eventId);
     const basePrompt = existing[0]?.inputPrompt || 'Bespoke event blueprint';
-    const combinedPrompt = `${basePrompt} [Adjustment requested: ${adjustmentInstruction || 'Optimize parameters'}]`;
+    const combinedPrompt = `${basePrompt} [Adjustment requested: ${cleanInstruction || 'Optimize parameters'}]`.substring(
+      0,
+      1000
+    );
 
-    const plan = await aiService.generatePlan(eventId, combinedPrompt, 'Adjusted Synthesis Checkpoint', eventType);
+    const plan = await aiService.generatePlan(
+      eventId,
+      combinedPrompt,
+      'Adjusted Synthesis Checkpoint',
+      sanitizeText(eventType, 50)
+    );
     res.json({ success: true, plan });
   } catch (err: any) {
-    handleError(res, 500, err.message || 'Replanning failed');
+    console.error('Replanning error:', err);
+    handleError(res, 500, 'Replanning failed');
   }
 });
 
 // ==========================================
 // 9. PREDICTIVE ANALYTICS & SCENARIOS
 // ==========================================
-apiRouter.get('/events/:id/predictions/latest', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/predictions/latest', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const prediction = predictionService.generatePrediction(eventId);
   res.json({ success: true, prediction });
 });
 
-apiRouter.post('/events/:id/predict', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/predict', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const prediction = predictionService.generatePrediction(eventId);
   res.json({ success: true, prediction });
 });
 
-apiRouter.post('/events/:id/scenarios', (req: Request, res: Response) => {
+apiRouter.post('/events/:id/scenarios', optionalAuth, validateBody(simulateScenarioSchema), (req: Request, res: Response) => {
   const eventId = req.params.id;
   const { guestShift, decorTier, barPackage, saveSnapshot, title } = req.body;
 
+  const validShift = Math.round(validateNumber(guestShift, -500, 1000, 0));
+  const validDecorTier = ['classic', 'couture', 'regal'].includes(decorTier) ? decorTier : 'couture';
+  const validBarPackage = ['baseline', 'vintage_champagne'].includes(barPackage) ? barPackage : 'baseline';
+
   const result = predictionService.simulateScenario(
     eventId,
-    Number(guestShift) || 0,
-    decorTier || 'couture',
-    barPackage || 'baseline'
+    validShift,
+    validDecorTier as any,
+    validBarPackage as any
   );
 
   let savedItem = null;
   if (saveSnapshot) {
     savedItem = db.saveScenario({
       eventId,
-      title: title || `Scenario (${guestShift >= 0 ? '+' : ''}${guestShift} Guests, ${decorTier})`,
-      guestShift: Number(guestShift) || 0,
-      decorTier: decorTier || 'couture',
-      barPackage: barPackage || 'baseline',
+      title: sanitizeText(title, 100) || `Scenario (${validShift >= 0 ? '+' : ''}${validShift} Guests, ${validDecorTier})`,
+      guestShift: validShift,
+      decorTier: validDecorTier,
+      barPackage: validBarPackage,
       simulatedOutlay: result.simulatedFinalOutlay,
       variance: result.netVariance,
     });
@@ -627,15 +847,15 @@ apiRouter.post('/events/:id/scenarios', (req: Request, res: Response) => {
   res.json({ success: true, simulation: result, savedSnapshot: savedItem });
 });
 
-apiRouter.get('/events/:id/scenarios', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/scenarios', optionalAuth, (req: Request, res: Response) => {
   const list = db.getScenarios(req.params.id);
   res.json({ success: true, scenarios: list });
 });
 
 // ==========================================
-// 10. REPORTS
+// 10. AUDIT & EXECUTIVE REPORTS
 // ==========================================
-apiRouter.get('/events/:id/reports/summary', (req: Request, res: Response) => {
+apiRouter.get('/events/:id/reports/summary', optionalAuth, (req: Request, res: Response) => {
   const eventId = req.params.id;
   const event = db.getEvent(eventId);
   if (!event) return handleError(res, 404, 'Event not found');

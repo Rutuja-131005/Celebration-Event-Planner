@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { BudgetCategory, Expense } from '../../server/models/types.ts';
 import { predictionsService } from '../services/predictions.ts';
 import { budgetService } from '../services/budget.ts';
@@ -37,22 +37,43 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
   // Format currency helpers
   const formatINR = (val: number) => '₹' + Math.round(val).toLocaleString('en-IN');
 
-  // Dynamic calculations for scenario simulator
-  const guestCostImpact = guestShift * 1500;
-  let decorTierCost = 0;
-  if (decorTier === 'classic') decorTierCost = -35000;
-  else if (decorTier === 'couture') decorTierCost = 0;
-  else if (decorTier === 'regal') decorTierCost = 75000;
+  // Memoized dynamic calculations for scenario simulator to eliminate redundant re-renders
+  const {
+    guestCostImpact,
+    decorTierCost,
+    barCost,
+    netVariance,
+    simulatedFinalOutlay,
+    isBufferDrawn,
+    bufferDrawnAmount,
+    netSurplusAmount,
+  } = useMemo(() => {
+    const guestCost = guestShift * 1500;
+    let decorCost = 0;
+    if (decorTier === 'classic') decorCost = -35000;
+    else if (decorTier === 'couture') decorCost = 0;
+    else if (decorTier === 'regal') decorCost = 75000;
 
-  const barCost = barPackage === 'vintage_champagne' ? 65000 : 0;
-  const netVariance = guestCostImpact + decorTierCost + barCost;
-  const baseForecast = metrics?.forecastedTotal || 2415000;
-  const simulatedFinalOutlay = baseForecast + netVariance;
+    const bar = barPackage === 'vintage_champagne' ? 65000 : 0;
+    const variance = guestCost + decorCost + bar;
+    const baseForecast = metrics?.forecastedTotal || 2415000;
+    const outlay = baseForecast + variance;
+    const baseline = metrics?.baselineBudget || 2500000;
+    const bufferDrawn = outlay > baseline;
+
+    return {
+      guestCostImpact: guestCost,
+      decorTierCost: decorCost,
+      barCost: bar,
+      netVariance: variance,
+      simulatedFinalOutlay: outlay,
+      isBufferDrawn: bufferDrawn,
+      bufferDrawnAmount: bufferDrawn ? outlay - baseline : 0,
+      netSurplusAmount: !bufferDrawn ? baseline - outlay : 0,
+    };
+  }, [guestShift, decorTier, barPackage, metrics]);
+
   const baselineBudget = metrics?.baselineBudget || 2500000;
-
-  const isBufferDrawn = simulatedFinalOutlay > baselineBudget;
-  const bufferDrawnAmount = isBufferDrawn ? simulatedFinalOutlay - baselineBudget : 0;
-  const netSurplusAmount = !isBufferDrawn ? baselineBudget - simulatedFinalOutlay : 0;
 
   const handleResetSimulation = () => {
     setGuestShift(0);
@@ -90,24 +111,29 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
     }
   };
 
-  // Filter expenses
-  const filteredExpenses = expenses.filter((exp) => {
-    const matchesSearch =
-      exp.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      exp.vendorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      exp.voucherCode.toLowerCase().includes(searchQuery.toLowerCase());
+  // Memoized filter for expenses stream to eliminate redundant computations on re-render
+  const filteredExpenses = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    const cat = categoryFilter.toLowerCase();
+    return expenses.filter((exp) => {
+      const matchesSearch =
+        !q ||
+        exp.description.toLowerCase().includes(q) ||
+        exp.vendorName.toLowerCase().includes(q) ||
+        exp.voucherCode.toLowerCase().includes(q);
 
-    const matchesCategory =
-      categoryFilter === 'All' || exp.categoryName.toLowerCase().includes(categoryFilter.toLowerCase());
+      const matchesCategory =
+        categoryFilter === 'All' || exp.categoryName.toLowerCase().includes(cat);
 
-    const matchesStatus =
-      statusFilter === 'All' ||
-      (statusFilter === 'Settled' && exp.paymentStatus === 'settled') ||
-      (statusFilter === 'Tranche Due' && exp.paymentStatus === 'drawdown_partial') ||
-      (statusFilter === 'Pending Invoice' && exp.paymentStatus === 'pending_invoice');
+      const matchesStatus =
+        statusFilter === 'All' ||
+        (statusFilter === 'Settled' && exp.paymentStatus === 'settled') ||
+        (statusFilter === 'Tranche Due' && exp.paymentStatus === 'drawdown_partial') ||
+        (statusFilter === 'Pending Invoice' && exp.paymentStatus === 'pending_invoice');
 
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [expenses, searchQuery, categoryFilter, statusFilter]);
 
   return (
     <div className="w-full px-space-lg py-space-lg max-w-[1400px] mx-auto">
@@ -197,7 +223,14 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                 <span className="font-bold text-secondary">67.2%</span> of total allocation
               </div>
             </div>
-            <div className="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+            <div
+              className="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden"
+              role="progressbar"
+              aria-valuenow={67.2}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Budget committed: 67.2% of total allocation"
+            >
               <div className="bg-secondary h-full rounded-full" style={{ width: '67.2%' }}></div>
             </div>
           </div>
@@ -391,15 +424,15 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
             {/* Ledger Table Container */}
             <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left font-body-sm text-body-sm">
+                <table className="w-full text-left font-body-sm text-body-sm" aria-label="Category Allocation and Variance Ledger">
                   <thead className="bg-surface-container-low text-outline font-label-sm uppercase tracking-wider">
                     <tr>
-                      <th className="py-space-sm px-space-md">Expense Dimension</th>
-                      <th className="py-space-sm px-space-sm">Allocation</th>
-                      <th className="py-space-sm px-space-sm">Committed</th>
-                      <th className="py-space-sm px-space-sm">Status</th>
-                      <th className="py-space-sm px-space-sm text-right">Variance</th>
-                      <th className="py-space-sm px-space-md text-right">Actions</th>
+                      <th scope="col" className="py-space-sm px-space-md">Expense Dimension</th>
+                      <th scope="col" className="py-space-sm px-space-sm">Allocation</th>
+                      <th scope="col" className="py-space-sm px-space-sm">Committed</th>
+                      <th scope="col" className="py-space-sm px-space-sm">Status</th>
+                      <th scope="col" className="py-space-sm px-space-sm text-right">Variance</th>
+                      <th scope="col" className="py-space-sm px-space-md text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="text-on-surface">
@@ -517,10 +550,50 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                   </div>
                 )}
 
+                {/* Accessible live region for dynamic calculations */}
+                <div className="sr-only" aria-live="polite" aria-atomic="true">
+                  {`Scenario updated: Guest shift is ${guestShift > 0 ? '+' : ''}${guestShift} guests. Decor tier is ${decorTier}. Bar package is ${barPackage}. Net variance is ${netVariance >= 0 ? '+' : '-'}${formatINR(Math.abs(netVariance))}. Simulated final outlay is ${formatINR(simulatedFinalOutlay)}. ${isBufferDrawn ? `Draws ${formatINR(bufferDrawnAmount)} from contingency buffer.` : `Contingency intact with net surplus ${formatINR(netSurplusAmount)}.`}`}
+                </div>
+
+                {/* Visually-hidden summary table for screen readers */}
+                <div className="sr-only">
+                  <table aria-label="Scenario Simulator Calculation Summary">
+                    <thead>
+                      <tr>
+                        <th scope="col">Variable</th>
+                        <th scope="col">Selection</th>
+                        <th scope="col">Variance Impact</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Guest Shift</td>
+                        <td>{guestShift > 0 ? `+${guestShift}` : guestShift} Guests</td>
+                        <td>{guestCostImpact >= 0 ? '+' : ''}{formatINR(guestCostImpact)}</td>
+                      </tr>
+                      <tr>
+                        <td>Decor Tier</td>
+                        <td>{decorTier}</td>
+                        <td>{decorTierCost >= 0 ? '+' : ''}{formatINR(decorTierCost)}</td>
+                      </tr>
+                      <tr>
+                        <td>Beverage Package</td>
+                        <td>{barPackage}</td>
+                        <td>{barCost >= 0 ? '+' : ''}{formatINR(barCost)}</td>
+                      </tr>
+                      <tr>
+                        <td>Simulated Final Outlay</td>
+                        <td>{formatINR(simulatedFinalOutlay)}</td>
+                        <td>{netVariance >= 0 ? '+' : '-'}{formatINR(Math.abs(netVariance))}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
                 {/* Slider 1: Guest Count Adjustment */}
                 <div className="space-y-space-xs">
                   <div className="flex justify-between items-center">
-                    <label className="font-label-md text-label-md font-semibold text-primary">
+                    <label htmlFor="guest-shift-slider" className="font-label-md text-label-md font-semibold text-primary">
                       Guest Count Shift
                     </label>
                     <span className="font-label-md text-label-md text-secondary font-bold" id="guest-shift-val">
@@ -528,15 +601,21 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                     </span>
                   </div>
                   <input
+                    id="guest-shift-slider"
                     type="range"
                     min="-50"
                     max="50"
                     step="5"
                     value={guestShift}
+                    aria-label="Adjust guest count shift"
+                    aria-valuemin={-50}
+                    aria-valuemax={50}
+                    aria-valuenow={guestShift}
+                    aria-valuetext={`${guestShift > 0 ? '+' : ''}${guestShift} guests, cost impact ${guestCostImpact >= 0 ? '+' : ''}${formatINR(guestCostImpact)}`}
                     onChange={(e) => setGuestShift(parseInt(e.target.value, 10))}
-                    className="w-full accent-secondary bg-surface-container-high h-1.5 rounded-lg appearance-none cursor-pointer"
+                    className="w-full accent-secondary bg-surface-container-high h-1.5 rounded-lg appearance-none cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   />
-                  <div className="flex justify-between font-label-sm text-label-sm text-outline">
+                  <div className="flex justify-between font-label-sm text-label-sm text-outline" aria-hidden="true">
                     <span>-50 pax</span>
                     <span>Baseline (320)</span>
                     <span>+50 pax</span>
@@ -545,13 +624,19 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
 
                 {/* Selector 2: Decor Tier Production */}
                 <div className="space-y-space-xs">
-                  <label className="font-label-md text-label-md font-semibold text-primary">
+                  <span id="decor-tier-label" className="font-label-md text-label-md font-semibold text-primary block">
                     Decor Production Tier
-                  </label>
-                  <div className="grid grid-cols-3 gap-1 bg-surface-container-low p-1 rounded-xl text-center">
+                  </span>
+                  <div
+                    role="radiogroup"
+                    aria-labelledby="decor-tier-label"
+                    className="grid grid-cols-3 gap-1 bg-surface-container-low p-1 rounded-xl text-center"
+                  >
                     <button
                       onClick={() => setDecorTier('classic')}
                       type="button"
+                      role="radio"
+                      aria-checked={decorTier === 'classic'}
                       className={`decor-opt py-1.5 rounded-lg font-label-sm transition-all cursor-pointer ${
                         decorTier === 'classic'
                           ? 'bg-surface-container-lowest text-primary font-bold shadow-xs'
@@ -563,6 +648,8 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                     <button
                       onClick={() => setDecorTier('couture')}
                       type="button"
+                      role="radio"
+                      aria-checked={decorTier === 'couture'}
                       className={`decor-opt py-1.5 rounded-lg font-label-sm transition-all cursor-pointer ${
                         decorTier === 'couture'
                           ? 'bg-surface-container-lowest text-primary font-bold shadow-xs'
@@ -574,6 +661,8 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                     <button
                       onClick={() => setDecorTier('regal')}
                       type="button"
+                      role="radio"
+                      aria-checked={decorTier === 'regal'}
                       className={`decor-opt py-1.5 rounded-lg font-label-sm transition-all cursor-pointer ${
                         decorTier === 'regal'
                           ? 'bg-surface-container-lowest text-primary font-bold shadow-xs'
@@ -587,10 +676,10 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
 
                 {/* Selector 3: Hospitality & Bar Menu Package */}
                 <div className="space-y-space-xs">
-                  <label className="font-label-md text-label-md font-semibold text-primary">
+                  <span id="bar-package-label" className="font-label-md text-label-md font-semibold text-primary block">
                     Hospitality Beverage Curations
-                  </label>
-                  <div className="space-y-1.5">
+                  </span>
+                  <div role="radiogroup" aria-labelledby="bar-package-label" className="space-y-1.5">
                     <label
                       onClick={() => setBarPackage('baseline')}
                       className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-all ${
@@ -603,6 +692,7 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                         <input
                           type="radio"
                           name="bar_package"
+                          value="baseline"
                           checked={barPackage === 'baseline'}
                           onChange={() => setBarPackage('baseline')}
                           className="accent-primary"
@@ -624,6 +714,7 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
                         <input
                           type="radio"
                           name="bar_package"
+                          value="vintage_champagne"
                           checked={barPackage === 'vintage_champagne'}
                           onChange={() => setBarPackage('vintage_champagne')}
                           className="accent-primary"
@@ -705,59 +796,62 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
             </div>
 
             {/* Filters & Search Toolbar */}
-            <div className="flex flex-wrap items-center gap-space-xs">
-              <div className="flex items-center bg-surface-container-low px-space-sm py-1.5 rounded-xl text-outline w-56">
-                <span className="material-symbols-outlined text-[18px] mr-1">search</span>
-                <input
-                  type="text"
-                  placeholder="Search payee or item..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-transparent font-body-sm text-body-sm text-on-surface focus:outline-none w-full"
-                />
+              <div className="flex flex-wrap items-center gap-space-xs">
+                <div className="flex items-center bg-surface-container-low px-space-sm py-1.5 rounded-xl text-outline w-56">
+                  <span className="material-symbols-outlined text-[18px] mr-1" aria-hidden="true">search</span>
+                  <input
+                    type="text"
+                    aria-label="Search payee, expense item, or voucher code"
+                    placeholder="Search payee or item..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-transparent font-body-sm text-body-sm text-on-surface focus:outline-none w-full"
+                  />
+                </div>
+
+                <select
+                  value={categoryFilter}
+                  aria-label="Filter expenses by category"
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="bg-surface-container-low px-space-sm py-1.5 rounded-xl font-body-sm text-body-sm text-on-surface focus:outline-none cursor-pointer"
+                >
+                  <option value="All">All Categories</option>
+                  <option value="Venue">Venue &amp; Lodging</option>
+                  <option value="Catering">Catering &amp; Hospitality</option>
+                  <option value="Decor">Decor &amp; Production</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Stationery">Stationery</option>
+                </select>
+
+                <select
+                  value={statusFilter}
+                  aria-label="Filter expenses by milestone status"
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="bg-surface-container-low px-space-sm py-1.5 rounded-xl font-body-sm text-body-sm text-on-surface focus:outline-none cursor-pointer"
+                >
+                  <option value="All">All Milestones</option>
+                  <option value="Settled">Settled</option>
+                  <option value="Tranche Due">Tranche Due</option>
+                  <option value="Pending Invoice">Pending Invoice</option>
+                </select>
               </div>
-
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="bg-surface-container-low px-space-sm py-1.5 rounded-xl font-body-sm text-body-sm text-on-surface focus:outline-none cursor-pointer"
-              >
-                <option value="All">All Categories</option>
-                <option value="Venue">Venue &amp; Lodging</option>
-                <option value="Catering">Catering &amp; Hospitality</option>
-                <option value="Decor">Decor &amp; Production</option>
-                <option value="Photography">Photography</option>
-                <option value="Stationery">Stationery</option>
-              </select>
-
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-surface-container-low px-space-sm py-1.5 rounded-xl font-body-sm text-body-sm text-on-surface focus:outline-none cursor-pointer"
-              >
-                <option value="All">All Milestones</option>
-                <option value="Settled">Settled</option>
-                <option value="Tranche Due">Tranche Due</option>
-                <option value="Pending Invoice">Pending Invoice</option>
-              </select>
             </div>
-          </div>
 
-          {/* Audit Stream List / Ledger */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-body-sm text-body-sm">
-              <thead className="bg-surface-container-low text-outline font-label-sm uppercase tracking-wider">
-                <tr>
-                  <th className="py-space-sm px-space-md">Voucher Date</th>
-                  <th className="py-space-sm px-space-sm">Item &amp; Scope</th>
-                  <th className="py-space-sm px-space-sm">Vendor</th>
-                  <th className="py-space-sm px-space-sm">Category</th>
-                  <th className="py-space-sm px-space-sm">Invoiced</th>
-                  <th className="py-space-sm px-space-sm">Milestone</th>
-                  <th className="py-space-sm px-space-sm">Receipt</th>
-                  <th className="py-space-sm px-space-md text-right">Reconcile</th>
-                </tr>
-              </thead>
+            {/* Audit Stream List / Ledger */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left font-body-sm text-body-sm" aria-label="Expense Transaction Stream and Audit Trail">
+                <thead className="bg-surface-container-low text-outline font-label-sm uppercase tracking-wider">
+                  <tr>
+                    <th scope="col" className="py-space-sm px-space-md">Voucher Date</th>
+                    <th scope="col" className="py-space-sm px-space-sm">Item &amp; Scope</th>
+                    <th scope="col" className="py-space-sm px-space-sm">Vendor</th>
+                    <th scope="col" className="py-space-sm px-space-sm">Category</th>
+                    <th scope="col" className="py-space-sm px-space-sm">Invoiced</th>
+                    <th scope="col" className="py-space-sm px-space-sm">Milestone</th>
+                    <th scope="col" className="py-space-sm px-space-sm">Receipt</th>
+                    <th scope="col" className="py-space-sm px-space-md text-right">Reconcile</th>
+                  </tr>
+                </thead>
               <tbody className="text-on-surface">
                 {filteredExpenses.map((exp, idx) => {
                   const isSettled = exp.paymentStatus === 'settled';

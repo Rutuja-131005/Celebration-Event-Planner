@@ -47,43 +47,43 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-space-lg border-b border-outline-variant/30">
+    <header className="fixed top-0 left-[260px] right-0 h-16 bg-white/95 backdrop-blur-md z-40 flex items-center justify-between px-7 border-b border-stone-200/70">
       {/* Left section: Clean Page Title & Active Event Switcher */}
-      <div className="flex items-center gap-space-md min-w-0">
-        <h2 className="font-headline-sm text-headline-sm text-primary font-semibold tracking-tight truncate hidden md:block">
+      <div className="flex items-center gap-4 min-w-0">
+        <h2 className="font-serif text-lg text-stone-900 font-semibold tracking-tight truncate hidden md:block">
           {formatPathName(currentPath)}
         </h2>
 
-        <span className="hidden md:inline text-outline-variant">|</span>
+        <span className="hidden md:inline text-stone-300 font-light">/</span>
 
         {/* Active Event Pill Dropdown */}
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-space-xs bg-surface-container px-space-md py-1.5 rounded-xl cursor-pointer hover:bg-surface-container-high transition-all text-left border border-outline-variant/30 shadow-xs"
+            className="flex items-center gap-2 bg-stone-50 px-3.5 py-1.5 rounded-xl cursor-pointer hover:bg-stone-100 transition-all text-left border border-stone-200/80 shadow-2xs"
             type="button"
           >
-            <span className="material-symbols-outlined text-[18px] text-secondary">celebration</span>
+            <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
             <div className="flex flex-col min-w-0">
-              <span className="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[200px] lg:max-w-xs leading-tight">
+              <span className="text-xs text-stone-900 font-medium truncate max-w-[200px] lg:max-w-xs leading-tight">
                 {activeEvent ? activeEvent.name : 'Select Celebration'}
               </span>
               {activeEvent && (
-                <span className="font-body-xs text-[11px] text-outline truncate leading-none">
+                <span className="text-[10px] text-stone-400 truncate leading-none mt-0.5">
                   {activeEvent.location} · ₹{(activeEvent.budgetAmount / 100000).toFixed(1)}L
                 </span>
               )}
             </div>
-            <span className="material-symbols-outlined text-[16px] text-outline ml-1">expand_more</span>
+            <span className="material-symbols-outlined text-[16px] text-stone-400 ml-1">expand_more</span>
           </button>
 
           {dropdownOpen && (
-            <div className="absolute left-0 mt-2 w-80 rounded-2xl bg-surface-container-lowest shadow-xl border border-outline-variant/40 py-2 z-50">
-              <div className="px-3 py-1.5 text-xs font-semibold text-outline uppercase tracking-wider flex items-center justify-between">
-                <span>Switch Active Celebration</span>
-                <span className="text-[11px] text-secondary font-normal">{allEvents.length} total</span>
+            <div className="absolute left-0 mt-2 w-80 rounded-2xl bg-white shadow-xl border border-stone-200/80 py-2 z-50">
+              <div className="px-3.5 py-1.5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                <span>Active Celebrations</span>
+                <span className="text-[11px] text-stone-500 font-normal">{allEvents.length} total</span>
               </div>
-              <div className="divide-y divide-outline-variant/20 max-h-64 overflow-y-auto">
+              <div className="divide-y divide-stone-100 max-h-64 overflow-y-auto">
                 {allEvents.map((ev) => (
                   <button
                     key={ev.id}
@@ -91,36 +91,36 @@ export const Header: React.FC<HeaderProps> = ({
                       onSelectEvent(ev.id);
                       setDropdownOpen(false);
                     }}
-                    className={`w-full px-3 py-2 text-left flex items-start gap-2 hover:bg-surface-container-low transition-colors cursor-pointer ${
-                      activeEvent?.id === ev.id ? 'bg-primary-fixed/25 font-semibold' : ''
+                    className={`w-full px-3.5 py-2.5 text-left flex items-start gap-2.5 hover:bg-stone-50 transition-colors cursor-pointer ${
+                      activeEvent?.id === ev.id ? 'bg-stone-100 font-semibold' : ''
                     }`}
                   >
-                    <span className="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">
+                    <span className="material-symbols-outlined text-stone-500 text-[18px] shrink-0 mt-0.5">
                       castle
                     </span>
                     <div className="min-w-0 flex-1">
-                      <div className="font-title-md text-title-md text-primary truncate leading-snug">
+                      <div className="text-xs text-stone-900 truncate leading-snug font-medium">
                         {ev.name}
                       </div>
-                      <div className="font-body-sm text-body-sm text-outline flex items-center justify-between">
+                      <div className="text-[11px] text-stone-400 flex items-center justify-between mt-0.5">
                         <span className="truncate">{ev.location}</span>
-                        <span className="font-semibold text-on-surface">₹{(ev.budgetAmount / 100000).toFixed(1)}L</span>
+                        <span className="font-semibold text-stone-700">₹{(ev.budgetAmount / 100000).toFixed(1)}L</span>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
               {onCreateEventClick && (
-                <div className="p-2 border-t border-outline-variant/20 mt-1">
+                <div className="p-2 border-t border-stone-100 mt-1">
                   <button
                     onClick={() => {
                       setDropdownOpen(false);
                       onCreateEventClick();
                     }}
-                    className="w-full py-1.5 px-3 rounded-xl bg-primary-fixed text-on-primary-fixed text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-primary-fixed/80 transition-all cursor-pointer"
+                    className="w-full py-1.5 px-3 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-[16px]">add</span>
-                    <span>Create New Celebration Blueprint</span>
+                    <span className="material-symbols-outlined text-[15px]">add</span>
+                    <span>Create New Celebration</span>
                   </button>
                 </div>
               )}
@@ -130,15 +130,15 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right controls: Quick Creation CTA & Profile */}
-      <div className="flex items-center gap-space-md">
+      <div className="flex items-center gap-4">
         {onCreateEventClick && (
           <button
             onClick={onCreateEventClick}
-            className="flex items-center gap-1.5 bg-primary text-on-primary px-3.5 py-1.5 rounded-xl font-label-md text-label-md shadow-xs hover:bg-primary/90 transition-all cursor-pointer active:scale-95"
+            className="hidden sm:flex items-center gap-1.5 bg-stone-900 hover:bg-black text-white text-xs px-3.5 py-1.5 rounded-xl font-medium shadow-2xs transition-all cursor-pointer active:scale-95"
             type="button"
           >
-            <span className="material-symbols-outlined text-[16px] text-secondary">auto_awesome</span>
-            <span className="font-semibold">+ New Celebration</span>
+            <span className="material-symbols-outlined text-[15px] text-amber-300">auto_awesome</span>
+            <span>New Celebration</span>
           </button>
         )}
 

@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { apiRouter } from './server/api/routes.ts';
+import { detectPrototypePollution } from './server/utils/security.ts';
 
 dotenv.config();
 
@@ -17,8 +18,45 @@ async function startServer() {
   const app = express();
   const server = http.createServer(app);
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.disable('x-powered-by');
+
+  // Hardened Security Headers Middleware (OWASP ASVS / WCAG Compliant)
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('X-DNS-Prefetch-Control', 'off');
+    res.setHeader('X-Download-Options', 'noopen');
+    res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+    res.setHeader('Origin-Agent-Cluster', '?1');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: https://api.dicebear.com; connect-src 'self' https://generativelanguage.googleapis.com https://api.dicebear.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self';"
+    );
+    next();
+  });
+
+  app.use(express.json({ limit: '500kb' }));
+  app.use(express.urlencoded({ extended: true, limit: '500kb' }));
+
+  // Anti-Prototype Pollution Protection Middleware
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.body && detectPrototypePollution(req.body)) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Suspicious payload detected.',
+        },
+      });
+    }
+    next();
+  });
 
   // Request ID & Structured Logging Middleware
   app.use((req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +64,8 @@ async function startServer() {
     res.setHeader('X-Request-Id', reqId);
     next();
   });
+
+  app.set('etag', 'strong');
 
   // Mount API router under /api/v1 as well as health endpoints
   app.use('/api/v1', apiRouter);
@@ -44,16 +84,39 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // Production mode: Serve built static assets
+    // Production mode: Serve built static assets with modern HTTP caching
     const distPath = path.resolve(__dirname, 'dist');
-    app.use(express.static(distPath));
+    app.use(
+      express.static(distPath, {
+        maxAge: '1y',
+        immutable: true,
+        dotfiles: 'deny',
+        setHeaders: (res, filePath) => {
+          if (filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          } else {
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          }
+        },
+      })
+    );
     app.get('*', (_req: Request, res: Response) => {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.sendFile(path.resolve(distPath, 'index.html'));
     });
   }
 
   // Error handling middleware
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    if (err instanceof SyntaxError && 'body' in err) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Malformed JSON payload in request body.',
+        },
+      });
+    }
     console.error('Server Uncaught Error:', err);
     res.status(500).json({
       success: false,
