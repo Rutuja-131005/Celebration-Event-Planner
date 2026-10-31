@@ -13,7 +13,7 @@ import {
 describe('End-to-End Enterprise Lifecycle & Workflow Flows', () => {
   it('E2E Flow 1: Sign in -> Create Event -> Generate AI Blueprint -> Add Expense -> Run Scenario -> Export Audit Report', async () => {
     // Step 1: Sign in
-    const user = db.getUserByEmail('priya@atelier.com');
+    const user = db.getUserByEmail('rutuja@atelier.com') || db.getUserByEmail('priya@atelier.com');
     expect(user).toBeDefined();
     expect(verifyPassword('atelier2025', user?.passwordHash)).toBe(true);
 

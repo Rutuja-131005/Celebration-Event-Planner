@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import {
   User,
   Event,
@@ -36,7 +37,9 @@ export interface DatabaseSchema {
   }>;
 }
 
-const DB_FILE = path.resolve(process.cwd(), 'data', 'atelier_db.json');
+const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+const BUNDLED_DB_FILE = path.resolve(process.cwd(), 'data', 'atelier_db.json');
+const DB_FILE = isServerless ? path.join(os.tmpdir(), 'atelier_db.json') : BUNDLED_DB_FILE;
 
 function getInitialSeedData(): DatabaseSchema {
   const defaultUser: User = {
@@ -1013,9 +1016,18 @@ class Database {
 
   private init() {
     try {
+      if (isServerless && !fs.existsSync(DB_FILE) && fs.existsSync(BUNDLED_DB_FILE)) {
+        try {
+          const bundledRaw = fs.readFileSync(BUNDLED_DB_FILE, 'utf-8');
+          fs.writeFileSync(DB_FILE, bundledRaw, 'utf-8');
+        } catch {}
+      }
+
       const dataDir = path.dirname(DB_FILE);
       if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
+        try {
+          fs.mkdirSync(dataDir, { recursive: true });
+        } catch {}
       }
 
       if (fs.existsSync(DB_FILE)) {

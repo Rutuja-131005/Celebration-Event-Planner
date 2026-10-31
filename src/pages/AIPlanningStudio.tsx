@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Event, AIPlanVersion } from '../../server/models/types.ts';
-import { planningService } from '../services/planning.ts';
+import { planningService, getDefaultSeedPlan } from '../services/planning.ts';
 
 interface AIPlanningStudioProps {
   event: Event;
@@ -39,7 +39,8 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
   const [applySuccessMessage, setApplySuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const currentPlan: AIPlanVersion | undefined = plans[selectedPlanIndex] || plans[0];
+  const activePlanList = plans.length > 0 ? plans : [getDefaultSeedPlan(event.id)];
+  const currentPlan: AIPlanVersion = activePlanList[selectedPlanIndex] || activePlanList[0];
   const planData = currentPlan?.planJson;
 
   // Preset Handlers for the 3 core challenge domains
