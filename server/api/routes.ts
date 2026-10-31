@@ -907,3 +907,24 @@ apiRouter.get('/events/:id/reports/summary', optionalAuth, (req: Request, res: R
     },
   });
 });
+
+// Fallback for API root diagnostics
+apiRouter.get('/', (_req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: 'Celebration Atelier API Router',
+    version: '1.0.0',
+    status: 'healthy',
+  });
+});
+
+// Catch-all 404 for unmatched API routes returning consistent JSON
+apiRouter.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    error: {
+      code: 'NOT_FOUND',
+      message: `API endpoint '${req.method} ${req.originalUrl || req.url}' does not exist.`,
+    },
+  });
+});

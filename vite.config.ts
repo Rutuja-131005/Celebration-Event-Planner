@@ -15,6 +15,16 @@ export default defineConfig(() => {
       // HMR is disabled in Express middleware mode to prevent WebSocket reconnection flickering
       hmr: false,
       watch: null,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+        '/health': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+      },
     },
   };
 });

@@ -112,8 +112,12 @@ async function request<T>(endpoint: string, options: RequestInit = {}, isRetry =
     }
 
     if (!res.ok) {
-      const errorMsg = data?.error?.message || `Request failed with status ${res.status}`;
-      const errorCode = data?.error?.code || 'UNKNOWN_ERROR';
+      const errorMsg =
+        data?.error?.message ||
+        (res.status === 404
+          ? `Resource not found at ${endpoint} (HTTP 404)`
+          : `Request failed with status ${res.status}`);
+      const errorCode = data?.error?.code || (res.status === 404 ? 'NOT_FOUND' : 'UNKNOWN_ERROR');
       throw new ApiError(errorMsg, res.status, errorCode);
     }
 
