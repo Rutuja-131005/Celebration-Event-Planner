@@ -55,7 +55,7 @@ export const authService = {
       id: `usr_${Date.now()}`,
       name: name || 'Planner',
       email: email || 'user@atelier.com',
-      role: (role as any) || 'Event Planner',
+      role: role || 'Event Planner',
       avatarUrl: fallbackLeadPlanner.avatarUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

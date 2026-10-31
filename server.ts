@@ -3,16 +3,16 @@ import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { env } from './server/config/env.ts';
+import { serverLogger } from './server/utils/logger.ts';
 import { apiRouter } from './server/api/routes.ts';
 import { detectPrototypePollution } from './server/utils/security.ts';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const isProduction = process.env.NODE_ENV === 'production';
-const PORT = parseInt(process.env.PORT || '3000', 10);
+const isProduction = env.NODE_ENV === 'production';
+const PORT = env.PORT;
 
 async function startServer() {
   const app = express();
@@ -107,8 +107,8 @@ async function startServer() {
   }
 
   // Error handling middleware
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof SyntaxError && 'body' in err) {
+  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    if (err instanceof SyntaxError && typeof err === 'object' && err !== null && 'body' in err) {
       return res.status(400).json({
         success: false,
         error: {
@@ -117,7 +117,7 @@ async function startServer() {
         },
       });
     }
-    console.error('Server Uncaught Error:', err);
+    serverLogger.error('Server Uncaught Error:', 'Server', { error: err instanceof Error ? err.message : String(err) });
     res.status(500).json({
       success: false,
       error: {
@@ -128,13 +128,13 @@ async function startServer() {
   });
 
   server.listen(PORT, () => {
-    console.log(`[Celebration Atelier Server] Running on http://localhost:${PORT}`);
-    console.log(`[Celebration Atelier Server] Direct IPv4 link: http://127.0.0.1:${PORT}`);
-    console.log(`[Celebration Atelier Server] API endpoints available at http://localhost:${PORT}/api/v1`);
+    serverLogger.info(`Celebration Atelier Server running on http://localhost:${PORT}`, 'Server');
+    serverLogger.info(`Direct IPv4 link: http://127.0.0.1:${PORT}`, 'Server');
+    serverLogger.info(`API endpoints available at http://localhost:${PORT}/api/v1`, 'Server');
   });
 }
 
 startServer().catch((err) => {
-  console.error('Failed to start server:', err);
+  serverLogger.error('Failed to start server:', 'Bootstrap', { error: err instanceof Error ? err.message : String(err) });
   process.exit(1);
 });

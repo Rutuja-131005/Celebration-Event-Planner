@@ -1,5 +1,5 @@
 import { api } from './api.ts';
-import { BudgetCategory, Expense } from '../../server/models/types.ts';
+import { BudgetCategory, Expense, BudgetMetrics } from '../../server/models/types.ts';
 
 const fallbackCategories: BudgetCategory[] = [
   {
@@ -82,7 +82,7 @@ const fallbackCategories: BudgetCategory[] = [
   },
 ];
 
-const fallbackMetrics = {
+const fallbackMetrics: BudgetMetrics = {
   baselineBudget: 2500000,
   plannedTotal: 2500000,
   committedAmount: 2415000,
@@ -155,9 +155,12 @@ const fallbackExpenses: Expense[] = [
 ];
 
 export const budgetService = {
-  async getBudget(eventId: string): Promise<{ success: boolean; metrics: any; categories: BudgetCategory[] }> {
+  /**
+   * Retrieves budget metrics and category breakdown for a celebration event.
+   */
+  async getBudget(eventId: string): Promise<{ success: boolean; metrics: BudgetMetrics; categories: BudgetCategory[] }> {
     try {
-      const res = await api.get<{ success: boolean; metrics: any; categories: BudgetCategory[] }>(
+      const res = await api.get<{ success: boolean; metrics: BudgetMetrics; categories: BudgetCategory[] }>(
         `/events/${eventId}/budget`
       );
       if (res?.success) return res;
@@ -170,12 +173,15 @@ export const budgetService = {
     };
   },
 
+  /**
+   * Updates planned budget allocations across categories.
+   */
   async updateBudgetCategories(
     eventId: string,
     categories: Array<Partial<BudgetCategory>>
-  ): Promise<{ success: boolean; categories: BudgetCategory[]; metrics: any }> {
+  ): Promise<{ success: boolean; categories: BudgetCategory[]; metrics: BudgetMetrics }> {
     try {
-      const res = await api.put<{ success: boolean; categories: BudgetCategory[]; metrics: any }>(
+      const res = await api.put<{ success: boolean; categories: BudgetCategory[]; metrics: BudgetMetrics }>(
         `/events/${eventId}/budget`,
         { categories }
       );
@@ -189,6 +195,9 @@ export const budgetService = {
     };
   },
 
+  /**
+   * Fetches all recorded expenses for a celebration event.
+   */
   async getExpenses(eventId: string): Promise<{ success: boolean; expenses: Expense[]; total: number }> {
     try {
       const res = await api.get<{ success: boolean; expenses: Expense[]; total: number }>(`/events/${eventId}/expenses`);
@@ -202,17 +211,22 @@ export const budgetService = {
     };
   },
 
+  /**
+   * Records a new expense voucher.
+   */
   async createExpense(
     eventId: string,
     expenseData: Partial<Expense>
-  ): Promise<{ success: boolean; expense: Expense; metrics: any }> {
+  ): Promise<{ success: boolean; expense: Expense; metrics: BudgetMetrics }> {
     try {
-      const res = await api.post<{ success: boolean; expense: Expense; metrics: any }>(
+      const res = await api.post<{ success: boolean; expense: Expense; metrics: BudgetMetrics }>(
         `/events/${eventId}/expenses`,
         expenseData
       );
       if (res?.success) return res;
     } catch {}
+
+    const paymentStatus: Expense['paymentStatus'] = expenseData.paymentStatus || 'settled';
 
     const newExp: Expense = {
       id: `exp_${Date.now()}`,
@@ -226,7 +240,7 @@ export const budgetService = {
       actualAmount: expenseData.actualAmount || 10000,
       expenseDate: expenseData.expenseDate || new Date().toISOString().split('T')[0],
       paymentMethod: expenseData.paymentMethod || 'Bank Transfer',
-      paymentStatus: (expenseData.paymentStatus as any) || 'settled',
+      paymentStatus,
       receiptRef: expenseData.receiptRef || 'REC-001',
       isReconciled: true,
       notes: expenseData.notes || '',
@@ -240,18 +254,25 @@ export const budgetService = {
     };
   },
 
+  /**
+   * Updates an existing expense voucher.
+   */
   async updateExpense(expenseId: string, updates: Partial<Expense>): Promise<{ success: boolean; expense: Expense }> {
     try {
       const res = await api.patch<{ success: boolean; expense: Expense }>(`/expenses/${expenseId}`, updates);
       if (res?.success) return res;
     } catch {}
 
+    const found = fallbackExpenses.find((e) => e.id === expenseId) || fallbackExpenses[0];
     return {
       success: true,
-      expense: { id: expenseId, ...updates } as any,
+      expense: { ...found, ...updates, updatedAt: new Date().toISOString() },
     };
   },
 
+  /**
+   * Deletes an expense voucher by ID.
+   */
   async deleteExpense(expenseId: string): Promise<{ success: boolean; message: string }> {
     try {
       const res = await api.delete<{ success: boolean; message: string }>(`/expenses/${expenseId}`);

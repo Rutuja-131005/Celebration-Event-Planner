@@ -22,7 +22,7 @@ export interface Event {
   budgetAmount: number;
   currencyCode: string;
   theme: string;
-  eventPreferences: Record<string, any>;
+  eventPreferences: Record<string, unknown>;
   status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'archived';
   daysRemaining: number;
   readinessScore: number;
@@ -205,7 +205,7 @@ export interface Prediction {
   riskProbability: number;
   modelVersion: string;
   confidenceScore: number;
-  featureSnapshot: Record<string, any>;
+  featureSnapshot: Record<string, unknown>;
   explanation: string;
   primaryVariable: {
     title: string;
@@ -239,3 +239,78 @@ export interface ScenarioSimulationResult {
   contingencyStatusText: string;
   isWithinBudget: boolean;
 }
+
+export interface BudgetMetrics {
+  baselineBudget: number;
+  plannedTotal: number;
+  committedAmount: number;
+  actualSpent: number;
+  remainingBudget: number;
+  committedPercentage: number;
+  actualPercentage: number;
+  contingencyPool: number;
+  riskTier: 'low' | 'moderate' | 'elevated' | 'critical';
+  forecastedTotal?: number;
+  variance?: number;
+}
+
+export interface ScenarioSnapshot {
+  id: string;
+  eventId: string;
+  title: string;
+  guestShift: number;
+  decorTier: string;
+  barPackage: string;
+  simulatedOutlay: number;
+  variance: number;
+  createdAt: string;
+}
+
+export interface CreateEventInput {
+  name: string;
+  eventType: string;
+  eventDate: string;
+  location: string;
+  venueName: string;
+  guestCount: number;
+  budgetAmount: number;
+  theme?: string;
+  currencyCode?: string;
+  eventPreferences?: Record<string, string | number | boolean>;
+  autoGeneratePlan?: boolean;
+  vibe?: string;
+  ambiance?: string;
+  culinaryStyle?: string;
+  specialMoments?: string;
+  colorPalette?: unknown;
+  additionalNotes?: string;
+  [key: string]: unknown;
+}
+
+export interface DashboardSummary {
+  budgetSpent: number;
+  budgetTotal: number;
+  daysRemaining: number;
+  readinessScore: number;
+  taskCount: number;
+  completedTasks: number;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
+}
+
+export interface AuthSession {
+  userId: string;
+  email: string;
+  role: string;
+  issuedAt: number;
+  expiresAt: number;
+}
+

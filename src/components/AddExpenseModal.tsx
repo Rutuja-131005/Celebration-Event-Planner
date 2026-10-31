@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { budgetService } from '../services/budget.ts';
-import { BudgetCategory, Expense } from '../../server/models/types.ts';
+import { BudgetCategory, Expense, BudgetMetrics } from '../../server/models/types.ts';
 import { Modal } from './Modal.tsx';
 
 interface AddExpenseModalProps {
@@ -8,7 +8,7 @@ interface AddExpenseModalProps {
   eventId: string;
   categories: BudgetCategory[];
   onClose: () => void;
-  onExpenseAdded: (expense: Expense, updatedMetrics?: any) => void;
+  onExpenseAdded: (expense: Expense, updatedMetrics?: BudgetMetrics) => void;
 }
 
 export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
@@ -56,8 +56,9 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         onExpenseAdded(res.expense, res.metrics);
         onClose();
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to log expense voucher.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to log expense voucher.';
+      setError(message);
     } finally {
       setSubmitting(false);
     }
@@ -181,7 +182,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             <select
               id="expense-status"
               value={paymentStatus}
-              onChange={(e: any) => setPaymentStatus(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPaymentStatus(e.target.value as 'settled' | 'drawdown_partial' | 'pending_invoice')}
               className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary text-sm cursor-pointer"
             >
               <option value="settled">Settled</option>

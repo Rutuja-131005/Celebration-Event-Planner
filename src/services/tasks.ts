@@ -99,7 +99,8 @@ export const tasksService = {
       if (res?.success) return res;
     } catch {}
 
-    return { success: true, task: { id: taskId, ...updates } as any };
+    const found = fallbackTasks.find((t) => t.id === taskId) || fallbackTasks[0];
+    return { success: true, task: { ...found, ...updates, updatedAt: new Date().toISOString() } };
   },
 
   async deleteTask(taskId: string): Promise<{ success: boolean; message: string }> {

@@ -1477,7 +1477,9 @@ class Database {
           plannedAmount: cat.amount,
           committedAmount: 0,
           actualAmount: 0,
-          priority: (cat.priority as any) || 'medium',
+          priority: ['high', 'medium', 'normal', 'low'].includes(cat.priority as string)
+            ? (cat.priority as 'high' | 'medium' | 'normal' | 'low')
+            : 'medium',
           status: 'pending',
           notes: cat.note,
           createdAt: new Date().toISOString(),
@@ -1497,7 +1499,9 @@ class Database {
           title: m.milestone,
           description: m.description,
           dueDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
-          priority: (m.priority as any) || 'medium',
+          priority: ['high', 'medium', 'normal', 'routine'].includes(m.priority as string)
+            ? (m.priority as 'high' | 'medium' | 'normal' | 'routine')
+            : 'medium',
           status: 'pending',
           assignedTo: 'Lead Planner',
           dueLabel: m.timeframe,

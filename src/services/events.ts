@@ -1,5 +1,5 @@
 import { api } from './api.ts';
-import { Event } from '../../server/models/types.ts';
+import { Event, CreateEventInput, DashboardSummary, AIPlanVersion } from '../../server/models/types.ts';
 
 const fallbackEvents: Event[] = [
   {
@@ -145,9 +145,11 @@ export const eventsService = {
     return { success: true, event: found };
   },
 
-  async createEvent(eventData: any): Promise<{ success: boolean; event: Event; plan?: any; planApplied?: boolean }> {
+  async createEvent(
+    eventData: Partial<CreateEventInput> & { name: string }
+  ): Promise<{ success: boolean; event: Event; plan?: AIPlanVersion; planApplied?: boolean }> {
     try {
-      const res = await api.post<{ success: boolean; event: Event; plan?: any; planApplied?: boolean }>(
+      const res = await api.post<{ success: boolean; event: Event; plan?: AIPlanVersion; planApplied?: boolean }>(
         '/events',
         eventData
       );
@@ -204,9 +206,9 @@ export const eventsService = {
     return { success: true, message: 'Celebration deleted successfully' };
   },
 
-  async getDashboardSummary(eventId: string): Promise<any> {
+  async getDashboardSummary(eventId: string): Promise<{ success: boolean; summary: DashboardSummary }> {
     try {
-      return await api.get(`/dashboard/summary?eventId=${eventId}`);
+      return await api.get<{ success: boolean; summary: DashboardSummary }>(`/dashboard/summary?eventId=${eventId}`);
     } catch {
       return {
         success: true,

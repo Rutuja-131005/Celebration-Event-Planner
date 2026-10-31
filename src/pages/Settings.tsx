@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '../../server/models/types.ts';
 
+import { logger } from '../utils/logger.ts';
+
+interface SystemHealth {
+  status?: string;
+  timestamp?: string;
+  version?: string;
+  aiProvider?: string;
+  uptime?: number;
+}
+
 interface SettingsProps {
   currentUser: User | null;
   onOpenAuth: () => void;
 }
 
 export const Settings: React.FC<SettingsProps> = ({ currentUser, onOpenAuth }) => {
-  const [health, setHealth] = useState<any>(null);
+  const [health, setHealth] = useState<SystemHealth | null>(null);
   const [loadingHealth, setLoadingHealth] = useState(false);
 
   useEffect(() => {
@@ -18,10 +28,10 @@ export const Settings: React.FC<SettingsProps> = ({ currentUser, onOpenAuth }) =
     try {
       setLoadingHealth(true);
       const res = await fetch('/health/ready');
-      const data = await res.json();
+      const data: SystemHealth = await res.json();
       setHealth(data);
     } catch (err) {
-      console.error(err);
+      logger.error('Failed to fetch system health diagnostics', err);
     } finally {
       setLoadingHealth(false);
     }

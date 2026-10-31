@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { BudgetCategory, Expense } from '../../server/models/types.ts';
+import { BudgetCategory, Expense, BudgetMetrics } from '../../server/models/types.ts';
 import { predictionsService } from '../services/predictions.ts';
 import { budgetService } from '../services/budget.ts';
 
@@ -7,7 +7,7 @@ interface BudgetForecastProps {
   eventId: string;
   categories: BudgetCategory[];
   expenses: Expense[];
-  metrics: any;
+  metrics: BudgetMetrics | null;
   onOpenAddExpense: () => void;
   onRefreshData: () => void;
 }

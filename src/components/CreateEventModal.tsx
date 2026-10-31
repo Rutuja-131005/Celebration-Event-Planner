@@ -198,8 +198,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           onClose();
         }, 500);
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to initialize celebration.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to initialize celebration.';
+      setError(message);
       setSubmitting(false);
     }
   };

@@ -2,8 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import { apiRouter } from '../server/api/routes.ts';
 import { detectPrototypePollution } from '../server/utils/security.ts';
-
-dotenv.config();
+import { serverLogger } from '../server/utils/logger.ts';
 
 const app = express();
 app.disable('x-powered-by');
@@ -55,7 +54,7 @@ app.use('/api', apiRouter);
 app.use('/', apiRouter);
 
 // Error handling middleware
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof SyntaxError && 'body' in err) {
     return res.status(400).json({
       success: false,
@@ -65,7 +64,9 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       },
     });
   }
-  console.error('Serverless Uncaught Error:', err);
+  serverLogger.error('Serverless Uncaught Error:', 'Serverless', {
+    error: err instanceof Error ? err.message : String(err),
+  });
   res.status(500).json({
     success: false,
     error: {
@@ -75,6 +76,6 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-export default function handler(req: any, res: any) {
-  return app(req, res);
+export default function handler(req: Request, res: Response): void {
+  app(req, res);
 }

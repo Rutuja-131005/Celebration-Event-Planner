@@ -66,6 +66,7 @@ import {
   AIPlanVersion,
   Prediction,
   User,
+  BudgetMetrics,
 } from '../server/models/types.ts';
 
 export default function App() {
@@ -76,7 +77,7 @@ export default function App() {
   const [activeEvent, setActiveEvent] = useState<Event | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  const [budgetMetrics, setBudgetMetrics] = useState<any>(null);
+  const [budgetMetrics, setBudgetMetrics] = useState<BudgetMetrics | null>(null);
   const [categories, setCategories] = useState<BudgetCategory[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -186,7 +187,7 @@ export default function App() {
     }
   };
 
-  const handleExpenseAdded = (newExpense: Expense, updatedMetrics?: any) => {
+  const handleExpenseAdded = (newExpense: Expense, updatedMetrics?: BudgetMetrics) => {
     setExpenses((prev) => [newExpense, ...prev]);
     if (updatedMetrics) {
       setBudgetMetrics(updatedMetrics);

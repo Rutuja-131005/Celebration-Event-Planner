@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { db } from '../db/database.ts';
-import { AIPlanVersion } from '../models/types.ts';
+import { AIPlanVersion, Event } from '../models/types.ts';
+import { serverLogger } from '../utils/logger.ts';
 
 export class AIService {
   private client: GoogleGenAI | null = null;
@@ -19,7 +20,7 @@ export class AIService {
           },
         });
       } catch (err) {
-        console.warn('Failed to initialize GoogleGenAI client:', err);
+        serverLogger.warn('Failed to initialize GoogleGenAI client', 'AIService', { error: String(err) });
       }
     }
   }
@@ -91,7 +92,7 @@ export class AIService {
     // If Gemini client is active, attempt live generation (skipped in test mode for speed and determinism)
     const isTestEnv = !!process.env.VITEST || process.env.NODE_ENV === 'test';
     if (this.client && !isTestEnv) {
-      let timer: any = null;
+      let timer: ReturnType<typeof setTimeout> | null = null;
       try {
         const systemInstruction = `You are a world-class luxury event planning assistant specializing in:
 1. Weddings (grand, intimate, destination, heritage)
@@ -277,12 +278,14 @@ ${sanitizedPrompt}
           this.planCache.set(cacheKey, { plan: savedPlan, timestamp: Date.now() });
           return savedPlan;
         }
-      } catch (err: any) {
-        if (err?.status === 400 || err?.message?.includes('API key not valid') || err?.message?.includes('API_KEY_INVALID')) {
-          console.warn('[AIService] Invalid Gemini API key detected. Falling back to local synthesis engine.');
+      } catch (err: unknown) {
+        const errObj = typeof err === 'object' && err !== null ? (err as Record<string, unknown>) : {};
+        const errMessage = typeof errObj.message === 'string' ? errObj.message : String(err);
+        if (errObj.status === 400 || errMessage.includes('API key not valid') || errMessage.includes('API_KEY_INVALID')) {
+          serverLogger.warn('Invalid Gemini API key detected. Falling back to local synthesis engine.', 'AIService');
           this.client = null;
         } else {
-          console.warn('Live Gemini API plan generation failed, using intelligent synthesis fallback:', err);
+          serverLogger.warn('Live Gemini API plan generation failed, using intelligent synthesis fallback', 'AIService', { error: errMessage });
         }
       } finally {
         if (timer) clearTimeout(timer);
@@ -361,7 +364,7 @@ ${sanitizedPrompt}
     }
   }
 
-  private getDefaultIdeas(category: string, event: any) {
+  private getDefaultIdeas(category: string, event: Partial<Event>) {
     if (category === 'birthday') {
       return [
         {
@@ -1047,7 +1050,7 @@ ${sanitizedPrompt}
   }
 
   private buildSynthesisPlan(
-    event: any,
+    event: Partial<Event>,
     prompt: string,
     versionNumber: string,
     customTitle?: string,
@@ -1065,8 +1068,11 @@ ${sanitizedPrompt}
       wedding: 'An opulent Marwari palace celebration combining heritage brassware, floating stages on Lake Pichola, and acoustic Sufi melodies.',
     };
 
+    const safeEventId = event.id || 'evt_default';
+    const safeBudgetAmount = typeof event.budgetAmount === 'number' && event.budgetAmount > 0 ? event.budgetAmount : 1500000;
+
     return {
-      eventId: event.id,
+      eventId: safeEventId,
       versionNumber,
       versionTitle: customTitle || `${titles[category as keyof typeof titles] || titles.wedding} • ${versionNumber}`,
       curationConcept: concepts[category as keyof typeof concepts] || concepts.wedding,
@@ -1078,10 +1084,10 @@ ${sanitizedPrompt}
         colorPalette: this.getDefaultPalette(category),
         spatialBlueprint: this.getDefaultSpatial(category),
         personalizedIdeas: this.getDefaultIdeas(category, event),
-        budgetRebalance: this.getDefaultBudget(category, event.budgetAmount),
+        budgetRebalance: this.getDefaultBudget(category, safeBudgetAmount),
         itinerary: this.getDefaultItinerary(category),
         milestoneTimeline: this.getDefaultMilestones(category),
-        vendorChecklist: this.getDefaultVendors(category, event.budgetAmount),
+        vendorChecklist: this.getDefaultVendors(category, safeBudgetAmount),
         culinaryAteliers: this.getDefaultCulinary(category),
       },
       isDevelopmentFallback: true,

@@ -50,8 +50,9 @@ export const AddQuoteModal: React.FC<AddQuoteModalProps> = ({
         onQuoteAdded(res.quote);
         onClose();
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to record quote');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to record quote';
+      setError(message);
     } finally {
       setSubmitting(false);
     }

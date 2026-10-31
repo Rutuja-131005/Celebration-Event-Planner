@@ -404,12 +404,23 @@ export class MemoryRateLimitStore implements RateLimitStore {
   }
 }
 
+interface RedisClientInterface {
+  get(key: string): Promise<string | null>;
+  multi(): {
+    incr(key: string): unknown;
+    pttl(key: string): unknown;
+    exec(): Promise<[number, number]>;
+  };
+  pexpire(key: string, ms: number): Promise<unknown>;
+  del(key: string): Promise<unknown>;
+}
+
 /**
  * Enterprise Redis RateLimitStore with in-memory fallback
  */
 export class RedisRateLimitStore implements RateLimitStore {
   private fallbackStore = new MemoryRateLimitStore();
-  private redisClient: any = null;
+  private redisClient: RedisClientInterface | null = null;
   private isConnected = false;
 
   constructor(redisUrl?: string) {

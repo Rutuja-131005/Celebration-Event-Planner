@@ -1,5 +1,5 @@
 import { api } from './api.ts';
-import { Prediction, ScenarioSimulationResult } from '../../server/models/types.ts';
+import { Prediction, ScenarioSimulationResult, ScenarioSnapshot } from '../../server/models/types.ts';
 
 const fallbackPrediction: Prediction = {
   id: 'pred_latest',
@@ -60,6 +60,9 @@ const fallbackPrediction: Prediction = {
 };
 
 export const predictionsService = {
+  /**
+   * Retrieves the latest statistical cost & risk forecast for an event.
+   */
   async getLatestPrediction(eventId: string): Promise<{ success: boolean; prediction: Prediction }> {
     try {
       const res = await api.get<{ success: boolean; prediction: Prediction }>(
@@ -71,6 +74,9 @@ export const predictionsService = {
     return { success: true, prediction: fallbackPrediction };
   },
 
+  /**
+   * Simulates what-if sensitivity permutations (headcount shifts, decor tiers, bar packages).
+   */
   async runScenario(
     eventId: string,
     guestShift: number,
@@ -78,9 +84,9 @@ export const predictionsService = {
     barPackage: string,
     saveSnapshot = false,
     title?: string
-  ): Promise<{ success: boolean; simulation: ScenarioSimulationResult; savedSnapshot?: any }> {
+  ): Promise<{ success: boolean; simulation: ScenarioSimulationResult; savedSnapshot?: ScenarioSnapshot }> {
     try {
-      const res = await api.post<{ success: boolean; simulation: ScenarioSimulationResult; savedSnapshot?: any }>(
+      const res = await api.post<{ success: boolean; simulation: ScenarioSimulationResult; savedSnapshot?: ScenarioSnapshot }>(
         `/events/${eventId}/scenarios`,
         {
           guestShift,
@@ -102,12 +108,17 @@ export const predictionsService = {
     const netVariance = guestVariance + decorDelta + barDelta;
     const simulatedFinalOutlay = 2415000 + netVariance;
 
+    const validDecorTier: ScenarioSimulationResult['decorTier'] =
+      decorTier === 'classic' || decorTier === 'couture' || decorTier === 'regal' ? decorTier : 'couture';
+    const validBarPackage: ScenarioSimulationResult['barPackage'] =
+      barPackage === 'vintage_champagne' ? 'vintage_champagne' : 'baseline';
+
     return {
       success: true,
       simulation: {
         guestCountShift: guestShift,
-        decorTier: (decorTier as any) || 'couture',
-        barPackage: (barPackage as any) || 'baseline',
+        decorTier: validDecorTier,
+        barPackage: validBarPackage,
         netVariance,
         simulatedFinalOutlay,
         baselineBudget: 2500000,
@@ -118,13 +129,28 @@ export const predictionsService = {
             : `Yields surplus of ₹${Math.abs(netVariance).toLocaleString('en-IN')}.`,
         isWithinBudget: simulatedFinalOutlay <= 2500000,
       },
-      savedSnapshot: saveSnapshot ? { id: `scn_${Date.now()}`, title: title || 'Scenario', variance: netVariance } : undefined,
+      savedSnapshot: saveSnapshot
+        ? {
+            id: `scn_${Date.now()}`,
+            eventId,
+            title: title || 'Scenario Snapshot',
+            guestShift,
+            decorTier,
+            barPackage,
+            simulatedOutlay: simulatedFinalOutlay,
+            variance: netVariance,
+            createdAt: new Date().toISOString(),
+          }
+        : undefined,
     };
   },
 
-  async getSavedScenarios(eventId: string): Promise<{ success: boolean; scenarios: any[] }> {
+  /**
+   * Retrieves all saved what-if scenario simulations for an event.
+   */
+  async getSavedScenarios(eventId: string): Promise<{ success: boolean; scenarios: ScenarioSnapshot[] }> {
     try {
-      const res = await api.get<{ success: boolean; scenarios: any[] }>(`/events/${eventId}/scenarios`);
+      const res = await api.get<{ success: boolean; scenarios: ScenarioSnapshot[] }>(`/events/${eventId}/scenarios`);
       if (res?.success) return res;
     } catch {}
 

@@ -1,4 +1,5 @@
 import { api } from './api.ts';
+import { eventsService } from './events.ts';
 import { AIPlanVersion, Event } from '../../server/models/types.ts';
 
 function getLocalKey(eventId: string): string {
@@ -434,9 +435,10 @@ export const planningService = {
       // Backend offline fallback
     }
 
+    const ev = await eventsService.getEvent(eventId);
     return {
       success: true,
-      event: { id: eventId } as any,
+      event: ev.event,
       categoriesUpdated: 5,
       tasksAdded: 6,
     };

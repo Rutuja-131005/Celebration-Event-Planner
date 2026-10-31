@@ -30,6 +30,8 @@ import {
   createTaskSchema,
   simulateScenarioSchema,
 } from '../validation/schemas.ts';
+import { serverLogger } from '../utils/logger.ts';
+import { BudgetCategory } from '../models/types.ts';
 
 export const apiRouter = Router();
 
@@ -441,7 +443,7 @@ apiRouter.patch('/events/:id', requireAuth, (req: AuthenticatedRequest, res: Res
     'readinessScore',
   ];
 
-  const safeUpdates: Record<string, any> = {};
+  const safeUpdates: Record<string, unknown> = {};
   for (const field of allowedFields) {
     if (field in req.body) {
       if (typeof req.body[field] === 'string') {
@@ -501,17 +503,34 @@ apiRouter.put('/events/:id/budget', requireAuth, (req: AuthenticatedRequest, res
     return handleError(res, 400, 'Categories must be an array', 'VALIDATION_ERROR');
   }
 
-  const sanitizedCategories = categories.map((cat: any) => ({
-    categoryName: sanitizeText(cat.categoryName, 80) || 'General Category',
-    plannedAmount: validateNumber(cat.plannedAmount, 0, 1000000000, 0),
-    committedAmount: validateNumber(cat.committedAmount, 0, 1000000000, 0),
-    actualAmount: validateNumber(cat.actualAmount, 0, 1000000000, 0),
-    priority: ['high', 'medium', 'normal', 'low'].includes(cat.priority) ? cat.priority : 'normal',
-    status: ['paid_100', 'advance_50', 'quoted', 'booked', 'in_progress', 'pending'].includes(cat.status)
-      ? cat.status
-      : 'pending',
-    notes: sanitizeText(cat.notes, 200),
-  }));
+  const sanitizedCategories: Omit<BudgetCategory, 'createdAt' | 'eventId' | 'id' | 'updatedAt'>[] = categories.map((cat: Record<string, unknown>) => {
+    const rawPriority = typeof cat.priority === 'string' ? cat.priority : 'normal';
+    const priority: 'high' | 'medium' | 'normal' | 'low' = ['high', 'medium', 'normal', 'low'].includes(rawPriority)
+      ? (rawPriority as 'high' | 'medium' | 'normal' | 'low')
+      : 'normal';
+
+    const rawStatus = typeof cat.status === 'string' ? cat.status : 'pending';
+    const status: 'paid_100' | 'advance_50' | 'quoted' | 'booked' | 'in_progress' | 'pending' = [
+      'paid_100',
+      'advance_50',
+      'quoted',
+      'booked',
+      'in_progress',
+      'pending',
+    ].includes(rawStatus)
+      ? (rawStatus as 'paid_100' | 'advance_50' | 'quoted' | 'booked' | 'in_progress' | 'pending')
+      : 'pending';
+
+    return {
+      categoryName: sanitizeText(typeof cat.categoryName === 'string' ? cat.categoryName : '', 80) || 'General Category',
+      plannedAmount: validateNumber(cat.plannedAmount, 0, 1000000000, 0),
+      committedAmount: validateNumber(cat.committedAmount, 0, 1000000000, 0),
+      actualAmount: validateNumber(cat.actualAmount, 0, 1000000000, 0),
+      priority,
+      status,
+      notes: sanitizeText(typeof cat.notes === 'string' ? cat.notes : '', 200),
+    };
+  });
 
   const updated = db.setBudgetCategories(eventId, sanitizedCategories);
   const metrics = predictionService.calculateBudgetMetrics(eventId);
@@ -572,7 +591,7 @@ apiRouter.post('/events/:id/expenses', requireAuth, validateBody(createExpenseSc
 
 apiRouter.patch('/expenses/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const allowed = ['description', 'actualAmount', 'estimatedAmount', 'paymentStatus', 'paymentMethod', 'notes'];
-  const safeUpdates: Record<string, any> = {};
+  const safeUpdates: Record<string, unknown> = {};
   for (const field of allowed) {
     if (field in req.body) {
       if (typeof req.body[field] === 'string') {
@@ -627,7 +646,7 @@ apiRouter.post('/events/:id/tasks', requireAuth, validateBody(createTaskSchema),
 
 apiRouter.patch('/tasks/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const allowed = ['title', 'description', 'dueDate', 'priority', 'status', 'assignedTo', 'category'];
-  const safeUpdates: Record<string, any> = {};
+  const safeUpdates: Record<string, unknown> = {};
   for (const field of allowed) {
     if (field in req.body) {
       safeUpdates[field] = sanitizeText(req.body[field], 300);
@@ -710,9 +729,9 @@ apiRouter.post('/events/:id/vendor-quotes', requireAuth, validateBody(createQuot
     quoteDate: new Date().toISOString().split('T')[0],
     validUntil: sanitizeText(validUntil, 30) || '2025-12-31',
     bookingStatus: 'under_review',
-    contractScope: [descriptionOrScope(req.body)],
+    contractScope: [descriptionOrScope(req.body as Record<string, unknown>)],
     inclusions: Array.isArray(inclusions)
-      ? inclusions.map((i: any) => sanitizeText(i, 200))
+      ? inclusions.map((i: unknown) => sanitizeText(typeof i === 'string' ? i : '', 200))
       : ['Standard atelier inclusions'],
     paymentTerms: sanitizeText(paymentTerms, 100) || '25% Advance / 50% Mid / 25% Wrap',
   });
@@ -720,8 +739,8 @@ apiRouter.post('/events/:id/vendor-quotes', requireAuth, validateBody(createQuot
   res.status(201).json({ success: true, quote });
 });
 
-function descriptionOrScope(body: any): string {
-  const raw = body.notes || body.scope || 'Custom scope agreed between client and partner';
+function descriptionOrScope(body: Record<string, unknown>): string {
+  const raw = (typeof body.notes === 'string' ? body.notes : null) || (typeof body.scope === 'string' ? body.scope : null) || 'Custom scope agreed between client and partner';
   return sanitizeText(raw, 300);
 }
 
@@ -751,8 +770,8 @@ apiRouter.post('/events/:id/generate-plan', aiRateLimiter, requireAuth, async (r
       sanitizeText(eventType, 50)
     );
     res.json({ success: true, plan });
-  } catch (err: any) {
-    console.error('Plan generation failed:', err);
+  } catch (err: unknown) {
+    serverLogger.error('Plan generation failed', 'Routes', { error: err instanceof Error ? err.message : String(err) });
     handleError(res, 500, 'AI Plan synthesis failed. Please try again.');
   }
 });
@@ -768,8 +787,8 @@ apiRouter.post('/events/:id/apply-ai-plan', requireAuth, (req: AuthenticatedRequ
   try {
     const result = db.applyAIPlanToEvent(eventId, sanitizeText(planId, 60));
     res.json(result);
-  } catch (err: any) {
-    console.error('Apply AI plan error:', err);
+  } catch (err: unknown) {
+    serverLogger.error('Apply AI plan error', 'Routes', { error: err instanceof Error ? err.message : String(err) });
     handleError(res, 500, 'Failed to apply AI plan to event');
   }
 });
@@ -795,8 +814,8 @@ apiRouter.post('/events/:id/replan', aiRateLimiter, requireAuth, async (req: Aut
       sanitizeText(eventType, 50)
     );
     res.json({ success: true, plan });
-  } catch (err: any) {
-    console.error('Replanning error:', err);
+  } catch (err: unknown) {
+    serverLogger.error('Replanning error', 'Routes', { error: err instanceof Error ? err.message : String(err) });
     handleError(res, 500, 'Replanning failed');
   }
 });
@@ -821,14 +840,14 @@ apiRouter.post('/events/:id/scenarios', optionalAuth, validateBody(simulateScena
   const { guestShift, decorTier, barPackage, saveSnapshot, title } = req.body;
 
   const validShift = Math.round(validateNumber(guestShift, -500, 1000, 0));
-  const validDecorTier = ['classic', 'couture', 'regal'].includes(decorTier) ? decorTier : 'couture';
-  const validBarPackage = ['baseline', 'vintage_champagne'].includes(barPackage) ? barPackage : 'baseline';
+  const validDecorTier: 'classic' | 'couture' | 'regal' = (decorTier === 'classic' || decorTier === 'couture' || decorTier === 'regal') ? decorTier : 'couture';
+  const validBarPackage: 'baseline' | 'vintage_champagne' = (barPackage === 'baseline' || barPackage === 'vintage_champagne') ? barPackage : 'baseline';
 
   const result = predictionService.simulateScenario(
     eventId,
     validShift,
-    validDecorTier as any,
-    validBarPackage as any
+    validDecorTier,
+    validBarPackage
   );
 
   let savedItem = null;

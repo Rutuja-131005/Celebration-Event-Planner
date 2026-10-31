@@ -1,10 +1,10 @@
 import React from 'react';
-import { Event, Prediction } from '../../server/models/types.ts';
+import { Event, Prediction, BudgetMetrics } from '../../server/models/types.ts';
 
 interface ReportsInsightsProps {
   event: Event;
   prediction: Prediction | null;
-  metrics: any;
+  metrics: BudgetMetrics | null;
 }
 
 export const ReportsInsights: React.FC<ReportsInsightsProps> = ({
