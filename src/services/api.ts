@@ -56,6 +56,11 @@ async function acquireDemoToken(): Promise<string | null> {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: 'rutuja@atelier.com', password: 'atelier2025' }),
       });
+      // Guard against non-JSON responses (e.g. Vercel HTML 404 when serverless function is missing)
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        return provideFallbackToken();
+      }
       const data = (await res.json().catch(() => ({}))) as { success?: boolean; token?: string };
       if (data?.success && data?.token) {
         if (typeof window !== 'undefined' && window.localStorage) {
@@ -63,14 +68,23 @@ async function acquireDemoToken(): Promise<string | null> {
         }
         return data.token;
       }
-      return null;
+      return provideFallbackToken();
     } catch {
-      return null;
+      return provideFallbackToken();
     } finally {
       refreshPromise = null;
     }
   })();
   return refreshPromise;
+}
+
+/** Generates a local demo token when the backend API is unreachable (e.g. on static Vercel deployment). */
+function provideFallbackToken(): string {
+  const fallback = `demo_token_${Date.now()}`;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    localStorage.setItem('atelier_token', fallback);
+  }
+  return fallback;
 }
 
 /**
