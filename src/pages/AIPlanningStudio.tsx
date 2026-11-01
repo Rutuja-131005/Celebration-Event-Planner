@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Event, AIPlanVersion } from '../../server/models/types.ts';
 import { planningService, getDefaultSeedPlan } from '../services/planning.ts';
 import { StudioHeader } from '../components/studio/StudioHeader.tsx';
@@ -34,14 +34,14 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
   const [selectedPlanIndex, setSelectedPlanIndex] = useState(0);
 
   // Input states
-  const [eventTypeCategory, setEventTypeCategory] = useState<'wedding' | 'birthday' | 'community' | 'custom'>('wedding');
+  const [eventTypeCategory, setEventTypeCategory] = useState<'destination_wedding' | 'wedding' | 'birthday' | 'community' | 'custom'>('wedding');
   const [eventTitle, setEventTitle] = useState(event.name);
-  const [guestCount, setGuestCount] = useState<number>(event.guestCount);
-  const [budgetAmount, setBudgetAmount] = useState<number>(event.budgetAmount);
+  const [guestCount, setGuestCount] = useState<number | string>(event.guestCount);
+  const [budgetAmount, setBudgetAmount] = useState<number | string>(event.budgetAmount);
   const [locationName, setLocationName] = useState(event.location);
   const [venueName, setVenueName] = useState(event.venueName);
-  const [specialWishes, setSpecialWishes] = useState(
-    'Lakeside sunset acoustic set, artisanal royal thali, warm brass lantern glow, strict curfew compliance'
+  const [specialWishes, setSpecialWishes] = useState<string>(
+    (typeof event.eventPreferences?.specialMoments === 'string' ? event.eventPreferences.specialMoments : '') || ''
   );
   const [promptText, setPromptText] = useState(
     'Plan an unforgettable luxury celebration. Prioritize authentic culinary stations, harmonic 2700K ambient illumination, signature guest activities, and optimize floral and sound production below budget cap.'
@@ -53,17 +53,47 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
   const [applySuccessMessage, setApplySuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Synchronize local input state whenever selected event changes
+  useEffect(() => {
+    if (event) {
+      setEventTitle(event.name || '');
+      setGuestCount(event.guestCount || 150);
+      setBudgetAmount(event.budgetAmount || 1500000);
+      setLocationName(event.location || '');
+      setVenueName(event.venueName || '');
+      const evType = (event.eventType || '').toLowerCase();
+      if (evType.includes('destination') || evType.includes('beach') || evType.includes('coastal')) {
+        setEventTypeCategory('destination_wedding');
+        setSpecialWishes('Sunset barefoot vows by the ocean waves, fairy-lit palm grove, acoustic guitar & coastal seafood grill');
+      } else if (evType.includes('birthday')) {
+        setEventTypeCategory('birthday');
+      } else if (evType.includes('community') || evType.includes('festival') || evType.includes('fair')) {
+        setEventTypeCategory('community');
+      } else {
+        setEventTypeCategory('wedding');
+      }
+    }
+  }, [event.id, event.name, event.guestCount, event.budgetAmount, event.location, event.venueName, event.eventType]);
+
   const activePlanList = plans.length > 0 ? plans : [getDefaultSeedPlan(event.id)];
   const currentPlan: AIPlanVersion = activePlanList[selectedPlanIndex] || activePlanList[0];
   const planData = currentPlan?.planJson;
 
-  // Preset Handlers for the 3 core challenge domains
-  const handleLoadPreset = (type: 'wedding' | 'birthday' | 'community') => {
+  // Preset Handlers for challenge domains
+  const handleLoadPreset = (type: 'destination_wedding' | 'wedding' | 'birthday' | 'community') => {
     setEventTypeCategory(type);
     setError(null);
     setApplySuccessMessage(null);
 
-    if (type === 'wedding') {
+    if (type === 'destination_wedding') {
+      setEventTitle("Aarav & Maya's Destination Beach Wedding");
+      setGuestCount(150);
+      setBudgetAmount(1500000);
+      setLocationName('Goa, India');
+      setVenueName('Bayfront Beach Resort & Private Sands, Morjim');
+      setSpecialWishes('Barefoot vows by the ocean waves, fairy-lit palm grove, acoustic sundowner & fresh seafood grill');
+      setPromptText('Plan an unforgettable luxury beach destination wedding in Goa for 150 guests. Prioritize barefoot oceanfront ceremony, ambient lantern lighting, coastal seafood banquet, acoustic guitar sundowner, and beach bonfire party.');
+    } else if (type === 'wedding') {
       setEventTitle("Ananya & Rohan's Royal Heritage Wedding");
       setGuestCount(320);
       setBudgetAmount(2500000);
@@ -96,18 +126,32 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
       setError(null);
       setApplySuccessMessage(null);
 
-      const combinedPrompt = `${promptText} | Event Title: ${eventTitle} | Type: ${eventTypeCategory} | Location: ${locationName} (${venueName}) | Guests: ${guestCount} | Target Budget: ₹${budgetAmount.toLocaleString('en-IN')} | Special Parameters: ${specialWishes}`;
+      const numericGuestCount = Number(guestCount) || 100;
+      const numericBudget = Number(budgetAmount) || 1500000;
+
+      const combinedPrompt = `${promptText} | Event Title: ${eventTitle} | Type: ${eventTypeCategory} | Destination / Location: ${locationName} | Venue: ${venueName} | Guests: ${numericGuestCount} | Target Budget: ₹${numericBudget.toLocaleString('en-IN')} | Special Parameters: ${specialWishes}`;
 
       const res = await planningService.generatePlan(
         event.id,
         combinedPrompt,
-        `${eventTitle} (${eventTypeCategory.toUpperCase()})`,
-        eventTypeCategory
+        `${eventTitle} (${eventTypeCategory.toUpperCase().replace('_', ' ')})`,
+        eventTypeCategory,
+        {
+          guestCount: numericGuestCount,
+          budgetAmount: numericBudget,
+          location: locationName,
+          venueName: venueName,
+          name: eventTitle,
+          specialWishes,
+        }
       );
 
-      if (res.success) {
+      if (res.success && res.plan) {
         onRefreshPlans();
         setSelectedPlanIndex(0);
+        if (onEventUpdated && res.event) {
+          onEventUpdated(res.event);
+        }
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'GenAI plan synthesis failed.';
@@ -271,7 +315,7 @@ export const AIPlanningStudio: React.FC<AIPlanningStudioProps> = ({
             {activeTab === 'ideas' && <AtmosphereTab currentPlan={currentPlan} />}
             {activeTab === 'budget' && (
               <BudgetAllocationTab
-                totalBudget={event.budgetAmount}
+                totalBudget={planData?.budgetRebalance?.totalBudget || event.budgetAmount}
                 budgetCategories={budgetCategories}
                 currentPlan={currentPlan}
               />

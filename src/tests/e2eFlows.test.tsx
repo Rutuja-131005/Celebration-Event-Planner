@@ -205,4 +205,65 @@ describe('End-to-End Enterprise Lifecycle & Workflow Flows', () => {
     expect(bufferDrawn).toBe(130000);
     expect(bufferDrawn <= metrics.contingencyPool).toBe(true); // Safeguarded by 200k buffer
   });
+
+  it('E2E Flow 4: Destination Beach Wedding Plan Generation & Custom Budget Alignment', async () => {
+    const user = db.getUserByEmail('rutuja@atelier.com') || db.getUserByEmail('priya@atelier.com');
+    expect(user).toBeDefined();
+
+    // Create Destination Wedding Event
+    const destEvent = db.createEvent({
+      ownerUserId: user!.id,
+      name: "Siddharth & Natasha's Goa Beach Wedding",
+      eventType: 'Destination Wedding',
+      eventDate: '2026-11-20',
+      location: 'Goa, India',
+      venueName: 'Taj Holiday Village Resort & Sands',
+      guestCount: 180,
+      confirmedGuestCount: 0,
+      budgetAmount: 3500000,
+      currencyCode: 'INR',
+      theme: 'Bohemian Coastal Sunset & White Shell Florals',
+      eventPreferences: {
+        specialMoments: 'Sunset beachfront pheras, coconut water arrival & acoustic sundowner',
+      },
+      status: 'planning',
+      daysRemaining: 150,
+      readinessScore: 40,
+      code: 'ATELIER-GOA26',
+    });
+
+    expect(destEvent.id).toBeDefined();
+    expect(destEvent.guestCount).toBe(180);
+    expect(destEvent.budgetAmount).toBe(3500000);
+
+    // Synthesize plan tailored to user destination and budget parameters
+    const plan = await aiService.generatePlan(
+      destEvent.id,
+      'Barefoot beachfront wedding in Goa with live acoustic music and fresh catch seafood banquet.',
+      'Siddharth & Natasha Master Coastal Blueprint',
+      'destination_wedding',
+      {
+        guestCount: 180,
+        budgetAmount: 3500000,
+        location: 'Goa, India',
+        venueName: 'Taj Holiday Village Resort & Sands',
+        specialWishes: 'Sunset barefoot vows by the ocean waves and late-night beach bonfire',
+      }
+    );
+
+    expect(plan.id).toBeDefined();
+    expect(plan.planJson.budgetRebalance.totalBudget).toBe(3500000);
+    expect(plan.planJson.colorPalette.some((c) => c.name.includes('Ocean') || c.name.includes('Coral'))).toBe(true);
+    expect(plan.planJson.spatialBlueprint.description).toContain('tide line');
+    expect(plan.planJson.itinerary.some((item) => item.title.includes('Beach') || item.title.includes('Sunset') || item.title.includes('Vows'))).toBe(true);
+    expect(plan.planJson.vendorChecklist?.some((v) => v.category.includes('Catering') || v.category.includes('Decor'))).toBe(true);
+
+    // Apply plan to event
+    const applyResult = db.applyAIPlanToEvent(destEvent.id, plan.id);
+    expect(applyResult.success).toBe(true);
+    expect(applyResult.categoriesUpdated).toBeGreaterThanOrEqual(4);
+
+    // Clean up
+    db.deleteEvent(destEvent.id);
+  });
 });

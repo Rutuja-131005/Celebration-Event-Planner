@@ -2,13 +2,13 @@ import React from 'react';
 import { AIPlanVersion } from '../../../server/models/types.ts';
 
 interface StudioConfiguratorProps {
-  eventTypeCategory: 'wedding' | 'birthday' | 'community' | 'custom';
+  eventTypeCategory: 'destination_wedding' | 'wedding' | 'birthday' | 'community' | 'custom';
   eventTitle: string;
   setEventTitle: (title: string) => void;
-  guestCount: number;
-  setGuestCount: (count: number) => void;
-  budgetAmount: number;
-  setBudgetAmount: (amount: number) => void;
+  guestCount: number | string;
+  setGuestCount: (count: number | string) => void;
+  budgetAmount: number | string;
+  setBudgetAmount: (amount: number | string) => void;
   locationName: string;
   setLocationName: (loc: string) => void;
   venueName: string;
@@ -22,7 +22,7 @@ interface StudioConfiguratorProps {
   applySuccessMessage: string | null;
   error: string | null;
   currentPlan?: AIPlanVersion;
-  onLoadPreset: (type: 'wedding' | 'birthday' | 'community') => void;
+  onLoadPreset: (type: 'destination_wedding' | 'wedding' | 'birthday' | 'community') => void;
   onSynthesize: () => void;
   onNavigateTab?: (path: string) => void;
 }
@@ -73,11 +73,11 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
           <span className="material-symbols-outlined text-secondary text-[22px]" aria-hidden="true">tune</span>
           <h2 className="font-title-lg text-title-lg text-primary">1. Select Event Type &amp; One-Click Presets</h2>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs uppercase tracking-wider text-outline font-semibold mr-1">One-Click Starter:</span>
-          {(['wedding', 'birthday', 'community'] as const).map((type) => {
-            const icons = { wedding: '💍', birthday: '🎂', community: '🎪' };
-            const labels = { wedding: 'Wedding', birthday: 'Birthday', community: 'Community' };
+          {(['destination_wedding', 'wedding', 'birthday', 'community'] as const).map((type) => {
+            const icons = { destination_wedding: '✈️', wedding: '💍', birthday: '🎂', community: '🎪' };
+            const labels = { destination_wedding: 'Destination Wedding', wedding: 'Royal Wedding', birthday: 'Birthday', community: 'Community' };
             const isSelected = eventTypeCategory === type;
             return (
               <button
@@ -109,8 +109,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             type="text"
             value={eventTitle}
             onChange={(e) => setEventTitle(e.target.value)}
-            placeholder="e.g. Ananya & Rohan's Wedding or Aria's 30th Birthday"
-            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary text-sm"
+            placeholder="e.g. Aarav & Maya's Destination Wedding or Aria's 30th Birthday"
+            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary text-sm font-medium"
           />
         </div>
         <div>
@@ -120,43 +120,76 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
           <input
             id="ai-guest-count-input"
             type="number"
-            min="10"
-            max="5000"
+            min="1"
+            max="50000"
+            placeholder="e.g. 150"
             value={guestCount}
-            onChange={(e) => setGuestCount(Number(e.target.value))}
-            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val === '') {
+                setGuestCount('');
+              } else {
+                const num = parseInt(val, 10);
+                setGuestCount(isNaN(num) ? '' : num);
+              }
+            }}
+            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm font-semibold"
           />
         </div>
         <div>
-          <label htmlFor="ai-budget-amount-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
-            Target Budget (₹ INR)
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label htmlFor="ai-budget-amount-input" className="block text-xs font-semibold uppercase tracking-wider text-outline">
+              Target Budget (₹ INR)
+            </label>
+            <span className="text-[11px] font-bold text-secondary">
+              ₹{((Number(budgetAmount) || 0) / 100000).toFixed(1)} Lakhs
+            </span>
+          </div>
           <input
             id="ai-budget-amount-input"
             type="number"
             step="25000"
+            min="1000"
+            placeholder="e.g. 1500000"
             value={budgetAmount}
-            onChange={(e) => setBudgetAmount(Number(e.target.value))}
-            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val === '') {
+                setBudgetAmount('');
+              } else {
+                const num = parseInt(val, 10);
+                setBudgetAmount(isNaN(num) ? '' : num);
+              }
+            }}
+            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm font-semibold"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md">
         <div>
-          <label htmlFor="ai-destination-venue-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
-            Destination &amp; Venue
+          <label htmlFor="ai-destination-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+            Destination / City
           </label>
           <input
-            id="ai-destination-venue-input"
+            id="ai-destination-input"
             type="text"
-            value={`${locationName} · ${venueName}`}
-            onChange={(e) => {
-              const parts = e.target.value.split('·');
-              setLocationName(parts[0]?.trim() || '');
-              setVenueName(parts[1]?.trim() || parts[0]?.trim() || '');
-            }}
-            placeholder="City, State · Venue Name"
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
+            placeholder="e.g. Goa, India or Udaipur, Rajasthan"
+            className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
+          />
+        </div>
+        <div>
+          <label htmlFor="ai-venue-input" className="block text-xs font-semibold uppercase tracking-wider text-outline mb-1">
+            Venue Name
+          </label>
+          <input
+            id="ai-venue-input"
+            type="text"
+            value={venueName}
+            onChange={(e) => setVenueName(e.target.value)}
+            placeholder="e.g. Bayfront Beach Resort & Private Sands"
             className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
           />
         </div>
@@ -169,7 +202,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             type="text"
             value={specialWishes}
             onChange={(e) => setSpecialWishes(e.target.value)}
-            placeholder="e.g. Craft cocktails, live vinyl DJ, sunset sundowner..."
+            placeholder="e.g. Barefoot ocean vows, acoustic sundowner, seafood grill..."
             className="w-full bg-surface-container-low px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
           />
         </div>

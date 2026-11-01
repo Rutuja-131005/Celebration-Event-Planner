@@ -3,7 +3,7 @@ import { Event } from '../../../server/models/types.ts';
 
 interface StudioHeaderProps {
   event: Event;
-  eventTypeCategory: 'wedding' | 'birthday' | 'community' | 'custom';
+  eventTypeCategory: 'destination_wedding' | 'wedding' | 'birthday' | 'community' | 'custom';
 }
 
 /**
@@ -33,7 +33,13 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({ event, eventTypeCate
       <div className="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_-4px_rgba(81,44,61,0.06)] max-w-md w-full border border-outline-variant/30">
         <div className="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center text-primary shrink-0 shadow-sm">
           <span className="material-symbols-outlined text-[24px]">
-            {eventTypeCategory === 'birthday' ? 'cake' : eventTypeCategory === 'community' ? 'festival' : 'celebration'}
+            {eventTypeCategory === 'destination_wedding'
+              ? 'flight_takeoff'
+              : eventTypeCategory === 'birthday'
+              ? 'cake'
+              : eventTypeCategory === 'community'
+              ? 'festival'
+              : 'celebration'}
           </span>
         </div>
         <div className="flex flex-col min-w-0 flex-1">

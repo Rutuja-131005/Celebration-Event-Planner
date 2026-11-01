@@ -12,6 +12,12 @@ export const ReportsInsights: React.FC<ReportsInsightsProps> = ({
   prediction,
   metrics,
 }) => {
+  const committedAmount = metrics?.committedAmount || 0;
+  const committedPct = metrics?.committedPercentage !== undefined ? metrics.committedPercentage : 0;
+  const variance = metrics?.variance || 0;
+  const isSurplus = variance >= 0;
+  const variancePct = event.budgetAmount > 0 ? Math.round((Math.abs(variance) / event.budgetAmount) * 1000) / 10 : 0;
+
   return (
     <div className="w-full px-space-lg py-space-lg max-w-[1400px] mx-auto">
       <div className="flex flex-col w-full space-y-space-xl">
@@ -25,7 +31,7 @@ export const ReportsInsights: React.FC<ReportsInsightsProps> = ({
               Reports &amp; Executive Insights
             </h1>
             <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl">
-              Consolidated financial statements, vendor milestone drawdowns, and predictive analytics audit report.
+              Consolidated financial statements, vendor milestone drawdowns, and predictive analytics audit report for {event.name}.
             </p>
           </div>
 
@@ -59,17 +65,19 @@ export const ReportsInsights: React.FC<ReportsInsightsProps> = ({
             <div className="p-4 rounded-xl bg-surface-container-low">
               <span className="text-xs text-outline uppercase tracking-wider block font-semibold">Sanctioned Envelope</span>
               <p className="text-2xl font-bold text-primary mt-1">₹{event.budgetAmount.toLocaleString('en-IN')}</p>
-              <p className="text-xs text-on-surface-variant mt-1">Approved March 12, 2025</p>
+              <p className="text-xs text-on-surface-variant mt-1">Target Fiscal Envelope</p>
             </div>
             <div className="p-4 rounded-xl bg-surface-container-low">
               <span className="text-xs text-outline uppercase tracking-wider block font-semibold">Committed Disbursals</span>
-              <p className="text-2xl font-bold text-secondary mt-1">₹{(metrics?.committedAmount || 1680000).toLocaleString('en-IN')}</p>
-              <p className="text-xs text-on-surface-variant mt-1">{metrics?.committedPercentage || 67.2}% of envelope locked</p>
+              <p className="text-2xl font-bold text-secondary mt-1">₹{committedAmount.toLocaleString('en-IN')}</p>
+              <p className="text-xs text-on-surface-variant mt-1">{committedPct}% of envelope locked</p>
             </div>
             <div className="p-4 rounded-xl bg-surface-container-low">
-              <span className="text-xs text-outline uppercase tracking-wider block font-semibold">Net Projected Surplus</span>
-              <p className="text-2xl font-bold text-tertiary mt-1">₹{(metrics?.variance || 85000).toLocaleString('en-IN')}</p>
-              <p className="text-xs text-on-surface-variant mt-1">3.4% below maximum ceiling</p>
+              <span className="text-xs text-outline uppercase tracking-wider block font-semibold">Net Projected {isSurplus ? 'Surplus' : 'Deficit'}</span>
+              <p className="text-2xl font-bold text-tertiary mt-1">₹{Math.abs(variance).toLocaleString('en-IN')}</p>
+              <p className="text-xs text-on-surface-variant mt-1">
+                {variancePct}% {isSurplus ? 'surplus reserve' : 'overrun risk'}
+              </p>
             </div>
           </div>
 
@@ -81,7 +89,7 @@ export const ReportsInsights: React.FC<ReportsInsightsProps> = ({
             </h3>
             <p className="text-sm text-on-surface leading-relaxed">
               {prediction?.explanation ||
-                'Automated analysis cross-referenced against 120+ atelier weddings in Rajasthan indicates low overall risk with high probability of ₹85,000 net surplus under approved baseline budget.'}
+                `Automated predictive modeling calibrated for ${event.location || 'this celebration'} indicates stable financial variance with high confidence of execution within the approved baseline envelope.`}
             </p>
           </div>
         </div>

@@ -295,6 +295,7 @@ export default function App() {
               {currentPath === 'budget-and-forecast' && (
                 <BudgetForecast
                   eventId={activeEventId}
+                  event={eventToRender}
                   categories={categories}
                   expenses={expenses}
                   metrics={budgetMetrics}

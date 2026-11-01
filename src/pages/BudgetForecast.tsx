@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { BudgetCategory, Expense, BudgetMetrics } from '../../server/models/types.ts';
+import { BudgetCategory, Expense, BudgetMetrics, Event } from '../../server/models/types.ts';
 import { predictionsService } from '../services/predictions.ts';
 import { budgetService } from '../services/budget.ts';
 
 interface BudgetForecastProps {
   eventId: string;
+  event?: Event;
   categories: BudgetCategory[];
   expenses: Expense[];
   metrics: BudgetMetrics | null;
@@ -14,6 +15,7 @@ interface BudgetForecastProps {
 
 export const BudgetForecast: React.FC<BudgetForecastProps> = ({
   eventId,
+  event,
   categories,
   expenses,
   metrics,
@@ -58,7 +60,7 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
     const variance = guestCost + decorCost + bar;
     const baseForecast = metrics?.forecastedTotal || 2415000;
     const outlay = baseForecast + variance;
-    const baseline = metrics?.baselineBudget || 2500000;
+    const baseline = metrics?.baselineBudget || event?.budgetAmount || 2500000;
     const bufferDrawn = outlay > baseline;
 
     return {
@@ -73,7 +75,7 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
     };
   }, [guestShift, decorTier, barPackage, metrics]);
 
-  const baselineBudget = metrics?.baselineBudget || 2500000;
+  const baselineBudget = metrics?.baselineBudget || event?.budgetAmount || 2500000;
 
   const handleResetSimulation = () => {
     setGuestShift(0);
@@ -144,7 +146,7 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
             <div className="flex items-center gap-space-sm text-outline font-label-sm uppercase tracking-widest">
               <span>Fiscal Folio</span>
               <span>•</span>
-              <span>Ananya &amp; Rohan’s Celebration</span>
+              <span>{event?.name || "Active Celebration"}</span>
               <span>•</span>
               <span className="text-secondary font-semibold">INR (₹) Standard</span>
             </div>
@@ -197,89 +199,106 @@ export const BudgetForecast: React.FC<BudgetForecastProps> = ({
         </div>
 
         {/* Editorial 5-Metric Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md">
-          {/* Card 1 */}
-          <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
-            <div className="flex items-center justify-between text-outline">
-              <span className="font-label-sm uppercase tracking-wider">Baseline Budget</span>
-              <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
-            </div>
-            <div className="my-space-sm">
-              <div className="font-headline-md text-headline-md text-primary">₹25,00,000</div>
-              <div className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Approved fiscal envelope</div>
-            </div>
-            <div className="font-label-sm text-label-sm text-outline">Sanctioned Mar 12, 2025</div>
-          </div>
+        {(() => {
+          const cap = metrics?.baselineBudget || event?.budgetAmount || 2500000;
+          const committed = metrics?.committedAmount || 0;
+          const committedPct = metrics?.committedPercentage !== undefined
+            ? metrics.committedPercentage
+            : cap > 0 ? Math.round((committed / cap) * 1000) / 10 : 0;
+          const forecasted = metrics?.forecastedTotal || cap;
+          const variance = metrics?.variance !== undefined ? metrics.variance : (cap - forecasted);
+          const variancePct = cap > 0 ? Math.round((Math.abs(variance) / cap) * 1000) / 10 : 0;
+          const isSurplus = variance >= 0;
+          const freeCash = metrics?.remainingBudget !== undefined ? metrics.remainingBudget : Math.max(0, cap - committed);
+          const contingency = metrics?.contingencyPool !== undefined ? metrics.contingencyPool : Math.round(cap * 0.08);
+          const contingencyPct = cap > 0 ? ((contingency / cap) * 100).toFixed(1) : '8.0';
 
-          {/* Card 2 */}
-          <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
-            <div className="flex items-center justify-between text-outline">
-              <span className="font-label-sm uppercase tracking-wider">Committed / Spent</span>
-              <span className="material-symbols-outlined text-[20px] text-secondary">payments</span>
-            </div>
-            <div className="my-space-sm">
-              <div className="font-headline-md text-headline-md text-secondary">₹16,80,000</div>
-              <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant mt-0.5">
-                <span className="font-bold text-secondary">67.2%</span> of total allocation
+          return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md">
+              {/* Card 1: Baseline Budget */}
+              <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between border border-outline-variant/20">
+                <div className="flex items-center justify-between text-outline">
+                  <span className="font-label-sm uppercase tracking-wider font-semibold">Baseline Budget</span>
+                  <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                </div>
+                <div className="my-space-sm">
+                  <div className="font-headline-md text-headline-md text-primary font-bold">{formatINR(cap)}</div>
+                  <div className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Approved fiscal envelope</div>
+                </div>
+                <div className="font-label-sm text-label-sm text-outline">Event Cap Baseline</div>
+              </div>
+
+              {/* Card 2: Committed / Spent */}
+              <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between border border-outline-variant/20">
+                <div className="flex items-center justify-between text-outline">
+                  <span className="font-label-sm uppercase tracking-wider font-semibold">Committed / Spent</span>
+                  <span className="material-symbols-outlined text-[20px] text-secondary">payments</span>
+                </div>
+                <div className="my-space-sm">
+                  <div className="font-headline-md text-headline-md text-secondary font-bold">{formatINR(committed)}</div>
+                  <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant mt-0.5">
+                    <span className="font-bold text-secondary">{committedPct}%</span> of total allocation
+                  </div>
+                </div>
+                <div
+                  className="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden"
+                  role="progressbar"
+                  aria-valuenow={committedPct}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`Budget committed: ${committedPct}% of total allocation`}
+                >
+                  <div className="bg-secondary h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, Math.max(0, committedPct))}%` }}></div>
+                </div>
+              </div>
+
+              {/* Card 3: Forecasted Total */}
+              <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between border border-outline-variant/20">
+                <div className="flex items-center justify-between text-outline">
+                  <span className="font-label-sm uppercase tracking-wider font-semibold">Forecasted Total</span>
+                  <span className="material-symbols-outlined text-[20px] text-tertiary">query_stats</span>
+                </div>
+                <div className="my-space-sm">
+                  <div className="font-headline-md text-headline-md text-primary font-bold">{formatINR(forecasted)}</div>
+                  <div className="flex items-center gap-1 text-tertiary-container font-label-sm text-label-sm mt-0.5">
+                    <span className="material-symbols-outlined text-[16px]">{isSurplus ? 'trending_down' : 'trending_up'}</span>
+                    <span className="font-bold">{formatINR(Math.abs(variance))} {isSurplus ? 'Surplus' : 'Deficit'} ({variancePct}%)</span>
+                  </div>
+                </div>
+                <div className="font-label-sm text-label-sm text-outline">Predictive Cost Model</div>
+              </div>
+
+              {/* Card 4: Free Cash Flow */}
+              <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between border border-outline-variant/20">
+                <div className="flex items-center justify-between text-outline">
+                  <span className="font-label-sm uppercase tracking-wider font-semibold">Free Cash Flow</span>
+                  <span className="material-symbols-outlined text-[20px]">account_balance</span>
+                </div>
+                <div className="my-space-sm">
+                  <div className="font-headline-md text-headline-md text-primary font-bold">{formatINR(freeCash)}</div>
+                  <div className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Uncommitted balance</div>
+                </div>
+                <div className="font-label-sm text-label-sm text-outline">Operational Liquidity</div>
+              </div>
+
+              {/* Card 5: Contingency Pool */}
+              <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between border border-outline-variant/20">
+                <div className="flex items-center justify-between text-outline">
+                  <span className="font-label-sm uppercase tracking-wider font-semibold">Contingency Pool</span>
+                  <span className="material-symbols-outlined text-[20px] text-tertiary">shield</span>
+                </div>
+                <div className="my-space-sm">
+                  <div className="font-headline-md text-headline-md text-tertiary font-bold">{formatINR(contingency)}</div>
+                  <div className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Buffer ({contingencyPct}% of total)</div>
+                </div>
+                <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-tertiary font-medium">
+                  <span className="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                  <span>Safety Reserve</span>
+                </div>
               </div>
             </div>
-            <div
-              className="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden"
-              role="progressbar"
-              aria-valuenow={67.2}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label="Budget committed: 67.2% of total allocation"
-            >
-              <div className="bg-secondary h-full rounded-full" style={{ width: '67.2%' }}></div>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
-            <div className="flex items-center justify-between text-outline">
-              <span className="font-label-sm uppercase tracking-wider">Forecasted Total</span>
-              <span className="material-symbols-outlined text-[20px] text-tertiary">query_stats</span>
-            </div>
-            <div className="my-space-sm">
-              <div className="font-headline-md text-headline-md text-primary">₹24,15,000</div>
-              <div className="flex items-center gap-1 text-tertiary-container font-label-sm text-label-sm mt-0.5">
-                <span className="material-symbols-outlined text-[16px]">trending_down</span>
-                <span className="font-bold">₹85,000 Surplus (3.4%)</span>
-              </div>
-            </div>
-            <div className="font-label-sm text-label-sm text-outline">AI Predictive Model v2.4</div>
-          </div>
-
-          {/* Card 4 */}
-          <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
-            <div className="flex items-center justify-between text-outline">
-              <span className="font-label-sm uppercase tracking-wider">Free Cash Flow</span>
-              <span className="material-symbols-outlined text-[20px]">account_balance</span>
-            </div>
-            <div className="my-space-sm">
-              <div className="font-headline-md text-headline-md text-primary">₹8,20,000</div>
-              <div className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Uncommitted balance</div>
-            </div>
-            <div className="font-label-sm text-label-sm text-outline">Tranche 3 due in 18 days</div>
-          </div>
-
-          {/* Card 5 */}
-          <div className="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
-            <div className="flex items-center justify-between text-outline">
-              <span className="font-label-sm uppercase tracking-wider">Contingency Pool</span>
-              <span className="material-symbols-outlined text-[20px] text-tertiary">shield</span>
-            </div>
-            <div className="my-space-sm">
-              <div className="font-headline-md text-headline-md text-tertiary-container">₹2,00,000</div>
-              <div className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Buffer (8.0% of total)</div>
-            </div>
-            <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-tertiary font-medium">
-              <span className="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-              <span>100% Unencumbered</span>
-            </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* Predictive Overrun & Risk Intelligence Panel */}
         <div className="bg-surface-container-low p-space-lg rounded-xl shadow-sm relative overflow-hidden">

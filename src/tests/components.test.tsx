@@ -5,6 +5,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { AddExpenseModal } from '../components/AddExpenseModal.tsx';
 import { AddTaskModal } from '../components/AddTaskModal.tsx';
 import { AddQuoteModal } from '../components/AddQuoteModal.tsx';
+import { CreateEventModal } from '../components/CreateEventModal.tsx';
 import { BudgetCategory, Event } from '../../server/models/types.ts';
 
 const mockEvent: Event = {
@@ -160,5 +161,42 @@ describe('Frontend Component Tests Suite', () => {
     expect(simulatedOutlay).toBe(2585000);
     expect(bufferDrawn).toBe(true);
     expect(bufferAmount).toBe(85000); // 85,000 drawn from contingency pool
+  });
+
+  it('CreateEventModal renders clean empty state and populates destination wedding preset on demand', () => {
+    const handleClose = vi.fn();
+    const handleCreated = vi.fn();
+
+    render(
+      <CreateEventModal
+        isOpen={true}
+        onClose={handleClose}
+        onEventCreated={handleCreated}
+      />
+    );
+
+    // Initial state is clean without hardcoded sample names
+    const titleInput = screen.getByPlaceholderText(/e\.g\. Ananya & Rohan's Royal Heritage Wedding/i);
+    expect(titleInput).toHaveValue('');
+
+    // Clicking Destination Wedding preset fills coastal specs
+    const destBtn = screen.getByRole('button', { name: /destination wedding/i });
+    fireEvent.click(destBtn);
+
+    expect(titleInput).toHaveValue("Aarav & Maya's Goa Beach Destination Wedding");
+
+    // Clicking Start Blank clears the form completely
+    const blankBtn = screen.getByRole('button', { name: /start blank/i });
+    fireEvent.click(blankBtn);
+
+    expect(titleInput).toHaveValue('');
+
+    // Guest count and budget allow typing without snapping back to 0
+    const guestInput = screen.getByPlaceholderText('e.g. 150');
+    fireEvent.change(guestInput, { target: { value: '220' } });
+    expect(guestInput).toHaveValue(220);
+
+    fireEvent.change(guestInput, { target: { value: '' } });
+    expect(guestInput).toHaveValue(null);
   });
 });

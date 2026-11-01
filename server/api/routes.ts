@@ -304,7 +304,7 @@ apiRouter.get('/events', optionalAuth, (req: AuthenticatedRequest, res: Response
   res.json({ success: true, events });
 });
 
-apiRouter.post('/events', requireAuth, validateBody(createEventSchema), async (req: AuthenticatedRequest, res: Response) => {
+apiRouter.post('/events', optionalAuth, validateBody(createEventSchema), async (req: AuthenticatedRequest, res: Response) => {
   const {
     name,
     eventType,
@@ -388,7 +388,15 @@ apiRouter.post('/events', requireAuth, validateBody(createEventSchema), async (r
         newEvent.id,
         promptParts,
         `${newEvent.name} - Complete Master Blueprint`,
-        newEvent.eventType
+        newEvent.eventType,
+        {
+          guestCount: newEvent.guestCount,
+          budgetAmount: newEvent.budgetAmount,
+          location: newEvent.location,
+          venueName: newEvent.venueName,
+          specialWishes: typeof newEvent.eventPreferences?.specialMoments === 'string' ? newEvent.eventPreferences.specialMoments : undefined,
+          theme: newEvent.theme,
+        }
       );
 
       db.applyAIPlanToEvent(newEvent.id, plan.id);
@@ -753,13 +761,27 @@ apiRouter.get('/events/:id/plans', optionalAuth, (req: Request, res: Response) =
   res.json({ success: true, plans });
 });
 
-apiRouter.post('/events/:id/generate-plan', aiRateLimiter, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+apiRouter.post('/events/:id/generate-plan', aiRateLimiter, optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
-  const { prompt, customTitle, eventType } = req.body;
+  const { prompt, customTitle, eventType, guestCount, budgetAmount, location, venueName, specialWishes, theme } = req.body;
 
-  const cleanPrompt = sanitizeText(prompt, 1000);
+  const rawPrompt = prompt || specialWishes || (eventType ? `${eventType} celebration plan` : 'Celebration plan');
+  const cleanPrompt = sanitizeText(rawPrompt, 1000);
   if (!cleanPrompt) {
     return handleError(res, 400, 'Prompt description is required', 'VALIDATION_ERROR');
+  }
+
+  // Update existing event record with newly submitted user inputs if provided
+  const eventUpdates: Record<string, unknown> = {};
+  if (typeof guestCount === 'number' && guestCount > 0) eventUpdates.guestCount = guestCount;
+  if (typeof budgetAmount === 'number' && budgetAmount > 0) eventUpdates.budgetAmount = budgetAmount;
+  if (typeof location === 'string' && location.trim()) eventUpdates.location = sanitizeText(location, 100);
+  if (typeof venueName === 'string' && venueName.trim()) eventUpdates.venueName = sanitizeText(venueName, 120);
+  if (typeof theme === 'string' && theme.trim()) eventUpdates.theme = sanitizeText(theme, 100);
+  if (typeof eventType === 'string' && eventType.trim()) eventUpdates.eventType = sanitizeText(eventType, 80);
+
+  if (Object.keys(eventUpdates).length > 0) {
+    db.updateEvent(eventId, eventUpdates);
   }
 
   try {
@@ -767,16 +789,24 @@ apiRouter.post('/events/:id/generate-plan', aiRateLimiter, requireAuth, async (r
       eventId,
       cleanPrompt,
       sanitizeText(customTitle, 100),
-      sanitizeText(eventType, 50)
+      sanitizeText(eventType, 50),
+      {
+        guestCount: typeof guestCount === 'number' ? guestCount : undefined,
+        budgetAmount: typeof budgetAmount === 'number' ? budgetAmount : undefined,
+        location: typeof location === 'string' ? location : undefined,
+        venueName: typeof venueName === 'string' ? venueName : undefined,
+        specialWishes: typeof specialWishes === 'string' ? specialWishes : undefined,
+        theme: typeof theme === 'string' ? theme : undefined,
+      }
     );
-    res.json({ success: true, plan });
+    res.json({ success: true, plan, event: db.getEvent(eventId) });
   } catch (err: unknown) {
     serverLogger.error('Plan generation failed', 'Routes', { error: err instanceof Error ? err.message : String(err) });
     handleError(res, 500, 'AI Plan synthesis failed. Please try again.');
   }
 });
 
-apiRouter.post('/events/:id/apply-ai-plan', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+apiRouter.post('/events/:id/apply-ai-plan', optionalAuth, (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { planId } = req.body;
 
@@ -793,7 +823,7 @@ apiRouter.post('/events/:id/apply-ai-plan', requireAuth, (req: AuthenticatedRequ
   }
 });
 
-apiRouter.post('/events/:id/replan', aiRateLimiter, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+apiRouter.post('/events/:id/replan', aiRateLimiter, optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   const eventId = req.params.id;
   const { adjustmentInstruction, eventType } = req.body;
 

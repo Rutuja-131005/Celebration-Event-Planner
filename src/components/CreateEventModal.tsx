@@ -27,27 +27,27 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   onEventCreated,
 }) => {
   // Preset Templates
-  const [selectedPreset, setSelectedPreset] = useState<string>('wedding');
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
   // Core Logistics
-  const [name, setName] = useState("Ananya & Rohan's Royal Heritage Wedding");
-  const [eventType, setEventType] = useState('Royal Wedding Celebration');
-  const [eventDate, setEventDate] = useState('2026-03-25');
-  const [location, setLocation] = useState('Udaipur, Rajasthan');
-  const [venueName, setVenueName] = useState('Jagmandir Island Palace, Lake Pichola');
-  const [guestCount, setGuestCount] = useState<number>(320);
-  const [budgetAmount, setBudgetAmount] = useState<number>(2500000);
+  const [name, setName] = useState('');
+  const [eventType, setEventType] = useState('Destination Wedding');
+  const [eventDate, setEventDate] = useState('2026-06-15');
+  const [location, setLocation] = useState('');
+  const [venueName, setVenueName] = useState('');
+  const [guestCount, setGuestCount] = useState<number | string>('');
+  const [budgetAmount, setBudgetAmount] = useState<number | string>('');
 
   // Vibe & Aesthetics
-  const [theme, setTheme] = useState('Royal Marwar & Rajputana Florals');
+  const [theme, setTheme] = useState('');
   const [selectedPalette, setSelectedPalette] = useState<string>(PALETTE_PRESETS[0].name);
-  const [ambiance, setAmbiance] = useState('Lakeside candlelight, warm fairy lights, cascading marigolds & acoustic Sufi');
-  const [vibe, setVibe] = useState('Opulent heritage grandeur with intimate candlelit hospitality');
+  const [ambiance, setAmbiance] = useState('');
+  const [vibe, setVibe] = useState('');
 
   // Culinary & Entertainment
-  const [culinaryStyle, setCulinaryStyle] = useState('Mewari royal feast, live charcoal kebabs, artisanal gin & cocktail bar');
-  const [specialMoments, setSpecialMoments] = useState('Sunset boat procession, lakeside fireworks reveal & midnight acoustic session');
-  const [additionalNotes, setAdditionalNotes] = useState('Ensure boat shuttles operate seamlessly from jetty; VIP dietary preferences noted');
+  const [culinaryStyle, setCulinaryStyle] = useState('');
+  const [specialMoments, setSpecialMoments] = useState('');
+  const [additionalNotes, setAdditionalNotes] = useState('');
 
   // All-in-One Blueprint Generation Switch
   const [autoGeneratePlan, setAutoGeneratePlan] = useState<boolean>(true);
@@ -86,7 +86,36 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
   const applyPreset = (presetKey: string) => {
     setSelectedPreset(presetKey);
-    if (presetKey === 'wedding') {
+    if (presetKey === 'blank') {
+      setName('');
+      setEventType('Destination Wedding');
+      setLocation('');
+      setVenueName('');
+      setGuestCount('');
+      setBudgetAmount('');
+      setTheme('');
+      setAmbiance('');
+      setVibe('');
+      setCulinaryStyle('');
+      setSpecialMoments('');
+      setAdditionalNotes('');
+      return;
+    }
+    if (presetKey === 'destination_wedding') {
+      setName("Aarav & Maya's Goa Beach Destination Wedding");
+      setEventType('Destination Wedding');
+      setEventDate('2026-04-20');
+      setLocation('Goa, India');
+      setVenueName('Bayfront Beach Resort & Private Sands, Morjim');
+      setGuestCount(150);
+      setBudgetAmount(1500000);
+      setTheme('Bohemian Coastal Sunset & White Shell Florals');
+      setSelectedPalette(PALETTE_PRESETS[1].name);
+      setAmbiance('Barefoot ocean breeze, fairy-lit palm grove, acoustic guitar & coastal sunset');
+      setVibe('Effortless tropical luxury, warm intimate coastal romance');
+      setCulinaryStyle('Fresh coastal seafood grill, artisanal gin & coconut cocktail bar, woodfired tapas');
+      setSpecialMoments('Sunset barefoot vows by the ocean waves, beach bonfire & midnight acoustic jam');
+    } else if (presetKey === 'wedding') {
       setName("Ananya & Rohan's Royal Heritage Wedding");
       setEventType('Royal Wedding Celebration');
       setEventDate('2026-03-25');
@@ -174,8 +203,8 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         eventDate,
         location,
         venueName,
-        guestCount: Number(guestCount),
-        budgetAmount: Number(budgetAmount),
+        guestCount: Number(guestCount) || 100,
+        budgetAmount: Number(budgetAmount) || 1000000,
         theme,
         autoGeneratePlan,
         vibe,
@@ -259,12 +288,13 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
             <label className="block text-xs font-bold uppercase tracking-wider text-outline mb-2">
               Fast Track with Curated Presets
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               {[
+                { key: 'destination_wedding', label: 'Destination Wedding', icon: 'flight_takeoff', sub: '150 Guests · ₹15L' },
                 { key: 'wedding', label: 'Royal Wedding', icon: 'favorite', sub: '320 Guests · ₹25L' },
                 { key: 'birthday', label: 'Milestone Birthday', icon: 'cake', sub: '85 Guests · ₹5L' },
                 { key: 'community', label: 'Community Fair', icon: 'festival', sub: '500 Guests · ₹8.5L' },
-                { key: 'charity', label: 'Charity Gala', icon: 'volunteer_activism', sub: '200 Guests · ₹18L' },
+                { key: 'blank', label: 'Start Blank', icon: 'restart_alt', sub: 'Clear Form' },
               ].map((p) => (
                 <button
                   key={p.key}
@@ -319,7 +349,10 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                     onChange={(e) => setEventType(e.target.value)}
                     className="w-full bg-surface-container-lowest px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
                   >
+                    <option value="Destination Wedding">Destination Wedding</option>
                     <option value="Royal Wedding Celebration">Royal Wedding Celebration</option>
+                    <option value="Intimate Beach Wedding">Intimate Beach Wedding</option>
+                    <option value="Heritage Palace Wedding">Heritage Palace Wedding</option>
                     <option value="Milestone Birthday Party">Milestone Birthday Party</option>
                     <option value="Community Cultural Festival">Community Cultural Festival</option>
                     <option value="Charity Gala & Fundraiser">Charity Gala & Fundraiser</option>
@@ -346,10 +379,19 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                   </label>
                   <input
                     type="number"
-                    min="10"
-                    max="10000"
+                    min="1"
+                    max="100000"
+                    placeholder="e.g. 150"
                     value={guestCount}
-                    onChange={(e) => setGuestCount(Number(e.target.value))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setGuestCount('');
+                      } else {
+                        const num = parseInt(val, 10);
+                        setGuestCount(isNaN(num) ? '' : num);
+                      }
+                    }}
                     className="w-full bg-surface-container-lowest px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm"
                   />
                 </div>
@@ -364,13 +406,23 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                     <input
                       type="number"
                       step="25000"
+                      min="1000"
                       required
+                      placeholder="e.g. 1500000"
                       value={budgetAmount}
-                      onChange={(e) => setBudgetAmount(Number(e.target.value))}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setBudgetAmount('');
+                        } else {
+                          const num = parseInt(val, 10);
+                          setBudgetAmount(isNaN(num) ? '' : num);
+                        }
+                      }}
                       className="w-full bg-surface-container-lowest px-3 py-2 rounded-xl text-on-surface border border-outline-variant/40 focus:outline-none text-sm font-semibold"
                     />
                     <span className="absolute right-3 top-2.5 text-xs text-secondary font-bold">
-                      ₹{(budgetAmount / 100000).toFixed(1)} Lakhs
+                      ₹{((Number(budgetAmount) || 0) / 100000).toFixed(1)} Lakhs
                     </span>
                   </div>
                 </div>
